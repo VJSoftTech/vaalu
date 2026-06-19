@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420">
+<defs>
+  <linearGradient id="bg" x1="0%" y1="0%" x2="60%" y2="100%">
+    <stop offset="0%"   stop-color="#083344"/>
+    <stop offset="55%"  stop-color="#155E75"/>
+    <stop offset="100%" stop-color="#0E7490"/>
+  </linearGradient>
+  <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%"   stop-color="#041C24" stop-opacity="0.82"/>
+    <stop offset="100%" stop-color="#041C24" stop-opacity="0.96"/>
+  </linearGradient>
+  <linearGradient id="bottombar" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%"   stop-color="#041C24" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#041C24" stop-opacity="1"/>
+  </linearGradient>
+  <filter id="ts" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.8)"/>
+  </filter>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>text { font-family:'Noto Serif Tamil','Noto Sans Tamil','Latha','Tamil MN',serif; }</style>
+</defs>
+
+<!-- background -->
+<rect width="300" height="420" fill="url(#bg)"/>
+
+<!-- illustration area (top) -->
+
+  <!-- outer glow rings -->
+  <circle cx="150" cy="105" r="78" fill="none" stroke="rgba(34,211,238,0.12)" stroke-width="1.5"/>
+  <circle cx="150" cy="105" r="68" fill="none" stroke="rgba(34,211,238,0.15)" stroke-width="1"/>
+  <circle cx="150" cy="105" r="58" fill="none" stroke="rgba(34,211,238,0.18)" stroke-width="1"/>
+  <!-- mandala petals -->
+  <ellipse cx="210.0" cy="105.0" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(0.0,210.0,105.0)"/><ellipse cx="192.4" cy="147.4" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(45.0,192.4,147.4)"/><ellipse cx="150.0" cy="165.0" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(90.0,150.0,165.0)"/><ellipse cx="107.6" cy="147.4" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(135.0,107.6,147.4)"/><ellipse cx="90.0" cy="105.0" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(180.0,90.0,105.0)"/><ellipse cx="107.6" cy="62.6" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(225.0,107.6,62.6)"/><ellipse cx="150.0" cy="45.0" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(270.0,150.0,45.0)"/><ellipse cx="192.4" cy="62.6" rx="4" ry="2" fill="rgba(34,211,238,0.15)" transform="rotate(315.0,192.4,62.6)"/><ellipse cx="198.0" cy="105.0" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(0.0,198.0,105.0)"/><ellipse cx="188.8" cy="133.2" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(36.0,188.8,133.2)"/><ellipse cx="164.8" cy="150.7" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(72.0,164.8,150.7)"/><ellipse cx="135.2" cy="150.7" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(108.0,135.2,150.7)"/><ellipse cx="111.2" cy="133.2" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(144.0,111.2,133.2)"/><ellipse cx="102.0" cy="105.0" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(180.0,102.0,105.0)"/><ellipse cx="111.2" cy="76.8" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(216.0,111.2,76.8)"/><ellipse cx="135.2" cy="59.3" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(252.0,135.2,59.3)"/><ellipse cx="164.8" cy="59.3" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(288.0,164.8,59.3)"/><ellipse cx="188.8" cy="76.8" rx="3.7" ry="1.9" fill="rgba(34,211,238,0.21)" transform="rotate(324.0,188.8,76.8)"/><ellipse cx="186.0" cy="105.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(0.0,186.0,105.0)"/><ellipse cx="181.2" cy="123.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(30.0,181.2,123.0)"/><ellipse cx="168.0" cy="136.2" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(60.0,168.0,136.2)"/><ellipse cx="150.0" cy="141.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(90.0,150.0,141.0)"/><ellipse cx="132.0" cy="136.2" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(120.0,132.0,136.2)"/><ellipse cx="118.8" cy="123.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(150.0,118.8,123.0)"/><ellipse cx="114.0" cy="105.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(180.0,114.0,105.0)"/><ellipse cx="118.8" cy="87.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(210.0,118.8,87.0)"/><ellipse cx="132.0" cy="73.8" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(240.0,132.0,73.8)"/><ellipse cx="150.0" cy="69.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(270.0,150.0,69.0)"/><ellipse cx="168.0" cy="73.8" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(300.0,168.0,73.8)"/><ellipse cx="181.2" cy="87.0" rx="3.4" ry="1.8" fill="rgba(34,211,238,0.27)" transform="rotate(330.0,181.2,87.0)"/><ellipse cx="174.0" cy="105.0" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(0.0,174.0,105.0)"/><ellipse cx="171.6" cy="115.4" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(25.7,171.6,115.4)"/><ellipse cx="165.0" cy="123.8" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(51.4,165.0,123.8)"/><ellipse cx="155.3" cy="128.4" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(77.1,155.3,128.4)"/><ellipse cx="144.7" cy="128.4" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(102.9,144.7,128.4)"/><ellipse cx="135.0" cy="123.8" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(128.6,135.0,123.8)"/><ellipse cx="128.4" cy="115.4" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(154.3,128.4,115.4)"/><ellipse cx="126.0" cy="105.0" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(180.0,126.0,105.0)"/><ellipse cx="128.4" cy="94.6" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(205.7,128.4,94.6)"/><ellipse cx="135.0" cy="86.2" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(231.4,135.0,86.2)"/><ellipse cx="144.7" cy="81.6" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(257.1,144.7,81.6)"/><ellipse cx="155.3" cy="81.6" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(282.9,155.3,81.6)"/><ellipse cx="165.0" cy="86.2" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(308.6,165.0,86.2)"/><ellipse cx="171.6" cy="94.6" rx="3.1" ry="1.7" fill="rgba(34,211,238,0.32999999999999996)" transform="rotate(334.3,171.6,94.6)"/><ellipse cx="162.0" cy="105.0" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(0.0,162.0,105.0)"/><ellipse cx="161.1" cy="109.6" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(22.5,161.1,109.6)"/><ellipse cx="158.5" cy="113.5" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(45.0,158.5,113.5)"/><ellipse cx="154.6" cy="116.1" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(67.5,154.6,116.1)"/><ellipse cx="150.0" cy="117.0" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(90.0,150.0,117.0)"/><ellipse cx="145.4" cy="116.1" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(112.5,145.4,116.1)"/><ellipse cx="141.5" cy="113.5" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(135.0,141.5,113.5)"/><ellipse cx="138.9" cy="109.6" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(157.5,138.9,109.6)"/><ellipse cx="138.0" cy="105.0" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(180.0,138.0,105.0)"/><ellipse cx="138.9" cy="100.4" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(202.5,138.9,100.4)"/><ellipse cx="141.5" cy="96.5" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(225.0,141.5,96.5)"/><ellipse cx="145.4" cy="93.9" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(247.5,145.4,93.9)"/><ellipse cx="150.0" cy="93.0" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(270.0,150.0,93.0)"/><ellipse cx="154.6" cy="93.9" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(292.5,154.6,93.9)"/><ellipse cx="158.5" cy="96.5" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(315.0,158.5,96.5)"/><ellipse cx="161.1" cy="100.4" rx="2.8" ry="1.6" fill="rgba(34,211,238,0.39)" transform="rotate(337.5,161.1,100.4)"/>
+  <!-- centre -->
+  <circle cx="150" cy="105" r="10" fill="rgba(34,211,238,0.5)"/>
+  <circle cx="150" cy="105" r="5" fill="rgba(200,250,255,0.8)"/>
+  <!-- cross lines -->
+  <line x1="150" y1="30"  x2="150" y2="180" stroke="rgba(34,211,238,0.15)" stroke-width="1"/>
+  <line x1="75"  y1="105" x2="225" y2="105" stroke="rgba(34,211,238,0.15)" stroke-width="1"/>
+  <line x1="96"  y1="51"  x2="204" y2="159" stroke="rgba(34,211,238,0.10)" stroke-width="1"/>
+  <line x1="204" y1="51"  x2="96"  y2="159" stroke="rgba(34,211,238,0.10)" stroke-width="1"/>
+  <text x="22" y="55" font-size="12" fill="rgba(34,211,238,0.5)">✦</text>
+  <text x="264" y="60" font-size="10" fill="rgba(34,211,238,0.5)">✦</text>
+
+<!-- text panel -->
+<rect x="0" y="195" width="300" height="225" fill="url(#panel)"/>
+
+<!-- decorative border -->
+
+  <rect x="10" y="10" width="280" height="400" rx="3" fill="none" stroke="#22D3EE" stroke-width="1.2" opacity="0.5"/>
+  <rect x="14" y="14" width="272" height="392" rx="2" fill="none" stroke="#22D3EE" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="10" cy="10" r="3" fill="#22D3EE" opacity="0.6"/>
+  <circle cx="290" cy="10" r="3" fill="#22D3EE" opacity="0.6"/>
+  <circle cx="10" cy="410" r="3" fill="#22D3EE" opacity="0.6"/>
+  <circle cx="290" cy="410" r="3" fill="#22D3EE" opacity="0.6"/>
+  <line x1="10" y1="26" x2="30" y2="26" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+  <line x1="270" y1="26" x2="290" y2="26" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+  <line x1="10" y1="394" x2="30" y2="394" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+  <line x1="270" y1="394" x2="290" y2="394" stroke="#22D3EE" stroke-width="1" opacity="0.5"/>
+
+<!-- category badge -->
+
+  <rect x="18" y="18" width="110" height="24" rx="12" fill="rgba(0,0,0,0.5)"/>
+  <text x="28" y="35" font-size="10.5" fill="#22D3EE" font-weight="600" letter-spacing="0.8">பொது அறிவு</text>
+
+<!-- publisher top-right -->
+<text x="282" y="35" text-anchor="end" font-size="9.5" fill="#A5F3FC" opacity="0.65" letter-spacing="0.5">வாலு பதிப்பகம்</text>
+
+<!-- thin gold line separator -->
+<line x1="30" y1="202" x2="270" y2="202" stroke="#22D3EE" stroke-width="0.8" opacity="0.4"/>
+
+<!-- title -->
+<text x="150" y="200" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">வாழ்வில்</text>
+<text x="150" y="232" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">பொருள் - பொது</text>
+<text x="150" y="264" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">அறிவு கேள்வி</text>
+
+<!-- ornamental divider -->
+<g opacity="0.6">
+  <line x1="55"  y1="306" x2="120" y2="306" stroke="#22D3EE" stroke-width="0.8"/>
+  <circle cx="150" cy="306" r="3" fill="#22D3EE"/>
+  <line x1="180" y1="306" x2="245" y2="306" stroke="#22D3EE" stroke-width="0.8"/>
+</g>
+
+<!-- publisher name below divider -->
+<text x="150" y="324" text-anchor="middle" font-size="12.5" fill="#A5F3FC" letter-spacing="1.5" opacity="0.85">வாலு பதிப்பகம்</text>
+
+<!-- star rating -->
+<polygon points="105,348 109.5,351 112,348 110,353 113,356 109.5,355 106,356 107,353" fill="#22D3EE" stroke="#22D3EE" stroke-width="0.8" opacity="0.9"/><polygon points="123,348 127.5,351 130,348 128,353 131,356 127.5,355 124,356 125,353" fill="#22D3EE" stroke="#22D3EE" stroke-width="0.8" opacity="0.9"/><polygon points="141,348 145.5,351 148,348 146,353 149,356 145.5,355 142,356 143,353" fill="#22D3EE" stroke="#22D3EE" stroke-width="0.8" opacity="0.9"/><polygon points="159,348 163.5,351 166,348 164,353 167,356 163.5,355 160,356 161,353" fill="#22D3EE" stroke="#22D3EE" stroke-width="0.8" opacity="0.9"/><polygon points="177,348 181.5,351 184,348 182,353 185,356 181.5,355 178,356 179,353" fill="#22D3EE" stroke="#22D3EE" stroke-width="0.8" opacity="0.9"/>
+<text x="201" y="357" font-size="11" fill="#A5F3FC" opacity="0.8">4.5</text>
+
+<!-- bottom bar -->
+<rect x="0" y="393" width="300" height="27" fill="url(#bottombar)"/>
+<line x1="0" y1="393" x2="300" y2="393" stroke="#22D3EE" stroke-width="0.6" opacity="0.4"/>
+<text x="18"  y="411" font-size="9.5" fill="#A5F3FC" opacity="0.5">ISBN 9789388001007</text>
+<text x="282" y="411" font-size="9.5" fill="#A5F3FC" opacity="0.5" text-anchor="end">vaalu.in</text>
+</svg>

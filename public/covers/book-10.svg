@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#14532D"/>
+      <stop offset="100%" stop-color="#15803D"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="rgba(0,0,0,0.55)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.75)"/>
+    </linearGradient>
+    <style>
+      text { font-family: 'Noto Serif Tamil', 'Noto Sans Tamil', 'Latha', 'Tamil MN', serif; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="420" fill="url(#bg)"/>
+
+  <!-- Decorative elements -->
+  
+    <path d="M130,30 L170,30 L170,70 L190,70 L190,110 L170,110 L170,150 L130,150 L130,110 L110,110 L110,70 L130,70 Z" fill="rgba(255,255,255,0.12)"/>
+    <circle cx="250" cy="320" r="60" fill="rgba(255,255,255,0.07)"/>
+    <circle cx="30"  cy="100" r="40" fill="rgba(255,255,255,0.06)"/>
+    <path d="M240,20 Q270,50 260,80 Q250,110 230,90" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none"/>
+
+  <!-- Dark panel for text legibility -->
+  <rect x="0" y="170" width="300" height="250" fill="url(#panel)"/>
+
+  <!-- Thin border line -->
+  <rect x="8" y="8" width="284" height="404" rx="4" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+
+  <!-- Category badge -->
+  <rect x="16" y="18" width="106" height="26" rx="13" fill="rgba(0,0,0,0.35)"/>
+  <text x="24" y="36" font-size="11" fill="#BBF7D0" font-weight="700" letter-spacing="0.5">மருத்துவம்</text>
+
+  <!-- Title -->
+  <text x="150" y="190" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF" letter-spacing="0.3">
+    <tspan x="150" dy="0">எளிய சித்த</tspan><tspan x="150" dy="36">மருத்துவம்</tspan><tspan x="150" dy="36">குறிப்புகள்</tspan>
+  </text>
+
+  <!-- Divider -->
+  <line x1="60" y1="312" x2="240" y2="312" stroke="#BBF7D0" stroke-width="1" opacity="0.6"/>
+
+  <!-- Publisher name -->
+  <text x="150" y="334" text-anchor="middle" font-size="13" fill="#BBF7D0" letter-spacing="1">வாலு பதிப்பகம்</text>
+
+  <!-- Stars -->
+  <text x="115" y="375" font-size="13" fill="#4ADE80">★</text><text x="129" y="375" font-size="13" fill="#4ADE80">★</text><text x="143" y="375" font-size="13" fill="#4ADE80">★</text><text x="157" y="375" font-size="13" fill="#4ADE80">★</text><text x="171" y="375" font-size="13" fill="#4ADE80">☆</text>
+  <text x="189" y="375" font-size="11" fill="rgba(255,255,255,0.7)">4.8</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="395" width="300" height="25" fill="rgba(0,0,0,0.4)"/>
+  <text x="16"  y="412" font-size="10" fill="rgba(255,255,255,0.5)">ISBN: 9789388001010</text>
+  <text x="284" y="412" font-size="10" fill="rgba(255,255,255,0.5)" text-anchor="end">vaalu.in</text>
+</svg>

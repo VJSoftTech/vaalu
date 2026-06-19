@@ -1,0 +1,339 @@
+[2m1:50:40 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+E:/vaalupathigammmm/src/pages/public/Home.tsx:118:36: ERROR: The character ">" is not valid inside a JSX element[39m
+  Plugin: [35mvite:esbuild[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/Home.tsx[39m:99:23
+[33m  
+  [33mThe character ">" is not valid inside a JSX element[33m
+  117|                
+  118|                வாலு<br /> br/> 
+  119|                பதிப்பகம்
+     |       ^
+  120|              </motion.h1>
+  121|              <motion.p
+  [39m
+      at failureErrorWithLog (E:\vaalupathigammmm\node_modules\esbuild\lib\main.js:1472:15)
+      at E:\vaalupathigammmm\node_modules\esbuild\lib\main.js:755:50
+      at responseCallbacks.<computed> (E:\vaalupathigammmm\node_modules\esbuild\lib\main.js:622:9)
+      at handleIncomingPacket (E:\vaalupathigammmm\node_modules\esbuild\lib\main.js:677:12)
+      at Socket.readFromStdout (E:\vaalupathigammmm\node_modules\esbuild\lib\main.js:600:7)
+      at Socket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
+[2m2:37:37 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: E:\vaalupathigammmm\src\pages\public\VaaluTV.tsx: Unterminated JSX contents. (67:10)
+
+[0m [90m 65 |[31m         [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 66 |[31m       [33m<[31m[33m/[31m[33msection[31m[33m>[31m
+[31m[1m>[22m[31m[90m 67 |[31m     [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m    |[31m           [31m[1m^[22m[31m
+ [90m 68 |[31m   )
+ [90m 69 |[31m }
+ [90m 70 |[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/VaaluTV.tsx[39m:67:10
+[33m  65 |          </div>
+  66 |        </section>
+  67 |      </div>
+     |            ^
+  68 |    )
+  69 |  }[39m
+      at constructor (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.jsxReadToken (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4460:20)
+      at TypeScriptParserMixin.getTokenFromCode (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4786:12)
+      at TypeScriptParserMixin.getTokenFromCode (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10004:11)
+      at TypeScriptParserMixin.nextToken (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5799:10)
+      at TypeScriptParserMixin.next (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5709:10)
+      at TypeScriptParserMixin.eat (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5713:12)
+      at TypeScriptParserMixin.expect (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6915:15)
+      at TypeScriptParserMixin.jsxParseClosingElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4692:10)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4707:37)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:18)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10801:23)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12438:16)
+      at TypeScriptParserMixin.parseExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.parseReturnStatement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13159:28)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12815:21)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12784:17)
+      at TypeScriptParserMixin.parseStatementListItem (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12764:17)
+[2m3:15:16 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: E:\vaalupathigammmm\src\pages\public\VaaluTV.tsx: Unexpected token (44:0)
+
+[0m [90m 42 |[31m [33m<[31m[33m/[31m[33mh1[31m[33m>[31m
+ [90m 43 |[31m [33m<[31m
+[31m[1m>[22m[31m[90m 44 |[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-muted-foreground mt-1"[31m[33m>[31m
+ [90m    |[31m [31m[1m^[22m[31m
+ [90m 45 |[31m   [33mWatch[31m [33mTamil[31m literary videos and interviews
+ [90m 46 |[31m [33m<[31m[33m/[31m[33mp[31m[33m>[31m
+ [90m 47 |[31m [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/VaaluTV.tsx[39m:44:0
+[33m  42 |  </h1>
+  43 |  <
+  44 |  <p className="text-muted-foreground mt-1">
+     |  ^
+  45 |    Watch Tamil literary videos and interviews
+  46 |  </p>[39m
+      at constructor (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.unexpected (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6636:16)
+      at TypeScriptParserMixin.jsxParseIdentifier (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4581:12)
+      at TypeScriptParserMixin.jsxParseNamespacedName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4588:23)
+      at TypeScriptParserMixin.jsxParseElementName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4597:21)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4673:22)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:18)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10801:23)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12438:16)
+      at TypeScriptParserMixin.parseExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.parseReturnStatement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13159:28)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12815:21)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12784:17)
+      at TypeScriptParserMixin.parseStatementListItem (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12764:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13333:61)
+      at TypeScriptParserMixin.parseBlockBody (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13326:10)
+[2m3:15:21 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: E:\vaalupathigammmm\src\pages\public\VaaluTV.tsx: Unexpected token (44:0)
+
+[0m [90m 42 |[31m [33m<[31m[33m/[31m[33mh1[31m[33m>[31m
+ [90m 43 |[31m [33m<[31m[33mbr[31m
+[31m[1m>[22m[31m[90m 44 |[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-muted-foreground mt-1"[31m[33m>[31m
+ [90m    |[31m [31m[1m^[22m[31m
+ [90m 45 |[31m   [33mWatch[31m [33mTamil[31m literary videos and interviews
+ [90m 46 |[31m [33m<[31m[33m/[31m[33mp[31m[33m>[31m
+ [90m 47 |[31m [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/VaaluTV.tsx[39m:44:0
+[33m  42 |  </h1>
+  43 |  <br
+  44 |  <p className="text-muted-foreground mt-1">
+     |  ^
+  45 |    Watch Tamil literary videos and interviews
+  46 |  </p>[39m
+      at constructor (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.unexpected (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6636:16)
+      at TypeScriptParserMixin.jsxParseIdentifier (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4581:12)
+      at TypeScriptParserMixin.jsxParseNamespacedName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4588:23)
+      at TypeScriptParserMixin.jsxParseAttribute (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4664:22)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10060:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:18)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10801:23)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12438:16)
+      at TypeScriptParserMixin.parseExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.parseReturnStatement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13159:28)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12815:21)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12784:17)
+      at TypeScriptParserMixin.parseStatementListItem (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12764:17)
+[2m3:15:23 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: E:\vaalupathigammmm\src\pages\public\VaaluTV.tsx: Unexpected token (44:0)
+
+[0m [90m 42 |[31m [33m<[31m[33m/[31m[33mh1[31m[33m>[31m
+ [90m 43 |[31m [33m<[31m[33mbr[31m
+[31m[1m>[22m[31m[90m 44 |[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-muted-foreground mt-1"[31m[33m>[31m
+ [90m    |[31m [31m[1m^[22m[31m
+ [90m 45 |[31m   [33mWatch[31m [33mTamil[31m literary videos and interviews
+ [90m 46 |[31m [33m<[31m[33m/[31m[33mp[31m[33m>[31m
+ [90m 47 |[31m [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/VaaluTV.tsx[39m:44:0
+[33m  42 |  </h1>
+  43 |  <br
+  44 |  <p className="text-muted-foreground mt-1">
+     |  ^
+  45 |    Watch Tamil literary videos and interviews
+  46 |  </p>[39m
+      at constructor (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.unexpected (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6636:16)
+      at TypeScriptParserMixin.jsxParseIdentifier (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4581:12)
+      at TypeScriptParserMixin.jsxParseNamespacedName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4588:23)
+      at TypeScriptParserMixin.jsxParseAttribute (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4664:22)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10060:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9792:18)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10801:23)
+      at E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12438:16)
+      at TypeScriptParserMixin.parseExpression (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.parseReturnStatement (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13159:28)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12815:21)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12784:17)
+      at TypeScriptParserMixin.parseStatementListItem (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12764:17)
+[2m4:04:13 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: E:\vaalupathigammmm\src\pages\public\Home.tsx: Expecting Unicode escape sequence \uXXXX. (1:3)
+
+[0m[31m[1m>[22m[31m[90m 1 |[31m e[33m:[31m[37m[41m[1m\[22m[49m[31mvaalupathigammmm[37m[41m[1m\[22m[49m[31msrc[37m[41m[1m\[22m[49m[31mpages[37m[41m[1m\[22m[49m[31m[36mpublic[31m[37m[41m[1m\[22m[49m[31m[33mBookDetail[31m[33m.[31mtsx
+ [90m   |[31m    [31m[1m^[22m[31m
+ [90m 2 |[31m [36mfor[31m photo browse no url and also [36min[31m books rating feild add [36mwhile[31m add and edit [36mfor[31m both books[33m,[31mauthours[33m,[31mblog [36min[31m frontend [36mwhile[31m open blog has error[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mE:/vaalupathigammmm/src/pages/public/Home.tsx[39m:1:3
+[33m  1  |  e:\vaalupathigammmm\src\pages\public\BookDetail.tsx
+     |     ^
+  2  |  for photo browse no url and also in books rating feild add while add and edit for both books,authours,blog in frontend while open blog has error[39m
+      at constructor (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.readWord1 (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6576:16)
+      at TypeScriptParserMixin.readWord (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6596:23)
+      at TypeScriptParserMixin.getTokenFromCode (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:6315:14)
+      at TypeScriptParserMixin.getTokenFromCode (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10004:11)
+      at TypeScriptParserMixin.nextToken (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5799:10)
+      at TypeScriptParserMixin.next (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5709:10)
+      at TypeScriptParserMixin.eat (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:5713:12)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12913:76)
+      at TypeScriptParserMixin.parseStatementContent (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:9525:18)
+      at TypeScriptParserMixin.parseStatementLike (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12784:17)
+      at TypeScriptParserMixin.parseModuleItem (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12761:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13333:36)
+      at TypeScriptParserMixin.parseBlockBody (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:13326:10)
+      at TypeScriptParserMixin.parseProgram (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12639:10)
+      at TypeScriptParserMixin.parseTopLevel (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:12629:25)
+      at TypeScriptParserMixin.parse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:14505:25)
+      at TypeScriptParserMixin.parse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:10143:18)
+      at parse (E:\vaalupathigammmm\node_modules\@babel\parser\lib\index.js:14539:38)
+      at parser (E:\vaalupathigammmm\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (E:\vaalupathigammmm\node_modules\@babel\core\lib\transformation\normalize-file.js:51:37)
+      at normalizeFile.next (<anonymous>)
+      at run (E:\vaalupathigammmm\node_modules\@babel\core\lib\transformation\index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (E:\vaalupathigammmm\node_modules\@babel\core\lib\transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (E:\vaalupathigammmm\node_modules\gensync\index.js:261:32)
+      at E:\vaalupathigammmm\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (E:\vaalupathigammmm\node_modules\gensync\index.js:223:11)
+      at E:\vaalupathigammmm\node_modules\gensync\index.js:189:28
+      at E:\vaalupathigammmm\node_modules\@babel\core\lib\gensync-utils\async.js:67:7
+      at E:\vaalupathigammmm\node_modules\gensync\index.js:113:33
+      at step (E:\vaalupathigammmm\node_modules\gensync\index.js:287:14)
+      at E:\vaalupathigammmm\node_modules\gensync\index.js:273:13
+      at async.call.result.err.err (E:\vaalupathigammmm\node_modules\gensync\index.js:223:11)

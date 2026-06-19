@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420">
+<defs>
+  <linearGradient id="bg" x1="0%" y1="0%" x2="60%" y2="100%">
+    <stop offset="0%"   stop-color="#4C1D95"/>
+    <stop offset="55%"  stop-color="#7C3AED"/>
+    <stop offset="100%" stop-color="#C026D3"/>
+  </linearGradient>
+  <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%"   stop-color="#2E1065" stop-opacity="0.82"/>
+    <stop offset="100%" stop-color="#2E1065" stop-opacity="0.96"/>
+  </linearGradient>
+  <linearGradient id="bottombar" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%"   stop-color="#2E1065" stop-opacity="0.9"/>
+    <stop offset="100%" stop-color="#2E1065" stop-opacity="1"/>
+  </linearGradient>
+  <filter id="ts" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.8)"/>
+  </filter>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>text { font-family:'Noto Serif Tamil','Noto Sans Tamil','Latha','Tamil MN',serif; }</style>
+</defs>
+
+<!-- background -->
+<rect width="300" height="420" fill="url(#bg)"/>
+
+<!-- illustration area (top) -->
+
+  <!-- glow -->
+  <circle cx="160" cy="100" r="75" fill="rgba(255,255,255,0.05)"/>
+  <!-- full moon -->
+  <circle cx="160" cy="100" r="55" fill="rgba(255,248,200,0.25)"/>
+  <!-- crescent -->
+  <circle cx="160" cy="100" r="48" fill="rgba(255,245,180,0.7)"/>
+  <circle cx="178" cy="92" r="40" fill="#6B21A8"/>
+  <!-- stars scattered -->
+  
+  <circle cx="45" cy="40" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="80" cy="30" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="210" cy="45" r="1.5" fill="white" opacity="1.3"/>
+  <circle cx="250" cy="35" r="2.5" fill="white" opacity="0.5"/>
+  <circle cx="270" cy="70" r="1.5" fill="white" opacity="0.9"/>
+  <circle cx="30" cy="80" r="2.5" fill="white" opacity="1.3"/>
+  <circle cx="22" cy="110" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="260" cy="110" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="48" cy="140" r="1.5" fill="white" opacity="1.3"/>
+  <circle cx="270" cy="140" r="2.5" fill="white" opacity="0.5"/>
+  <!-- lotus at bottom -->
+  <ellipse cx="150" cy="178" rx="18" ry="8" fill="rgba(255,200,220,0.6)"/>
+  <path d="M132,178 Q150,155 168,178" fill="rgba(255,180,210,0.5)"/>
+  <path d="M136,178 Q150,162 164,178" fill="rgba(255,200,225,0.7)"/>
+  <path d="M140,178 Q150,168 160,178" fill="rgba(255,220,235,0.9)"/>
+  <!-- shooting star -->
+  <line x1="220" y1="50" x2="250" y2="30" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="220" cy="50" r="2" fill="white" opacity="0.8"/>
+
+<!-- text panel -->
+<rect x="0" y="195" width="300" height="225" fill="url(#panel)"/>
+
+<!-- decorative border -->
+
+  <rect x="10" y="10" width="280" height="400" rx="3" fill="none" stroke="#F0ABFC" stroke-width="1.2" opacity="0.5"/>
+  <rect x="14" y="14" width="272" height="392" rx="2" fill="none" stroke="#F0ABFC" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="10" cy="10" r="3" fill="#F0ABFC" opacity="0.6"/>
+  <circle cx="290" cy="10" r="3" fill="#F0ABFC" opacity="0.6"/>
+  <circle cx="10" cy="410" r="3" fill="#F0ABFC" opacity="0.6"/>
+  <circle cx="290" cy="410" r="3" fill="#F0ABFC" opacity="0.6"/>
+  <line x1="10" y1="26" x2="30" y2="26" stroke="#F0ABFC" stroke-width="1" opacity="0.5"/>
+  <line x1="270" y1="26" x2="290" y2="26" stroke="#F0ABFC" stroke-width="1" opacity="0.5"/>
+  <line x1="10" y1="394" x2="30" y2="394" stroke="#F0ABFC" stroke-width="1" opacity="0.5"/>
+  <line x1="270" y1="394" x2="290" y2="394" stroke="#F0ABFC" stroke-width="1" opacity="0.5"/>
+
+<!-- category badge -->
+
+  <rect x="18" y="18" width="65" height="24" rx="12" fill="rgba(0,0,0,0.5)"/>
+  <text x="28" y="35" font-size="10.5" fill="#F0ABFC" font-weight="600" letter-spacing="0.8">கவிதை</text>
+
+<!-- publisher top-right -->
+<text x="282" y="35" text-anchor="end" font-size="9.5" fill="#E9D5FF" opacity="0.65" letter-spacing="0.5">வாலு பதிப்பகம்</text>
+
+<!-- thin gold line separator -->
+<line x1="30" y1="202" x2="270" y2="202" stroke="#F0ABFC" stroke-width="0.8" opacity="0.4"/>
+
+<!-- title -->
+<text x="150" y="200" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">காலை வணக்கம்</text>
+<text x="150" y="232" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">காதல்</text>
+<text x="150" y="264" text-anchor="middle" font-size="21" font-weight="bold" fill="white" letter-spacing="0.4" filter="url(#ts)">கவிதைகள்</text>
+
+<!-- ornamental divider -->
+<g opacity="0.6">
+  <line x1="55"  y1="306" x2="120" y2="306" stroke="#F0ABFC" stroke-width="0.8"/>
+  <circle cx="150" cy="306" r="3" fill="#F0ABFC"/>
+  <line x1="180" y1="306" x2="245" y2="306" stroke="#F0ABFC" stroke-width="0.8"/>
+</g>
+
+<!-- publisher name below divider -->
+<text x="150" y="324" text-anchor="middle" font-size="12.5" fill="#E9D5FF" letter-spacing="1.5" opacity="0.85">வாலு பதிப்பகம்</text>
+
+<!-- star rating -->
+<polygon points="105,348 109.5,351 112,348 110,353 113,356 109.5,355 106,356 107,353" fill="#F0ABFC" stroke="#F0ABFC" stroke-width="0.8" opacity="0.9"/><polygon points="123,348 127.5,351 130,348 128,353 131,356 127.5,355 124,356 125,353" fill="#F0ABFC" stroke="#F0ABFC" stroke-width="0.8" opacity="0.9"/><polygon points="141,348 145.5,351 148,348 146,353 149,356 145.5,355 142,356 143,353" fill="#F0ABFC" stroke="#F0ABFC" stroke-width="0.8" opacity="0.9"/><polygon points="159,348 163.5,351 166,348 164,353 167,356 163.5,355 160,356 161,353" fill="#F0ABFC" stroke="#F0ABFC" stroke-width="0.8" opacity="0.9"/><polygon points="177,348 181.5,351 184,348 182,353 185,356 181.5,355 178,356 179,353" fill="#F0ABFC" stroke="#F0ABFC" stroke-width="0.8" opacity="0.9"/>
+<text x="201" y="357" font-size="11" fill="#E9D5FF" opacity="0.8">4.6</text>
+
+<!-- bottom bar -->
+<rect x="0" y="393" width="300" height="27" fill="url(#bottombar)"/>
+<line x1="0" y1="393" x2="300" y2="393" stroke="#F0ABFC" stroke-width="0.6" opacity="0.4"/>
+<text x="18"  y="411" font-size="9.5" fill="#E9D5FF" opacity="0.5">ISBN 9789388001002</text>
+<text x="282" y="411" font-size="9.5" fill="#E9D5FF" opacity="0.5" text-anchor="end">vaalu.in</text>
+</svg>

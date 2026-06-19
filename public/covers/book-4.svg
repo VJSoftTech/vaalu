@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="rgba(0,0,0,0.55)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.75)"/>
+    </linearGradient>
+    <style>
+      text { font-family: 'Noto Serif Tamil', 'Noto Sans Tamil', 'Latha', 'Tamil MN', serif; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="420" fill="url(#bg)"/>
+
+  <!-- Decorative elements -->
+  
+    <rect x="0"   y="380" width="300" height="4" fill="rgba(255,255,255,0.2)"/>
+    <rect x="0"   y="388" width="300" height="2" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20"  y="20"  width="260" height="2" fill="rgba(255,255,255,0.15)"/>
+    <rect x="20"  y="26"  width="260" height="1" fill="rgba(255,255,255,0.08)"/>
+    <circle cx="270" cy="60"  r="50" fill="rgba(255,255,255,0.07)"/>
+    <circle cx="30"  cy="350" r="60" fill="rgba(255,255,255,0.06)"/>
+    <rect x="240" y="300" width="50" height="80" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- Dark panel for text legibility -->
+  <rect x="0" y="170" width="300" height="250" fill="url(#panel)"/>
+
+  <!-- Thin border line -->
+  <rect x="8" y="8" width="284" height="404" rx="4" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+
+  <!-- Category badge -->
+  <rect x="16" y="18" width="187" height="26" rx="13" fill="rgba(0,0,0,0.35)"/>
+  <text x="24" y="36" font-size="11" fill="#BFDBFE" font-weight="700" letter-spacing="0.5">வரலாறு & நிகழ்வுகள்</text>
+
+  <!-- Title -->
+  <text x="150" y="190" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF" letter-spacing="0.3">
+    <tspan x="150" dy="0">2026 சென்னை</tspan><tspan x="150" dy="36">சர்வதேசப்</tspan><tspan x="150" dy="36">புத்தகக்காட்சியில் வாரு</tspan>
+  </text>
+
+  <!-- Divider -->
+  <line x1="60" y1="312" x2="240" y2="312" stroke="#BFDBFE" stroke-width="1" opacity="0.6"/>
+
+  <!-- Publisher name -->
+  <text x="150" y="334" text-anchor="middle" font-size="13" fill="#BFDBFE" letter-spacing="1">வாலு பதிப்பகம்</text>
+
+  <!-- Stars -->
+  <text x="122" y="375" font-size="13" fill="#93C5FD">★</text><text x="136" y="375" font-size="13" fill="#93C5FD">★</text><text x="150" y="375" font-size="13" fill="#93C5FD">★</text><text x="164" y="375" font-size="13" fill="#93C5FD">★</text>
+  <text x="182" y="375" font-size="11" fill="rgba(255,255,255,0.7)">4.3</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="395" width="300" height="25" fill="rgba(0,0,0,0.4)"/>
+  <text x="16"  y="412" font-size="10" fill="rgba(255,255,255,0.5)">ISBN: 9789388001004</text>
+  <text x="284" y="412" font-size="10" fill="rgba(255,255,255,0.5)" text-anchor="end">vaalu.in</text>
+</svg>

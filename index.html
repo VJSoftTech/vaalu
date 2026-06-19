@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ta">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Vaalu Pathippagam - Tamil Book Publishing & eCommerce" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Vaalu Pathippagam | வாலு பதிப்பகம்</title>
+  </head>
+  <body>
+    <div id="root"><div id="pre-react"><style>
+      #pre-react{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#fff;font-family:'Inter',sans-serif}
+      .vp-book{position:relative;width:96px;height:76px;perspective:600px}
+      .vp-cover{position:absolute;inset:0;background:#c0392b;border-radius:6px;box-shadow:0 6px 28px rgba(0,0,0,.22)}
+      .vp-spine{position:absolute;top:0;left:0;bottom:0;width:18px;background:rgba(139,0,0,.75);border-radius:6px 0 0 6px;border-right:1px solid rgba(0,0,0,.12)}
+      .vp-left{position:absolute;top:5px;bottom:5px;left:18px;right:52%;background:#fef9f0}
+      .vp-page{position:absolute;top:5px;bottom:5px;left:50%;right:5px;transform-origin:left center;border-radius:0 3px 3px 0;border:.5px solid rgba(0,0,0,.07);box-shadow:2px 0 6px rgba(0,0,0,.08)}
+      .vp-page:nth-child(1){background:linear-gradient(135deg,#fff,#fef3ec);animation:vp-flip 2.2s ease-in-out infinite 0s}
+      .vp-page:nth-child(2){background:linear-gradient(135deg,#fff,#fdf0f0);animation:vp-flip 2.2s ease-in-out infinite .28s}
+      .vp-page:nth-child(3){background:linear-gradient(135deg,#fff,#f0f0ff);animation:vp-flip 2.2s ease-in-out infinite .56s}
+      @keyframes vp-flip{0%,15%{transform:rotateY(0)}85%,100%{transform:rotateY(-162deg)}}
+      .vp-label{margin-top:20px;color:#c0392b;font-weight:600;font-size:14px;letter-spacing:.02em}
+      .vp-dots{display:flex;gap:6px;margin-top:8px}
+      .vp-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c0392b;animation:vp-bounce .9s ease-in-out infinite}
+      .vp-dots span:nth-child(2){animation-delay:.18s}
+      .vp-dots span:nth-child(3){animation-delay:.36s}
+      @keyframes vp-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    </style>
+    <div class="vp-book">
+      <div class="vp-cover"></div>
+      <div class="vp-spine"></div>
+      <div class="vp-left"></div>
+      <div class="vp-page"></div>
+      <div class="vp-page"></div>
+      <div class="vp-page"></div>
+    </div>
+    <div class="vp-label">வாலு பதிப்பகம்</div>
+    <div class="vp-dots"><span></span><span></span><span></span></div>
+    </div></div>
+    <script>
+      window.addEventListener('error', function(e) {
+        document.body.innerHTML = '<div style="padding:24px;font-family:monospace;color:red"><b>JS Error (before React):</b><pre style="white-space:pre-wrap">' + (e.message || '') + '\n' + (e.filename || '') + ':' + (e.lineno || '') + '\n\n' + (e.error && e.error.stack ? e.error.stack : '') + '</pre></div>';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        document.body.innerHTML = '<div style="padding:24px;font-family:monospace;color:red"><b>Unhandled Promise Rejection:</b><pre style="white-space:pre-wrap">' + (e.reason && e.reason.stack ? e.reason.stack : String(e.reason)) + '</pre></div>';
+      });
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

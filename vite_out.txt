@@ -1,0 +1,233 @@
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m632[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m12:30:24 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m12:30:34 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/layouts/AuthLayout.tsx, /src/components/common/ProtectedRoute.tsx, /src/layouts/AdminLayout.tsx, /src/pages/public/Profile.tsx, /src/components/common/Navbar.tsx, /src/components/common/AdminSidebar.tsx, /src/components/common/AdminHeader.tsx, /src/pages/public/Cart.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Checkout.tsx, /src/components/cart/CartItem.tsx, /src/components/books/BookCard.tsx, /src/pages/auth/Login.tsx, /src/pages/public/VaaluTV.tsx, /src/pages/admin/vaalu-tv/EditVideo.tsx, /src/pages/admin/vaalu-tv/AddVideo.tsx, /src/pages/admin/vaalu-tv/VideosList.tsx, /src/pages/admin/books/AddBook.tsx, /src/pages/admin/categories/CategoriesList.tsx, /src/pages/public/OrderHistory.tsx, /src/pages/admin/orders/OrderDetail.tsx, /src/pages/admin/orders/OrdersList.tsx, /src/pages/public/Home.tsx, /src/pages/admin/advertisements/AdsList.tsx, /src/pages/admin/advertisements/AddAd.tsx, /src/pages/admin/advertisements/EditAd.tsx, /src/pages/public/Blog.tsx, /src/pages/admin/blogs/EditBlog.tsx, /src/pages/admin/blogs/BlogsList.tsx, /src/pages/public/BlogDetail.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/pages/admin/customers/CustomerDetail.tsx, /src/pages/admin/customers/CustomersList.tsx, /src/pages/admin/reports/CustomerReport.tsx, /src/pages/admin/Dashboard.tsx, /src/pages/admin/reports/RevenueReport.tsx, /src/pages/admin/reports/SalesReport.tsx, /src/pages/admin/reports/PopularBooks.tsx, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/public/AuthorDetail.tsx, /src/pages/public/Authors.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/authors/AuthorsList.tsx, /src/pages/public/Books.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/books/BooksList.tsx[22m
+[2m12:32:36 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m12:44:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/books/BookCard.tsx, /src/index.css[22m
+[2m1:07:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/books/BookCard.tsx, /src/index.css[22m
+[2m1:07:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/books/BookCard.tsx, /src/index.css[22m
+[2m1:07:42 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m1:07:47 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m1:07:54 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m1:17:51 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/layouts/AuthLayout.tsx, /src/components/common/ProtectedRoute.tsx, /src/layouts/AdminLayout.tsx, /src/pages/public/Profile.tsx, /src/components/common/Navbar.tsx, /src/components/common/AdminSidebar.tsx, /src/components/common/AdminHeader.tsx, /src/pages/public/Cart.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Checkout.tsx, /src/components/cart/CartItem.tsx, /src/components/books/BookCard.tsx, /src/pages/auth/Login.tsx[22m
+[2m1:18:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m1:19:35 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:20:02 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/books/BookCard.tsx, /src/index.css[22m
+[2m1:20:22 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Wishlist.tsx, /src/index.css[22m
+[2m1:20:45 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Cart.tsx, /src/index.css[22m
+[2m1:21:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/auth/Login.tsx, /src/pages/public/Profile.tsx, /src/components/common/AdminHeader.tsx[22m
+[2m1:21:31 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Footer.tsx, /src/index.css[22m
+[2m1:22:13 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/routes/index.tsx, /src/index.css[22m
+[2m1:22:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/routes/index.tsx, /src/index.css[22m
+[2m1:27:25 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:27:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Offers.tsx, /src/index.css[22m
+[2m1:38:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/Dashboard.tsx, /src/index.css[22m
+[2m1:38:09 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/Dashboard.tsx, /src/index.css[22m
+[2m1:38:13 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:38:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:38:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Books.tsx, /src/index.css[22m
+[2m1:38:27 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Books.tsx, /src/index.css[22m
+[2m1:38:43 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m1:43:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/BooksList.tsx, /src/index.css[22m
+[2m1:44:03 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/reports/CustomerReport.tsx, /src/index.css[22m
+[2m1:44:13 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m1:45:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:45:44 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:46:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:46:20 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:46:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:46:32 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/Dashboard.tsx, /src/index.css[22m
+[2m1:46:37 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:50:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:50:44 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m1:54:08 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m2:00:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:00:08 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/routes/index.tsx[22m
+[2m2:00:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:02:12 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:02:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:06:15 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:07:42 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:18:35 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/AddVideo.tsx, /src/index.css[22m
+[2m2:32:43 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:35:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:35:20 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:35:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:35:33 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:37:27 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:37:37 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:37:44 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:37:53 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m2:38:01 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:02:50 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:02:58 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:02:58 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:05:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:05:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:10:13 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/AddVideo.tsx, /src/index.css[22m
+[2m3:11:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/AddVideo.tsx, /src/index.css[22m
+[2m3:11:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/AddVideo.tsx, /src/index.css[22m
+[2m3:11:35 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:11:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:12:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/AddVideo.tsx, /src/index.css[22m
+[2m3:15:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:07 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:16 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:21 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:25 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:45 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:47 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:15:48 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:16:09 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/VaaluTV.tsx, /src/index.css[22m
+[2m3:18:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/EditVideo.tsx, /src/index.css[22m
+[2m3:30:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m3:30:19 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m3:30:27 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/BookDetail.tsx, /src/index.css[22m
+[2m3:30:54 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m3:31:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m3:31:31 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m3:31:51 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/auth/Login.tsx, /src/pages/public/Profile.tsx, /src/components/common/AdminHeader.tsx[22m
+[2m3:31:56 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/auth/Login.tsx, /src/pages/public/Profile.tsx, /src/components/common/AdminHeader.tsx[22m
+[2m3:32:12 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/auth/Register.tsx, /src/index.css[22m
+[2m3:33:08 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:40:45 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/book.types.ts[22m
+[2m3:40:46 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/blog.types.ts[22m
+[2m3:40:48 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/author.types.ts[22m
+[2m3:40:56 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Blog.tsx, /src/pages/admin/blogs/EditBlog.tsx, /src/pages/admin/blogs/BlogsList.tsx, /src/pages/public/BlogDetail.tsx, /src/pages/admin/blogs/AddBlog.tsx[22m
+[2m3:40:58 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Home.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Books.tsx, /src/pages/admin/books/AddBook.tsx, /src/pages/public/AuthorDetail.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/books/BooksList.tsx, /src/pages/public/Offers.tsx[22m
+[2m3:41:00 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/books/AddBook.tsx, /src/pages/public/AuthorDetail.tsx, /src/pages/public/Authors.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/authors/AuthorsList.tsx, /src/pages/admin/books/EditBook.tsx[22m
+[2m3:41:07 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/AddBlog.tsx, /src/index.css[22m
+[2m3:41:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/AddBlog.tsx, /src/index.css[22m
+[2m3:41:21 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m3:41:28 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m3:41:32 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m3:41:38 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m3:41:44 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m3:41:44 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m3:41:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m3:41:56 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m3:42:01 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m3:42:10 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m3:42:15 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m3:42:21 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m3:42:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m3:42:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m3:49:24 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/book.types.ts[22m
+[2m3:49:45 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m3:50:06 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m3:50:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m3:50:24 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:50:31 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:51:11 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:51:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:10 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:13 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:16 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:21 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:34 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:54:41 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:58:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:58:45 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:58:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m3:58:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:04:12 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:04:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:04:18 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:05:16 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:05:45 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:11:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:11:28 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:13:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/books/AddBook.tsx, /src/pages/auth/Login.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/authors/EditAuthor.tsx[22m
+[2m4:13:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Home.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Books.tsx, /src/pages/admin/books/AddBook.tsx, /src/pages/public/AuthorDetail.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/books/BooksList.tsx, /src/pages/public/Offers.tsx[22m
+[2m4:13:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m4:13:56 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m4:14:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/AddBook.tsx, /src/index.css[22m
+[2m4:14:10 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:14:14 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:14:21 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:14:32 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:14:48 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/books/AddBook.tsx, /src/pages/public/AuthorDetail.tsx, /src/pages/public/Authors.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/authors/AuthorsList.tsx, /src/pages/admin/books/EditBook.tsx[22m
+[2m4:15:03 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m4:15:09 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m4:15:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m4:15:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Cart.tsx, /src/pages/admin/reports/CustomerReport.tsx, /src/pages/public/OrderHistory.tsx, /src/pages/public/BookDetail.tsx, /src/pages/admin/customers/CustomerDetail.tsx, /src/pages/admin/orders/OrderDetail.tsx, /src/pages/admin/orders/OrdersList.tsx, /src/pages/admin/blogs/BlogsList.tsx, /src/pages/public/BlogDetail.tsx, /src/pages/admin/advertisements/AdsList.tsx, /src/pages/public/Checkout.tsx, /src/pages/admin/reports/RevenueReport.tsx, /src/pages/admin/reports/SalesReport.tsx, /src/pages/admin/reports/PopularBooks.tsx, /src/pages/admin/books/BooksList.tsx, /src/pages/admin/customers/CustomersList.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/components/vaalu-tv/VideoCard.tsx, /src/components/cart/CartItem.tsx, /src/components/blogs/BlogCard.tsx, /src/components/books/BookCard.tsx, /src/pages/public/Wishlist.tsx[22m
+[2m4:16:01 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/AddBlog.tsx, /src/index.css[22m
+[2m4:16:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m4:16:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:17:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:17:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:18:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:18:31 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:18:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:18:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m4:25:35 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/layouts/AuthLayout.tsx, /src/components/common/ProtectedRoute.tsx, /src/layouts/AdminLayout.tsx, /src/pages/public/Profile.tsx, /src/components/common/Navbar.tsx, /src/components/common/AdminSidebar.tsx, /src/components/common/AdminHeader.tsx, /src/pages/public/Cart.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Checkout.tsx, /src/components/cart/CartItem.tsx, /src/components/books/BookCard.tsx, /src/pages/public/Wishlist.tsx, /src/pages/auth/Login.tsx[22m
+[2m4:25:41 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/layouts/AuthLayout.tsx, /src/components/common/ProtectedRoute.tsx, /src/layouts/AdminLayout.tsx, /src/pages/public/Profile.tsx, /src/components/common/Navbar.tsx, /src/components/common/AdminSidebar.tsx, /src/components/common/AdminHeader.tsx, /src/pages/public/Cart.tsx, /src/pages/public/BookDetail.tsx, /src/pages/public/Checkout.tsx, /src/components/cart/CartItem.tsx, /src/components/books/BookCard.tsx, /src/pages/public/Wishlist.tsx, /src/pages/auth/Login.tsx[22m
+[2m4:25:48 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/common/Navbar.tsx, /src/components/books/BookCard.tsx, /src/pages/public/Wishlist.tsx, /src/pages/public/BookDetail.tsx[22m
+[2m4:25:54 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m4:26:02 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m4:34:15 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:34:22 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/books/EditBook.tsx, /src/index.css[22m
+[2m4:34:27 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/EditAuthor.tsx, /src/index.css[22m
+[2m4:34:32 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/books/AddBook.tsx, /src/pages/auth/Login.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/pages/admin/blogs/EditBlog.tsx[22m
+[2m4:34:38 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m4:34:43 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/authors/AddAuthor.tsx, /src/index.css[22m
+[2m4:34:51 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/EditVideo.tsx, /src/index.css[22m
+[2m4:35:00 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/vaalu-tv/EditVideo.tsx, /src/index.css[22m
+[2m4:35:07 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Blog.tsx, /src/pages/admin/blogs/EditBlog.tsx, /src/pages/admin/blogs/BlogsList.tsx, /src/pages/public/BlogDetail.tsx, /src/pages/admin/blogs/AddBlog.tsx[22m
+[2m4:35:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/AddBlog.tsx, /src/index.css[22m
+[2m4:35:25 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/AddBlog.tsx, /src/index.css[22m
+[2m4:35:43 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m4:35:52 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/blogs/EditBlog.tsx, /src/index.css[22m
+[2m4:56:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m10:55:27 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m10:55:37 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m10:55:44 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m10:55:55 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Books.tsx, /src/index.css[22m
+[2m11:04:14 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/index.ts[22m
+[2m11:04:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/books/AddBook.tsx, /src/pages/auth/Login.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/pages/admin/blogs/EditBlog.tsx[22m
+[2m11:08:16 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/routes/index.tsx, /src/index.css[22m
+[2m11:08:22 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/routes/index.tsx, /src/index.css[22m
+[2m11:08:29 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/routes/index.tsx, /src/index.css[22m
+[2m11:08:36 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m11:08:36 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/Navbar.tsx, /src/index.css[22m
+[2m11:08:43 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/AdminSidebar.tsx, /src/index.css[22m
+[2m11:08:51 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/common/AdminSidebar.tsx, /src/index.css[22m
+[2m11:08:58 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m11:09:03 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m11:09:10 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m11:09:11 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m11:09:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/Home.tsx, /src/index.css[22m
+[2m11:09:49 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Gifts.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/EditGift.tsx[22m
+[2m11:10:03 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/books/AddBook.tsx, /src/pages/auth/Login.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/pages/admin/blogs/EditBlog.tsx, /src/pages/public/GiftDetail.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/EditGift.tsx[22m
+[2m11:10:10 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/AddGift.tsx, /src/index.css[22m
+[2m11:10:16 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/EditGift.tsx, /src/index.css[22m
+[2m11:10:24 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/EditGift.tsx, /src/index.css[22m
+[2m11:10:33 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/EditGift.tsx, /src/index.css[22m
+[2m11:10:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/EditGift.tsx, /src/index.css[22m
+[2m11:10:51 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/AddGift.tsx, /src/index.css[22m
+[2m11:10:58 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/AddGift.tsx, /src/index.css[22m
+[2m11:47:12 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Gifts.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/EditGift.tsx[22m
+[2m11:47:17 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Gifts.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/EditGift.tsx[22m
+[2m11:47:26 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/admin/books/AddBook.tsx, /src/pages/auth/Login.tsx, /src/pages/admin/authors/AddAuthor.tsx, /src/pages/admin/books/EditBook.tsx, /src/pages/admin/authors/EditAuthor.tsx, /src/pages/admin/blogs/AddBlog.tsx, /src/pages/admin/blogs/EditBlog.tsx, /src/pages/public/GiftDetail.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/EditGift.tsx[22m
+[2m11:47:33 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Gifts.tsx, /src/pages/public/GiftDetail.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/GiftsList.tsx, /src/pages/admin/gifts/GiftEnquiries.tsx, /src/pages/admin/gifts/EditGift.tsx, /src/pages/public/Home.tsx[22m
+[2m11:47:39 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/public/Gifts.tsx, /src/pages/public/GiftDetail.tsx, /src/pages/admin/gifts/AddGift.tsx, /src/pages/admin/gifts/GiftsList.tsx, /src/pages/admin/gifts/GiftEnquiries.tsx, /src/pages/admin/gifts/EditGift.tsx, /src/pages/public/Home.tsx[22m
+[2m11:48:09 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/AddGift.tsx, /src/index.css[22m
+[2m11:48:39 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/EditGift.tsx, /src/index.css[22m
+[2m11:48:47 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/gifts/GiftCard.tsx, /src/index.css[22m
+[2m11:48:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/gifts/GiftCard.tsx, /src/index.css[22m
+[2m11:49:01 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/gifts/GiftCard.tsx, /src/index.css[22m
+[2m11:49:09 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/GiftDetail.tsx, /src/index.css[22m
+[2m11:49:17 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/GiftDetail.tsx, /src/index.css[22m
+[2m11:49:33 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/public/GiftDetail.tsx, /src/index.css[22m
+[2m11:49:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/GiftsList.tsx, /src/index.css[22m
+[2m11:49:47 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/GiftsList.tsx, /src/index.css[22m
+[2m11:49:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/admin/gifts/GiftsList.tsx, /src/index.css[22m
+[2m11:49:59 am[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m11:49:59 am[22m [36m[1m[vite][22m[39m server restarted.
