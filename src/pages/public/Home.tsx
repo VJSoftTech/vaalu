@@ -61,17 +61,17 @@ export default function Home() {
   const countdown = useCountdown(offerEnd)
 
   useEffect(() => {
-    Promise.all([
+    Promise.allSettled([
       bookService.getAll({ limit: 12, sort_by: 'created_at', sort_order: 'desc' }),
       advertisementService.getAll({ is_active: true }),
       videoService.getAll({ limit: 6 }),
       giftService.getFeatured(8),
     ])
       .then(([booksRes, adsRes, videosRes, giftsRes]) => {
-        setBooks(booksRes.data)
-        setAds(adsRes.data)
-        setVideos(videosRes.data)
-        setFeaturedGifts(giftsRes.data)
+        if (booksRes.status === 'fulfilled') setBooks(booksRes.value.data ?? [])
+        if (adsRes.status === 'fulfilled') setAds(adsRes.value.data ?? [])
+        if (videosRes.status === 'fulfilled') setVideos(videosRes.value.data ?? [])
+        if (giftsRes.status === 'fulfilled') setFeaturedGifts(giftsRes.value.data ?? [])
       })
       .finally(() => setLoading(false))
   }, [])

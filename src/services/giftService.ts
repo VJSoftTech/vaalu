@@ -11,15 +11,15 @@ function normalizeGift(g: GiftItem): GiftItem {
 export const giftService = {
   getAll: (filters?: GiftFilters) =>
     api.get<PaginatedResponse<GiftItem>>('/api/gifts', { params: filters })
-      .then((r) => ({ ...r.data, data: r.data.data.map(normalizeGift) })),
+      .then((r) => ({ ...r.data, data: (r.data?.data ?? []).map(normalizeGift) })),
 
   getFeatured: (limit = 8) =>
     api.get<{ data: GiftItem[]; total: number }>('/api/gifts/featured', { params: { limit } })
-      .then((r) => ({ ...r.data, data: r.data.data.map(normalizeGift) })),
+      .then((r) => ({ ...r.data, data: (r.data?.data ?? []).map(normalizeGift) })),
 
   getTrending: (limit = 8) =>
     api.get<{ data: GiftItem[]; total: number }>('/api/gifts/trending', { params: { limit } })
-      .then((r) => ({ ...r.data, data: r.data.data.map(normalizeGift) })),
+      .then((r) => ({ ...r.data, data: (r.data?.data ?? []).map(normalizeGift) })),
 
   getBySlug: (slug: string) =>
     api.get<GiftItem>(`/api/gifts/slug/${slug}`).then((r) => normalizeGift(r.data)),
