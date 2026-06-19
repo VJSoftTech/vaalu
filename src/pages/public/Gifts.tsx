@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Filter } from 'lucide-react'
+import { Filter } from 'lucide-react'
 import { giftService } from '@/services/giftService'
 import type { GiftItem, GiftFilters } from '@/types'
 import { GIFT_CATEGORIES } from '@/types'
 import GiftCard from '@/components/gifts/GiftCard'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -17,7 +16,7 @@ export default function Gifts() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<GiftFilters>({ page: 1, limit: LIMIT })
-  const [search, setSearch] = useState('')
+  const [search] = useState('')
   const debouncedSearch = useDebounce(search, 400)
 
   const fetchGifts = useCallback(() => {

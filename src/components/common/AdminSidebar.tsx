@@ -7,7 +7,6 @@ import {
   ShoppingBag,
   UserCheck,
   Tv,
-  Megaphone,
   BarChart2,
   ChevronDown,
   Tag,
@@ -103,7 +102,7 @@ export default function AdminSidebar() {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  end={item.exact}
+                  end={'exact' in item ? item.exact : undefined}
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-3 px-2 py-2 rounded-md text-sm transition-colors',
