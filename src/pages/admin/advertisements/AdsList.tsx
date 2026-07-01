@@ -146,8 +146,6 @@ export default function AdsList() {
               <TableRow>
                 <TableHead>Ad</TableHead>
                 <TableHead>Type</TableHead>
-                <TableHead>Order</TableHead>
-                <TableHead>Period</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -177,12 +175,6 @@ export default function AdsList() {
                       {TYPE_LABELS[ad.type] ?? ad.type}
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground text-center">
-                    {ad.display_order ?? 0}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {formatDate(ad.start_date)} – {formatDate(ad.end_date)}
-                  </TableCell>
                   <TableCell>
                     <Badge variant={ad.is_active ? 'default' : 'secondary'}>
                       {ad.is_active ? 'Active' : 'Inactive'}
@@ -207,7 +199,7 @@ export default function AdsList() {
               ))}
               {ads.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center py-10 text-muted-foreground">
                     No advertisements yet. Add your first one.
                   </TableCell>
                 </TableRow>
