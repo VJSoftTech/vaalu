@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getBookCover } from '@/assets/images/bookCovers'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Props {
   book: Book
@@ -18,6 +19,8 @@ interface Props {
 export default function BookCard({ book }: Props) {
   const { addToCart, isInCart } = useCart()
   const { toggleWishlist, isInWishlist } = useWishlist()
+  const { t } = useLanguage()
+  const b = t.books
   const discount = calculateDiscount(book.price, book.discount_price)
   const wishlisted = isInWishlist(book.id)
 
@@ -33,7 +36,7 @@ export default function BookCard({ book }: Props) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {discount > 0 && (
-          <Badge className="absolute top-2 left-2 bg-destructive text-xs">{discount}% OFF</Badge>
+          <Badge className="absolute top-2 left-2 bg-destructive text-xs">{discount}% {b.off}</Badge>
         )}
       </Link>
 
@@ -90,7 +93,7 @@ export default function BookCard({ book }: Props) {
             className="h-7 text-xs px-2"
           >
             <ShoppingCart className="h-3 w-3 mr-1" />
-            {isInCart(book.id) ? 'Added' : 'Add'}
+            {isInCart(book.id) ? b.added : b.add}
           </Button>
         </div>
       </div>

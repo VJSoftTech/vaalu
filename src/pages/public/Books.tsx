@@ -4,20 +4,31 @@ import type { Book, BookFilters } from '@/types'
 import { bookService } from '@/services/bookService'
 import BookCard from '@/components/books/BookCard'
 import BookFiltersBar from '@/components/books/BookFilters'
+import BookSidebar, { FilterIcon } from '@/components/books/BookSidebar'
 import BookPageLoader from '@/components/common/BookPageLoader'
 import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/useDebounce'
 import { ITEMS_PER_PAGE } from '@/utils/constants'
+import { useLanguage } from '@/contexts/LanguageContext'
+
+const DEFAULT_FILTERS: BookFilters = {
+  page: 1,
+  limit: ITEMS_PER_PAGE,
+  sort_by: 'created_at',
+  sort_order: 'desc',
+}
 
 export default function Books() {
+  const { t } = useLanguage()
+  const b = t.books
   const [searchParams] = useSearchParams()
   const [books, setBooks] = useState<Book[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filters, setFilters] = useState<BookFilters>(() => ({
-    page: 1,
-    limit: ITEMS_PER_PAGE,
+    ...DEFAULT_FILTERS,
     search: searchParams.get('search') ?? undefined,
   }))
 
@@ -25,6 +36,7 @@ export default function Books() {
     const urlSearch = searchParams.get('search') ?? undefined
     setFilters((f) => ({ ...f, search: urlSearch, page: 1 }))
   }, [searchParams])
+
   const debouncedSearch = useDebounce(filters.search, 400)
 
   const fetchBooks = useCallback(() => {
@@ -32,12 +44,9 @@ export default function Books() {
     setError(null)
     bookService
       .getAll({ ...filters, search: debouncedSearch })
-      .then((res) => {
-        setBooks(res.data ?? [])
-        setTotal(res.total ?? 0)
-      })
+      .then((res) => { setBooks(res.data ?? []); setTotal(res.total ?? 0) })
       .catch((err) => {
-        setError(err?.response?.data?.message ?? err?.message ?? 'Failed to load books')
+        setError(err?.response?.data?.message ?? err?.message ?? b.failedToLoad)
         setBooks([])
       })
       .finally(() => setLoading(false))
@@ -48,44 +57,79 @@ export default function Books() {
   const updateFilters = (partial: Partial<BookFilters>) =>
     setFilters((f) => ({ ...f, ...partial, page: 1 }))
 
+  const clearFilters = () =>
+    setFilters((f) => ({ ...DEFAULT_FILTERS, search: f.search }))
+
+  const activeFilterCount = filters.category_id != null ? 1 : 0
+
+  const currentPage = filters.page ?? 1
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
+
   return (
-    <div className="container py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Books</h1>
-        <p className="text-muted-foreground mt-1">{total} books available</p>
+    <div className="container py-8">
+      {/* Title row */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1">
+          <div className="flex items-center gap-3">
+            <FilterIcon onClick={() => setSidebarOpen(true)} activeCount={activeFilterCount} />
+            <h1 className="text-3xl font-bold">{b.pageTitle}</h1>
+          </div>
+          <p className="text-muted-foreground mt-1 text-sm">{total} {b.booksAvailable}</p>
+        </div>
+        {/* Search bar */}
+        <div className="w-64 hidden sm:block">
+          <BookFiltersBar filters={filters} onChange={updateFilters} />
+        </div>
       </div>
 
-      <BookFiltersBar filters={filters} onChange={updateFilters} />
+      {/* Mobile search */}
+      <div className="sm:hidden mb-4">
+        <BookFiltersBar filters={filters} onChange={updateFilters} />
+      </div>
 
+      {/* Filter drawer */}
+      <BookSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        filters={filters}
+        onChange={updateFilters}
+        onClear={clearFilters}
+      />
+
+      {/* Book grid */}
       {loading ? (
         <BookPageLoader className="py-16" />
       ) : error ? (
         <div className="text-center py-16 text-destructive">{error}</div>
       ) : books.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">No books found.</div>
+        <div className="text-center py-16 text-muted-foreground">{b.noBooks}</div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {books.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
         </div>
       )}
 
-      {total > ITEMS_PER_PAGE && (
-        <div className="flex justify-center gap-2">
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-8">
           <Button
             variant="outline"
-            disabled={(filters.page ?? 1) <= 1}
-            onClick={() => updateFilters({ page: (filters.page ?? 1) - 1 })}
+            disabled={currentPage <= 1}
+            onClick={() => updateFilters({ page: currentPage - 1 })}
           >
-            Previous
+            {b.previous}
           </Button>
+          <span className="text-sm text-muted-foreground">
+            {b.page} {currentPage} {b.of} {totalPages}
+          </span>
           <Button
             variant="outline"
-            disabled={(filters.page ?? 1) * ITEMS_PER_PAGE >= total}
-            onClick={() => updateFilters({ page: (filters.page ?? 1) + 1 })}
+            disabled={currentPage >= totalPages}
+            onClick={() => updateFilters({ page: currentPage + 1 })}
           >
-            Next
+            {b.next}
           </Button>
         </div>
       )}

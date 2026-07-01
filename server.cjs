@@ -12,10 +12,14 @@ const UPLOADS_GIFTS   = path.join(__dirname, 'uploads', 'gifts')
 const UPLOADS_BLOGS   = path.join(__dirname, 'uploads', 'blogs')
 const UPLOADS_AUTHORS = path.join(__dirname, 'uploads', 'authors')
 const UPLOADS_BOOKS   = path.join(__dirname, 'uploads', 'books')
+const UPLOADS_BANNERS = path.join(__dirname, 'uploads', 'banners')
+const UPLOADS_ANNOUNCEMENTS = path.join(__dirname, 'uploads', 'announcements')
 fs.mkdirSync(UPLOADS_GIFTS,   { recursive: true })
 fs.mkdirSync(UPLOADS_BLOGS,   { recursive: true })
 fs.mkdirSync(UPLOADS_AUTHORS, { recursive: true })
 fs.mkdirSync(UPLOADS_BOOKS,   { recursive: true })
+fs.mkdirSync(UPLOADS_BANNERS, { recursive: true })
+fs.mkdirSync(UPLOADS_ANNOUNCEMENTS, { recursive: true })
 
 // ── DB Pool ───────────────────────────────────────────────────
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
@@ -63,7 +67,17 @@ async function initDB() {
       cover_image    VARCHAR(500)  DEFAULT '',
       preview_pdf    VARCHAR(500),
       rating         DECIMAL(3,2)  DEFAULT 0,
+      external_url   VARCHAR(500)  DEFAULT '',
       created_at     TIMESTAMPTZ   DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS reviews (
+      id             SERIAL PRIMARY KEY,
+      book_id        INTEGER REFERENCES books(id) ON DELETE CASCADE,
+      customer_name  VARCHAR(255) NOT NULL,
+      customer_email VARCHAR(255) DEFAULT '',
+      rating         INTEGER      NOT NULL CHECK (rating BETWEEN 1 AND 5),
+      comment        TEXT         DEFAULT '',
+      created_at     TIMESTAMPTZ  DEFAULT NOW()
     );
     CREATE TABLE IF NOT EXISTS customers (
       id            SERIAL PRIMARY KEY,
@@ -149,6 +163,58 @@ async function initDB() {
       status        VARCHAR(50)  DEFAULT 'new',
       created_at    TIMESTAMPTZ  DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS book_donations (
+      id                 SERIAL PRIMARY KEY,
+      name               VARCHAR(255) NOT NULL,
+      email              VARCHAR(255) DEFAULT '',
+      phone_number       VARCHAR(20)  DEFAULT '',
+      best_time_to_call  VARCHAR(50)  DEFAULT '',
+      comments           TEXT         DEFAULT '',
+      status             VARCHAR(50)  DEFAULT 'new',
+      created_at         TIMESTAMPTZ  DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS corporate_enquiries (
+      id                   SERIAL PRIMARY KEY,
+      company_name         VARCHAR(255) NOT NULL,
+      contact_person_name  VARCHAR(255) NOT NULL,
+      email                VARCHAR(255) DEFAULT '',
+      phone_number         VARCHAR(20)  NOT NULL,
+      best_time_to_call    VARCHAR(50)  DEFAULT '',
+      enquiry_type         VARCHAR(50)  DEFAULT 'Bulk Order',
+      comments             TEXT         DEFAULT '',
+      status               VARCHAR(50)  DEFAULT 'new',
+      created_at           TIMESTAMPTZ  DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS copyright_enquiries (
+      id              SERIAL PRIMARY KEY,
+      applicant_name  VARCHAR(255) NOT NULL,
+      email           VARCHAR(255) NOT NULL,
+      phone_number    VARCHAR(20)  NOT NULL,
+      book_id         INTEGER REFERENCES books(id) ON DELETE SET NULL,
+      enquiry_type    VARCHAR(50)  DEFAULT 'Other',
+      comments        TEXT         DEFAULT '',
+      status          VARCHAR(50)  DEFAULT 'new',
+      created_at      TIMESTAMPTZ  DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS announcements (
+      id           SERIAL PRIMARY KEY,
+      title        VARCHAR(500) NOT NULL,
+      message      TEXT         NOT NULL,
+      image        VARCHAR(500) DEFAULT '',
+      link_url     VARCHAR(500) DEFAULT '',
+      priority     VARCHAR(20)  DEFAULT 'normal',
+      is_active    BOOLEAN      DEFAULT true,
+      start_date   DATE,
+      end_date     DATE,
+      created_at   TIMESTAMPTZ  DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS announcement_reads (
+      id              SERIAL PRIMARY KEY,
+      announcement_id INTEGER REFERENCES announcements(id) ON DELETE CASCADE,
+      user_id         INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      read_at         TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(announcement_id, user_id)
+    );
   `)
 
   // Schema migrations: add columns that may be missing from tables created by older schemas
@@ -156,6 +222,10 @@ async function initDB() {
     ALTER TABLE gift_items ADD COLUMN IF NOT EXISTS price        DECIMAL(10,2) NOT NULL DEFAULT 0;
     ALTER TABLE gift_items ADD COLUMN IF NOT EXISTS offer_price  DECIMAL(10,2);
     ALTER TABLE gift_items ADD COLUMN IF NOT EXISTS updated_at   TIMESTAMPTZ   DEFAULT NOW();
+    ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS type          VARCHAR(50)  DEFAULT 'banner';
+    ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS display_order INTEGER      DEFAULT 0;
+    ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS subtitle      VARCHAR(500) DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS external_url VARCHAR(500) DEFAULT '';
   `)
 
   // Seed default admin
@@ -348,6 +418,24 @@ async function saveBookCover(file) {
   return '/uploads/books/' + name
 }
 
+async function saveBannerImage(file) {
+  if (!file || !file.filename || !file.data || file.data.length === 0) return ''
+  const ext  = path.extname(file.filename) || '.jpg'
+  const name = Date.now() + '-' + Math.random().toString(36).slice(2) + ext
+  const dest = path.join(UPLOADS_BANNERS, name)
+  fs.writeFileSync(dest, file.data)
+  return '/uploads/banners/' + name
+}
+
+async function saveAnnouncementImage(file) {
+  if (!file || !file.filename || !file.data || file.data.length === 0) return ''
+  const ext  = path.extname(file.filename) || '.jpg'
+  const name = Date.now() + '-' + Math.random().toString(36).slice(2) + ext
+  const dest = path.join(UPLOADS_ANNOUNCEMENTS, name)
+  fs.writeFileSync(dest, file.data)
+  return '/uploads/announcements/' + name
+}
+
 const BOOK_JOIN = `
   SELECT b.*, a.name AS author_name, c.name AS category_name
   FROM books b
@@ -418,6 +506,54 @@ const server = http.createServer(async (req, res) => {
         [name, email, mobile_number || null]
       )
       return created(res, { user: rows[0] })
+    }
+
+    // ── Users (admin/staff management) ───────────────────────
+    if (pathname === '/api/users' && method === 'GET') {
+      const { rows } = await q(
+        `SELECT id, name, email, role, is_active, created_at FROM users
+         WHERE role IN ('admin','staff') ORDER BY created_at DESC`
+      )
+      return ok(res, { data: rows, total: rows.length })
+    }
+
+    if (pathname === '/api/users' && method === 'POST') {
+      const body = await parseBody(req)
+      const { name, email, password, role = 'staff' } = body
+      if (!name || !email || !password) return badRequest(res, 'Name, email and password are required')
+      if (!['admin', 'staff'].includes(role)) return badRequest(res, 'Role must be admin or staff')
+      const existing = await q('SELECT id FROM users WHERE email=$1', [email])
+      if (existing.rows.length) return badRequest(res, 'Email already registered')
+      const { rows } = await q(
+        'INSERT INTO users (name, email, password, role) VALUES ($1,$2,$3,$4) RETURNING id, name, email, role, is_active, created_at',
+        [name, email, password, role]
+      )
+      return created(res, rows[0])
+    }
+
+    const userMatch = pathname.match(/^\/api\/users\/(\d+)$/)
+    if (userMatch) {
+      const id = parseInt(userMatch[1])
+      if (method === 'PUT') {
+        const body = await parseBody(req)
+        const cur = (await q('SELECT * FROM users WHERE id=$1', [id])).rows[0]
+        if (!cur) return notFound(res)
+        const name      = body.name      ?? cur.name
+        const email     = body.email     ?? cur.email
+        const role      = body.role      ?? cur.role
+        const is_active = body.is_active !== undefined ? body.is_active : cur.is_active
+        const password  = body.password  ? body.password : cur.password
+        const { rows } = await q(
+          `UPDATE users SET name=$1, email=$2, password=$3, role=$4, is_active=$5
+           WHERE id=$6 RETURNING id, name, email, role, is_active, created_at`,
+          [name, email, password, role, is_active, id]
+        )
+        return ok(res, rows[0])
+      }
+      if (method === 'DELETE') {
+        await q('DELETE FROM users WHERE id=$1', [id])
+        return ok(res, { message: 'Deleted' })
+      }
     }
 
     // ── Categories ────────────────────────────────────────────
@@ -533,12 +669,15 @@ const server = http.createServer(async (req, res) => {
       const sortBy    = ALLOWED_SORT.has(params.get('sort_by')) ? params.get('sort_by') : 'created_at'
       const sortOrder = params.get('sort_order') === 'asc' ? 'ASC' : 'DESC'
 
-      const where  = `WHERE ($1='' OR b.title ILIKE '%'||$1||'%') AND ($2::int IS NULL OR b.category_id=$2) AND ($3::int IS NULL OR b.author_id=$3)`
-      const wArgs  = [search, catId, authId]
+      const minPrice = params.get('min_price') ? parseFloat(params.get('min_price')) : null
+      const maxPrice = params.get('max_price') ? parseFloat(params.get('max_price')) : null
+
+      const where  = `WHERE ($1='' OR b.title ILIKE '%'||$1||'%') AND ($2::int IS NULL OR b.category_id=$2) AND ($3::int IS NULL OR b.author_id=$3) AND ($4::numeric IS NULL OR COALESCE(b.discount_price, b.price) >= $4) AND ($5::numeric IS NULL OR COALESCE(b.discount_price, b.price) <= $5)`
+      const wArgs  = [search, catId, authId, minPrice, maxPrice]
 
       const [countRes, dataRes] = await Promise.all([
         q(`SELECT COUNT(*) FROM books b ${where}`, wArgs),
-        q(`${BOOK_JOIN} ${where} ORDER BY b.${sortBy} ${sortOrder} LIMIT $4 OFFSET $5`, [...wArgs, limit, offset]),
+        q(`${BOOK_JOIN} ${where} ORDER BY b.${sortBy} ${sortOrder} LIMIT $6 OFFSET $7`, [...wArgs, limit, offset]),
       ])
       const total = parseInt(countRes.rows[0].count)
       return ok(res, { data: dataRes.rows, total, page, limit, total_pages: Math.ceil(total / limit) })
@@ -549,8 +688,8 @@ const server = http.createServer(async (req, res) => {
       if (!fields.title) return badRequest(res, 'Title is required')
       const coverUrl = await saveBookCover(files.cover_image)
       const { rows } = await q(
-        `INSERT INTO books (title, author_id, category_id, isbn, description, price, discount_price, stock_quantity, cover_image, preview_pdf, rating)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id`,
+        `INSERT INTO books (title, author_id, category_id, isbn, description, price, discount_price, stock_quantity, cover_image, preview_pdf, rating, external_url)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
         [fields.title, parseInt(fields.author_id) || null, parseInt(fields.category_id) || null,
          fields.isbn || '', fields.description || '',
          parseFloat(fields.price) || 0,
@@ -558,7 +697,8 @@ const server = http.createServer(async (req, res) => {
          parseInt(fields.stock_quantity) || 0,
          coverUrl || fields.cover_image || '',
          fields.preview_pdf || null,
-         fields.rating ? parseFloat(fields.rating) : 0]
+         fields.rating ? parseFloat(fields.rating) : 0,
+         fields.external_url || '']
       )
       const full = (await q(`${BOOK_JOIN} WHERE b.id=$1`, [rows[0].id])).rows[0]
       return created(res, full)
@@ -578,8 +718,8 @@ const server = http.createServer(async (req, res) => {
         const newCover = await saveBookCover(files.cover_image)
         await q(
           `UPDATE books SET title=$1, author_id=$2, category_id=$3, isbn=$4, description=$5,
-           price=$6, discount_price=$7, stock_quantity=$8, cover_image=$9, preview_pdf=$10, rating=$11
-           WHERE id=$12`,
+           price=$6, discount_price=$7, stock_quantity=$8, cover_image=$9, preview_pdf=$10, rating=$11, external_url=$12
+           WHERE id=$13`,
           [
             fields.title          ?? cur.title,
             fields.author_id      ? parseInt(fields.author_id)      : cur.author_id,
@@ -592,6 +732,7 @@ const server = http.createServer(async (req, res) => {
             newCover || fields.cover_image || cur.cover_image,
             fields.preview_pdf    ?? cur.preview_pdf,
             fields.rating         ? parseFloat(fields.rating)       : cur.rating,
+            fields.external_url   ?? cur.external_url,
             id,
           ]
         )
@@ -604,20 +745,102 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // ── Reviews ───────────────────────────────────────────────
+    const bookReviewsMatch = pathname.match(/^\/api\/books\/(\d+)\/reviews$/)
+    if (bookReviewsMatch) {
+      const bookId = parseInt(bookReviewsMatch[1])
+      if (method === 'GET') {
+        const { rows } = await q('SELECT * FROM reviews WHERE book_id=$1 ORDER BY created_at DESC', [bookId])
+        return ok(res, { data: rows, total: rows.length })
+      }
+      if (method === 'POST') {
+        const body = await parseBody(req)
+        const { customer_name, customer_email, comment } = body
+        const rating = parseInt(body.rating)
+        if (!customer_name) return badRequest(res, 'Name is required')
+        if (!comment) return badRequest(res, 'Comment is required')
+        if (!rating || rating < 1 || rating > 5) return badRequest(res, 'Rating must be between 1 and 5')
+        const { rows } = await q(
+          'INSERT INTO reviews (book_id, customer_name, customer_email, rating, comment) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+          [bookId, customer_name, customer_email || '', rating, comment]
+        )
+        await q(
+          'UPDATE books SET rating = COALESCE((SELECT ROUND(AVG(rating),2) FROM reviews WHERE book_id=$1), 0) WHERE id=$1',
+          [bookId]
+        )
+        return created(res, rows[0])
+      }
+    }
+
+    if (pathname === '/api/reviews' && method === 'GET') {
+      const { rows } = await q(
+        `SELECT r.*, b.title AS book_title FROM reviews r
+         LEFT JOIN books b ON r.book_id=b.id
+         ORDER BY r.created_at DESC`
+      )
+      return ok(res, { data: rows, total: rows.length })
+    }
+
+    const reviewMatch = pathname.match(/^\/api\/reviews\/(\d+)$/)
+    if (reviewMatch && method === 'DELETE') {
+      const id = parseInt(reviewMatch[1])
+      const existing = (await q('SELECT book_id FROM reviews WHERE id=$1', [id])).rows[0]
+      if (!existing) return notFound(res)
+      await q('DELETE FROM reviews WHERE id=$1', [id])
+      await q(
+        'UPDATE books SET rating = COALESCE((SELECT ROUND(AVG(rating),2) FROM reviews WHERE book_id=$1), 0) WHERE id=$1',
+        [existing.book_id]
+      )
+      return ok(res, { message: 'Deleted' })
+    }
+
+    // ── Hero Banners (public, active hero-type ads sorted by display_order) ──
+    if (pathname === '/api/banners' && method === 'GET') {
+      const today = new Date().toISOString().slice(0, 10)
+      const { rows } = await q(
+        `SELECT * FROM advertisements
+         WHERE is_active = true AND type = 'hero'
+           AND (start_date IS NULL OR start_date <= $1)
+           AND (end_date   IS NULL OR end_date   >= $1)
+         ORDER BY display_order ASC, id ASC`,
+        [today]
+      )
+      return ok(res, { data: rows, total: rows.length })
+    }
+
     // ── Advertisements ────────────────────────────────────────
     if (pathname === '/api/advertisements' && method === 'GET') {
       const isActiveParam = params.get('is_active')
-      const [sql, args] = isActiveParam !== null
-        ? ['SELECT * FROM advertisements WHERE is_active=$1 ORDER BY id DESC', [isActiveParam === 'true']]
-        : ['SELECT * FROM advertisements ORDER BY id DESC', []]
+      const typeParam     = params.get('type')
+      let sql  = 'SELECT * FROM advertisements'
+      const conditions = []
+      const args = []
+      if (isActiveParam !== null) { conditions.push(`is_active=$${args.length+1}`); args.push(isActiveParam === 'true') }
+      if (typeParam)              { conditions.push(`type=$${args.length+1}`);      args.push(typeParam) }
+      if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ')
+      sql += ' ORDER BY display_order ASC, id DESC'
       const { rows } = await q(sql, args)
       return ok(res, { data: rows, total: rows.length, page: 1, limit: rows.length || 10, total_pages: 1 })
     }
     if (pathname === '/api/advertisements' && method === 'POST') {
-      const body = await parseBody(req)
+      const { fields, files } = await parseMultipart(req)
+      const imageUrl = await saveBannerImage(files.banner_image)
+      const isActive = fields.is_active === 'false' ? false : true
       const { rows } = await q(
-        'INSERT INTO advertisements (title, banner_image, redirect_url, start_date, end_date, is_active) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *',
-        [body.title, body.banner_image||'', body.redirect_url||'', body.start_date||null, body.end_date||null, body.is_active ?? true]
+        `INSERT INTO advertisements
+           (title, subtitle, banner_image, redirect_url, start_date, end_date, is_active, type, display_order)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+        [
+          fields.title || '',
+          fields.subtitle || '',
+          imageUrl || fields.banner_image || '',
+          fields.redirect_url || '',
+          fields.start_date || null,
+          fields.end_date   || null,
+          isActive,
+          fields.type || 'banner',
+          parseInt(fields.display_order || '0'),
+        ]
       )
       return created(res, rows[0])
     }
@@ -629,18 +852,160 @@ const server = http.createServer(async (req, res) => {
         return rows.length ? ok(res, rows[0]) : notFound(res)
       }
       if (method === 'PUT') {
-        const body = await parseBody(req)
-        const cur  = (await q('SELECT * FROM advertisements WHERE id=$1', [id])).rows[0]
+        const { fields, files } = await parseMultipart(req)
+        const cur = (await q('SELECT * FROM advertisements WHERE id=$1', [id])).rows[0]
         if (!cur) return notFound(res)
+        const newImageUrl = await saveBannerImage(files.banner_image)
+        const bannerImage = newImageUrl || fields.banner_image || cur.banner_image
+        const isActive = fields.is_active !== undefined
+          ? (fields.is_active === 'true' || fields.is_active === '1' || fields.is_active === 'on')
+          : cur.is_active
         const { rows } = await q(
-          `UPDATE advertisements SET title=$1, banner_image=$2, redirect_url=$3, start_date=$4, end_date=$5, is_active=$6 WHERE id=$7 RETURNING *`,
-          [body.title??cur.title, body.banner_image??cur.banner_image, body.redirect_url??cur.redirect_url,
-           body.start_date??cur.start_date, body.end_date??cur.end_date, body.is_active??cur.is_active, id]
+          `UPDATE advertisements
+           SET title=$1, subtitle=$2, banner_image=$3, redirect_url=$4,
+               start_date=$5, end_date=$6, is_active=$7, type=$8, display_order=$9
+           WHERE id=$10 RETURNING *`,
+          [
+            fields.title     ?? cur.title,
+            fields.subtitle  ?? cur.subtitle,
+            bannerImage,
+            fields.redirect_url ?? cur.redirect_url,
+            fields.start_date   ?? cur.start_date,
+            fields.end_date     ?? cur.end_date,
+            isActive,
+            fields.type         ?? cur.type,
+            parseInt(fields.display_order ?? cur.display_order ?? 0),
+            id,
+          ]
         )
         return ok(res, rows[0])
       }
       if (method === 'DELETE') {
         await q('DELETE FROM advertisements WHERE id=$1', [id])
+        return ok(res, { message: 'Deleted' })
+      }
+    }
+
+    // ── Announcements ─────────────────────────────────────────
+    if (pathname === '/api/announcements' && method === 'GET') {
+      const activeOnly = params.get('active') === 'true'
+      const userId     = params.get('user_id')
+      const today = new Date().toISOString().slice(0, 10)
+      let sql = 'SELECT * FROM announcements'
+      const args = []
+      if (activeOnly) {
+        args.push(today)
+        sql += ` WHERE is_active = true
+                 AND (start_date IS NULL OR start_date <= $${args.length})
+                 AND (end_date   IS NULL OR end_date   >= $${args.length})`
+      }
+      sql += ' ORDER BY priority = \'urgent\' DESC, priority = \'important\' DESC, created_at DESC'
+      const { rows } = await q(sql, args)
+      if (userId) {
+        const { rows: readRows } = await q('SELECT announcement_id FROM announcement_reads WHERE user_id=$1', [userId])
+        const readIds = new Set(readRows.map((r) => r.announcement_id))
+        rows.forEach((r) => { r.is_read = readIds.has(r.id) })
+      }
+      return ok(res, { data: rows, total: rows.length })
+    }
+    if (pathname === '/api/announcements/unread-count' && method === 'GET') {
+      const userId = params.get('user_id')
+      if (!userId) return badRequest(res, 'user_id is required')
+      const today = new Date().toISOString().slice(0, 10)
+      const { rows } = await q(
+        `SELECT COUNT(*)::int AS count FROM announcements a
+         WHERE a.is_active = true
+           AND (a.start_date IS NULL OR a.start_date <= $1)
+           AND (a.end_date   IS NULL OR a.end_date   >= $1)
+           AND NOT EXISTS (
+             SELECT 1 FROM announcement_reads r WHERE r.announcement_id = a.id AND r.user_id = $2
+           )`,
+        [today, userId]
+      )
+      return ok(res, { count: rows[0].count })
+    }
+    if (pathname === '/api/announcements/read-all' && method === 'POST') {
+      const body = await parseBody(req)
+      if (!body.user_id) return badRequest(res, 'user_id is required')
+      await q(
+        `INSERT INTO announcement_reads (announcement_id, user_id)
+         SELECT id, $1 FROM announcements
+         ON CONFLICT (announcement_id, user_id) DO NOTHING`,
+        [body.user_id]
+      )
+      return ok(res, { message: 'All announcements marked as read' })
+    }
+    const annReadMatch = pathname.match(/^\/api\/announcements\/(\d+)\/read$/)
+    if (annReadMatch && method === 'POST') {
+      const id = parseInt(annReadMatch[1])
+      const body = await parseBody(req)
+      if (!body.user_id) return badRequest(res, 'user_id is required')
+      await q(
+        'INSERT INTO announcement_reads (announcement_id, user_id) VALUES ($1,$2) ON CONFLICT (announcement_id, user_id) DO NOTHING',
+        [id, body.user_id]
+      )
+      return ok(res, { message: 'Marked as read' })
+    }
+    if (pathname === '/api/announcements' && method === 'POST') {
+      const { fields, files } = await parseMultipart(req)
+      if (!fields.title)   return badRequest(res, 'Title is required')
+      if (!fields.message) return badRequest(res, 'Message is required')
+      const imageUrl = await saveAnnouncementImage(files.image)
+      const isActive = fields.is_active === 'false' ? false : true
+      const { rows } = await q(
+        `INSERT INTO announcements (title, message, image, link_url, priority, is_active, start_date, end_date)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+        [
+          fields.title,
+          fields.message,
+          imageUrl || '',
+          fields.link_url || '',
+          fields.priority || 'normal',
+          isActive,
+          fields.start_date || null,
+          fields.end_date   || null,
+        ]
+      )
+      return created(res, rows[0])
+    }
+    const annMatch = pathname.match(/^\/api\/announcements\/(\d+)$/)
+    if (annMatch) {
+      const id = parseInt(annMatch[1])
+      if (method === 'GET') {
+        const { rows } = await q('SELECT * FROM announcements WHERE id=$1', [id])
+        return rows.length ? ok(res, rows[0]) : notFound(res)
+      }
+      if (method === 'PUT') {
+        const { fields, files } = await parseMultipart(req)
+        const cur = (await q('SELECT * FROM announcements WHERE id=$1', [id])).rows[0]
+        if (!cur) return notFound(res)
+        const newImageUrl = await saveAnnouncementImage(files.image)
+        const image = newImageUrl || cur.image
+        const isActive = fields.is_active !== undefined
+          ? (fields.is_active === 'true' || fields.is_active === '1' || fields.is_active === 'on')
+          : cur.is_active
+        const startDate = fields.start_date !== undefined ? (fields.start_date || null) : cur.start_date
+        const endDate   = fields.end_date   !== undefined ? (fields.end_date   || null) : cur.end_date
+        const { rows } = await q(
+          `UPDATE announcements
+           SET title=$1, message=$2, image=$3, link_url=$4, priority=$5, is_active=$6, start_date=$7, end_date=$8
+           WHERE id=$9 RETURNING *`,
+          [
+            fields.title    ?? cur.title,
+            fields.message  ?? cur.message,
+            image,
+            fields.link_url ?? cur.link_url,
+            fields.priority ?? cur.priority,
+            isActive,
+            startDate,
+            endDate,
+            id,
+          ]
+        )
+        return ok(res, rows[0])
+      }
+      if (method === 'DELETE') {
+        await q('DELETE FROM announcements WHERE id=$1', [id])
         return ok(res, { message: 'Deleted' })
       }
     }
@@ -783,10 +1148,107 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ── Reports ───────────────────────────────────────────────
-    if (pathname === '/api/reports/sales')          return ok(res, { data: [] })
-    if (pathname === '/api/reports/revenue')        return ok(res, { data: [] })
-    if (pathname === '/api/reports/popular-books')  return ok(res, { data: [] })
-    if (pathname === '/api/reports/customers')      return ok(res, { data: [] })
+    if (pathname === '/api/reports/sales' && method === 'GET') {
+      const { rows } = await q(`
+        SELECT to_char(d::date, 'Mon DD') AS date,
+               COALESCE(COUNT(o.id), 0)::int AS orders,
+               COALESCE(SUM(o.total_amount), 0)::float AS revenue
+        FROM generate_series(CURRENT_DATE - INTERVAL '29 days', CURRENT_DATE, INTERVAL '1 day') d
+        LEFT JOIN orders o ON DATE(o.created_at) = d::date AND o.payment_status = 'paid'
+        GROUP BY d
+        ORDER BY d
+      `)
+      return ok(res, rows)
+    }
+
+    if (pathname === '/api/reports/revenue' && method === 'GET') {
+      const periodCfg = {
+        daily:   { unit: 'day',   count: 30, fmt: 'Mon DD'   },
+        weekly:  { unit: 'week',  count: 12, fmt: 'Mon DD'   },
+        monthly: { unit: 'month', count: 12, fmt: 'Mon YYYY' },
+        yearly:  { unit: 'year',  count: 6,  fmt: 'YYYY'     },
+      }
+      const cfg = periodCfg[params.get('period')] || periodCfg.monthly
+      const { rows } = await q(`
+        SELECT to_char(d, '${cfg.fmt}') AS date,
+               COALESCE(SUM(o.total_amount), 0)::float AS revenue
+        FROM generate_series(
+               date_trunc('${cfg.unit}', NOW()) - INTERVAL '${cfg.count - 1} ${cfg.unit}',
+               date_trunc('${cfg.unit}', NOW()),
+               INTERVAL '1 ${cfg.unit}'
+             ) d
+        LEFT JOIN orders o ON date_trunc('${cfg.unit}', o.created_at) = d AND o.payment_status = 'paid'
+        GROUP BY d
+        ORDER BY d
+      `)
+      return ok(res, rows)
+    }
+
+    if (pathname === '/api/reports/popular-books' && method === 'GET') {
+      const { rows } = await q(`
+        SELECT b.id, b.title, b.cover_image,
+               SUM(oi.quantity)::int AS total_sold,
+               SUM(oi.quantity * oi.unit_price)::float AS revenue
+        FROM order_items oi
+        JOIN orders o ON o.id = oi.order_id AND o.payment_status = 'paid'
+        JOIN books b  ON b.id = oi.book_id
+        GROUP BY b.id
+        ORDER BY total_sold DESC
+        LIMIT 10
+      `)
+      return ok(res, rows)
+    }
+
+    if (pathname === '/api/reports/customers' && method === 'GET') {
+      const totals = (await q(`
+        SELECT
+          (SELECT COUNT(*)::int FROM customers) AS total_customers,
+          (SELECT COUNT(*)::int FROM customers WHERE created_at >= date_trunc('month', NOW())) AS new_this_month
+      `)).rows[0]
+      const { rows: top_customers } = await q(`
+        SELECT c.id, c.name,
+               COUNT(o.id)::int AS orders,
+               SUM(o.total_amount)::float AS total_spent
+        FROM customers c
+        JOIN orders o ON o.customer_id = c.id AND o.payment_status = 'paid'
+        GROUP BY c.id
+        ORDER BY total_spent DESC
+        LIMIT 10
+      `)
+      return ok(res, { ...totals, top_customers })
+    }
+
+    // ── Dashboard ─────────────────────────────────────────────
+    if (pathname === '/api/dashboard/stats' && method === 'GET') {
+      const s = (await q(`
+        SELECT
+          (SELECT COUNT(*)::int FROM orders)    AS total_orders,
+          (SELECT COUNT(*)::int FROM books)     AS total_books,
+          (SELECT COUNT(*)::int FROM customers) AS total_customers,
+          (SELECT COALESCE(SUM(total_amount),0)::float FROM orders WHERE payment_status='paid') AS total_revenue,
+          (SELECT COUNT(*)::int FROM orders WHERE created_at >= date_trunc('month', NOW())) AS orders_this_month,
+          (SELECT COUNT(*)::int FROM orders WHERE created_at >= date_trunc('month', NOW() - INTERVAL '1 month') AND created_at < date_trunc('month', NOW())) AS orders_last_month,
+          (SELECT COUNT(*)::int FROM customers WHERE created_at >= date_trunc('month', NOW())) AS customers_this_month,
+          (SELECT COUNT(*)::int FROM customers WHERE created_at >= date_trunc('month', NOW() - INTERVAL '1 month') AND created_at < date_trunc('month', NOW())) AS customers_last_month,
+          (SELECT COALESCE(SUM(total_amount),0)::float FROM orders WHERE payment_status='paid' AND created_at >= date_trunc('month', NOW())) AS revenue_this_month,
+          (SELECT COALESCE(SUM(total_amount),0)::float FROM orders WHERE payment_status='paid' AND created_at >= date_trunc('month', NOW() - INTERVAL '1 month') AND created_at < date_trunc('month', NOW())) AS revenue_last_month
+      `)).rows[0]
+
+      const pctChange = (curr, prev) => {
+        if (!prev) return curr > 0 ? 100 : 0
+        return Math.round(((curr - prev) / prev) * 100)
+      }
+
+      return ok(res, {
+        total_orders:    s.total_orders,
+        total_books:     s.total_books,
+        total_customers: s.total_customers,
+        total_revenue:   s.total_revenue,
+        orders_trend:    pctChange(s.orders_this_month, s.orders_last_month),
+        customers_trend: pctChange(s.customers_this_month, s.customers_last_month),
+        revenue_trend:   pctChange(s.revenue_this_month, s.revenue_last_month),
+      })
+    }
 
     // ── Gifts ──────────────────────────────────────────────────
     if (pathname === '/api/gifts/featured' && method === 'GET') {
@@ -832,6 +1294,68 @@ const server = http.createServer(async (req, res) => {
         `SELECT ge.*, gi.title AS gift_title FROM gift_enquiries ge
          LEFT JOIN gift_items gi ON ge.gift_id=gi.id
          ORDER BY ge.created_at DESC`
+      )
+      return ok(res, { data: rows, total: rows.length })
+    }
+
+    // ── Donate Books ──────────────────────────────────────────
+    if (pathname === '/api/donate-books' && method === 'POST') {
+      const body = await parseBody(req)
+      const { name, email, phone_number, best_time_to_call, comments } = body
+      if (!name) return badRequest(res, 'Name is required')
+      if (!phone_number) return badRequest(res, 'Phone number is required')
+      const { rows } = await q(
+        'INSERT INTO book_donations (name, email, phone_number, best_time_to_call, comments) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+        [name, email || '', phone_number, best_time_to_call || '', comments || '']
+      )
+      return created(res, rows[0])
+    }
+
+    if (pathname === '/api/donate-books' && method === 'GET') {
+      const { rows } = await q('SELECT * FROM book_donations ORDER BY created_at DESC')
+      return ok(res, { data: rows, total: rows.length })
+    }
+
+    // ── Corporate Enquiries ────────────────────────────────────
+    if (pathname === '/api/corporate-enquiries' && method === 'POST') {
+      const body = await parseBody(req)
+      const { company_name, contact_person_name, email, phone_number, best_time_to_call, enquiry_type, comments } = body
+      if (!company_name) return badRequest(res, 'Company / Institution name is required')
+      if (!contact_person_name) return badRequest(res, 'Contact person name is required')
+      if (!phone_number) return badRequest(res, 'Phone number is required')
+      if (!enquiry_type) return badRequest(res, 'Enquiry type is required')
+      const { rows } = await q(
+        'INSERT INTO corporate_enquiries (company_name, contact_person_name, email, phone_number, best_time_to_call, enquiry_type, comments) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *',
+        [company_name, contact_person_name, email || '', phone_number, best_time_to_call || '', enquiry_type, comments || '']
+      )
+      return created(res, rows[0])
+    }
+
+    if (pathname === '/api/corporate-enquiries' && method === 'GET') {
+      const { rows } = await q('SELECT * FROM corporate_enquiries ORDER BY created_at DESC')
+      return ok(res, { data: rows, total: rows.length })
+    }
+
+    // ── Copyright Enquiries ────────────────────────────────────
+    if (pathname === '/api/copyright-enquiries' && method === 'POST') {
+      const body = await parseBody(req)
+      const { applicant_name, email, phone_number, book_id, enquiry_type, comments } = body
+      if (!applicant_name) return badRequest(res, 'Applicant name is required')
+      if (!email) return badRequest(res, 'Email is required')
+      if (!phone_number) return badRequest(res, 'Phone number is required')
+      if (!book_id) return badRequest(res, 'Please select a book')
+      const { rows } = await q(
+        'INSERT INTO copyright_enquiries (applicant_name, email, phone_number, book_id, enquiry_type, comments) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *',
+        [applicant_name, email, phone_number, parseInt(book_id), enquiry_type || 'Other', comments || '']
+      )
+      return created(res, rows[0])
+    }
+
+    if (pathname === '/api/copyright-enquiries' && method === 'GET') {
+      const { rows } = await q(
+        `SELECT ce.*, b.title AS book_title FROM copyright_enquiries ce
+         LEFT JOIN books b ON ce.book_id=b.id
+         ORDER BY ce.created_at DESC`
       )
       return ok(res, { data: rows, total: rows.length })
     }

@@ -3,12 +3,14 @@ import { useState } from 'react'
 import type { Video } from '@/types'
 import { getYoutubeEmbedUrl } from '@/utils/formatters'
 import { Badge } from '@/components/ui/badge'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Props {
   video: Video
 }
 
 export default function VideoCard({ video }: Props) {
+  const { t } = useLanguage()
   const [playing, setPlaying] = useState(false)
 
   return (
@@ -46,7 +48,7 @@ export default function VideoCard({ video }: Props) {
       <div className="p-3">
         <h3 className="font-medium text-sm line-clamp-2">{video.title}</h3>
         <div className="flex items-center gap-2 mt-1">
-          {video.is_featured && <Badge variant="secondary" className="text-xs">Featured</Badge>}
+          {video.is_featured && <Badge variant="secondary" className="text-xs">{t.vaaluTvPage.featured}</Badge>}
           {video.category && <span className="text-xs text-muted-foreground">{video.category}</span>}
         </div>
       </div>

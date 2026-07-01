@@ -52,6 +52,8 @@ import SalesReport from '@/pages/admin/reports/SalesReport'
 import RevenueReport from '@/pages/admin/reports/RevenueReport'
 import PopularBooks from '@/pages/admin/reports/PopularBooks'
 import CustomerReport from '@/pages/admin/reports/CustomerReport'
+import AboutUs from '@/pages/public/AboutUs'
+import PublishPlan from '@/pages/public/PublishPlan'
 import ContactUs from '@/pages/public/ContactUs'
 import ShippingDelivery from '@/pages/public/ShippingDelivery'
 import ReturnsRefunds from '@/pages/public/ReturnsRefunds'
@@ -60,10 +62,24 @@ import TermsConditions from '@/pages/public/TermsConditions'
 import FAQ from '@/pages/public/FAQ'
 import Gifts from '@/pages/public/Gifts'
 import GiftDetail from '@/pages/public/GiftDetail'
+import DonateBooks from '@/pages/public/DonateBooks'
+import CorporateEnquiries from '@/pages/public/CorporateEnquiries'
+import CopyrightEnquiries from '@/pages/public/CopyrightEnquiries'
 import GiftsList from '@/pages/admin/gifts/GiftsList'
 import AddGift from '@/pages/admin/gifts/AddGift'
 import EditGift from '@/pages/admin/gifts/EditGift'
 import GiftEnquiries from '@/pages/admin/gifts/GiftEnquiries'
+import DonationsList from '@/pages/admin/donations/DonationsList'
+import UsersList from '@/pages/admin/users/UsersList'
+import AddUser from '@/pages/admin/users/AddUser'
+import EditUser from '@/pages/admin/users/EditUser'
+import ReviewsList from '@/pages/admin/reviews/ReviewsList'
+import CorporateEnquiriesList from '@/pages/admin/corporate/CorporateEnquiriesList'
+import CopyrightEnquiriesList from '@/pages/admin/copyright/CopyrightEnquiriesList'
+import Announcements from '@/pages/public/Announcements'
+import AnnouncementsList from '@/pages/admin/announcements/AnnouncementsList'
+import AddAnnouncement from '@/pages/admin/announcements/AddAnnouncement'
+import EditAnnouncement from '@/pages/admin/announcements/EditAnnouncement'
 
 export default function AppRoutes() {
   return (
@@ -86,7 +102,12 @@ export default function AppRoutes() {
         <Route path="vaalu-tv" element={<VaaluTV />} />
         <Route path="gifts" element={<Gifts />} />
         <Route path="gifts/:slug" element={<GiftDetail />} />
+        <Route path="donate-books" element={<DonateBooks />} />
+        <Route path="corporate-enquiries" element={<CorporateEnquiries />} />
+        <Route path="copyright-enquiries" element={<CopyrightEnquiries />} />
         <Route path="offers" element={<Offers />} />
+        <Route path="about" element={<AboutUs />} />
+        <Route path="publish-plan" element={<PublishPlan />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="shipping" element={<ShippingDelivery />} />
         <Route path="returns" element={<ReturnsRefunds />} />
@@ -100,6 +121,7 @@ export default function AppRoutes() {
           <Route path="profile" element={<Profile />} />
           <Route path="orders" element={<OrderHistory />} />
           <Route path="wishlist" element={<Wishlist />} />
+          <Route path="announcements" element={<Announcements />} />
         </Route>
       </Route>
 
@@ -131,6 +153,16 @@ export default function AppRoutes() {
           <Route path="gifts/add" element={<AddGift />} />
           <Route path="gifts/:id/edit" element={<EditGift />} />
           <Route path="gifts/enquiries" element={<GiftEnquiries />} />
+          <Route path="donations" element={<DonationsList />} />
+          <Route path="corporate-enquiries" element={<CorporateEnquiriesList />} />
+          <Route path="copyright-enquiries" element={<CopyrightEnquiriesList />} />
+          <Route path="reviews" element={<ReviewsList />} />
+          <Route path="announcements" element={<AnnouncementsList />} />
+          <Route path="announcements/add" element={<AddAnnouncement />} />
+          <Route path="announcements/:id/edit" element={<EditAnnouncement />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="users/add" element={<AddUser />} />
+          <Route path="users/:id/edit" element={<EditUser />} />
           <Route path="reports/sales" element={<SalesReport />} />
           <Route path="reports/revenue" element={<RevenueReport />} />
           <Route path="reports/popular-books" element={<PopularBooks />} />

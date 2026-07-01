@@ -12,6 +12,13 @@ import {
   Tag,
   Gift,
   MessageSquare,
+  UserCog,
+  SlidersHorizontal,
+  Star,
+  HeartHandshake,
+  Building2,
+  Copyright,
+  Megaphone,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useUIStore } from '@/store'
@@ -40,9 +47,14 @@ const navGroups = [
   {
     label: 'Marketing',
     items: [
-      // { to: '/admin/advertisements', label: 'Advertisements', icon: Megaphone },
+      { to: '/admin/announcements', label: 'Announcements', icon: Megaphone },
+      { to: '/admin/advertisements', label: 'Home Slider', icon: SlidersHorizontal },
       { to: '/admin/gifts', label: 'Gift & Calendars', icon: Gift },
       { to: '/admin/gifts/enquiries', label: 'Gift Enquiries', icon: MessageSquare },
+      { to: '/admin/reviews', label: 'Book Reviews', icon: Star },
+      { to: '/admin/donations', label: 'Book Donations', icon: HeartHandshake },
+      { to: '/admin/corporate-enquiries', label: 'Corporate Enquiries', icon: Building2 },
+      { to: '/admin/copyright-enquiries', label: 'Copyright Enquiries', icon: Copyright },
     ],
   },
   {
@@ -50,6 +62,12 @@ const navGroups = [
     items: [
       { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
       { to: '/admin/customers', label: 'Customers', icon: UserCheck },
+    ],
+  },
+  {
+    label: 'Settings',
+    items: [
+      { to: '/admin/users', label: 'Staff Users', icon: UserCog },
     ],
   },
   {
@@ -77,10 +95,16 @@ export default function AdminSidebar() {
         sidebarOpen ? 'w-64' : 'w-16',
       )}
     >
-      <div className="p-4 border-b">
-        <span className={cn('font-bold text-primary text-lg', !sidebarOpen && 'hidden')}>
-          VPMS Admin
-        </span>
+      <div className="p-4 border-b flex items-center gap-2.5">
+        <div className="h-9 w-9 shrink-0 rounded-lg bg-gradient-to-br from-primary to-amber-500 flex items-center justify-center text-primary-foreground shadow-sm">
+          <BookOpen className="h-5 w-5" />
+        </div>
+        {sidebarOpen && (
+          <div className="leading-tight overflow-hidden">
+            <p className="font-bold text-foreground text-sm truncate">வாலு பதிப்பகம்</p>
+            <p className="text-xs text-muted-foreground">Admin Panel</p>
+          </div>
+        )}
       </div>
 
       <nav className="p-2 space-y-1">

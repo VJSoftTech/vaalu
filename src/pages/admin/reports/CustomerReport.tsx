@@ -23,7 +23,7 @@ export default function CustomerReport() {
       <PageTitle title="Customer Report" />
       <div className="grid sm:grid-cols-2 gap-4">
         <StatsCard title="Total Customers" value={data?.total_customers ?? 0} icon={Users} color="blue" />
-        <StatsCard title="New This Month" value={data?.new_this_month ?? 0} icon={UserPlus} color="green" />
+        <StatsCard title="New This Month" value={data?.new_this_month ?? 0} icon={UserPlus} color="purple" />
       </div>
       <Card>
         <CardHeader><CardTitle>Top Customers</CardTitle></CardHeader>
@@ -41,9 +41,16 @@ export default function CustomerReport() {
                 <TableRow key={c.id}>
                   <TableCell className="font-medium">{c.name}</TableCell>
                   <TableCell>{c.orders}</TableCell>
-                  <TableCell>{formatCurrency(c.total_spent)}</TableCell>
+                  <TableCell className="font-medium text-emerald-600">{formatCurrency(c.total_spent)}</TableCell>
                 </TableRow>
               ))}
+              {!data?.top_customers?.length && (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
+                    No customer purchases recorded yet
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

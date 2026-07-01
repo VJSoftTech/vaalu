@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Calendar, User } from 'lucide-react'
 import { blogService } from '@/services/blogService'
@@ -6,16 +6,30 @@ import type { Blog } from '@/types'
 import { formatDate } from '@/utils/formatters'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Badge } from '@/components/ui/badge'
+import ImageLightbox from '@/components/common/ImageLightbox'
 
 export default function BlogDetail() {
   const { slug } = useParams<{ slug: string }>()
   const [blog, setBlog] = useState<Blog | null>(null)
   const [loading, setLoading] = useState(true)
+  const [zoomImg, setZoomImg] = useState<string | null>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!slug) return
-    blogService.getBySlug(slug).then(setBlog).finally(() => setLoading(false))
+    blogService.getBySlug(slug).then(setBlog).catch(() => {}).finally(() => setLoading(false))
   }, [slug])
+
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === 'IMG') setZoomImg((target as HTMLImageElement).src)
+    }
+    el.addEventListener('click', onClick)
+    return () => el.removeEventListener('click', onClick)
+  }, [blog])
 
   if (loading) return <LoadingSpinner className="py-24" />
   if (!blog) return <div className="container py-24 text-center">Article not found.</div>
@@ -40,12 +54,14 @@ export default function BlogDetail() {
         <img
           src={blog.featured_image}
           alt={blog.title}
-          className="w-full aspect-video object-cover rounded-lg mt-6"
+          onClick={() => setZoomImg(blog.featured_image)}
+          className="w-full aspect-video object-cover rounded-lg mt-6 cursor-zoom-in"
         />
       )}
 
       <div
-        className="prose prose-lg max-w-none mt-8"
+        ref={contentRef}
+        className="prose prose-lg max-w-none mt-8 [&_img]:cursor-zoom-in"
         dangerouslySetInnerHTML={{ __html: blog.content }}
       />
 
@@ -56,6 +72,8 @@ export default function BlogDetail() {
           ))}
         </div>
       )}
+
+      <ImageLightbox src={zoomImg ?? ''} alt={blog.title} open={!!zoomImg} onClose={() => setZoomImg(null)} />
     </article>
   )
 }

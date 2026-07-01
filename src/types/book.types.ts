@@ -13,6 +13,7 @@ export interface Book {
   cover_image: string
   preview_pdf: string | null
   rating: number
+  external_url?: string
   created_at: string
 }
 
@@ -28,6 +29,7 @@ export interface BookFormData {
   cover_image?: string
   preview_pdf?: string
   rating?: number
+  external_url?: string
 }
 
 export interface BookFilters {

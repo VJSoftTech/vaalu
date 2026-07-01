@@ -7,6 +7,11 @@ export * from './customer.types'
 export * from './video.types'
 export * from './advertisement.types'
 export * from './gift.types'
+export * from './review.types'
+export * from './donation.types'
+export * from './corporate.types'
+export * from './copyright.types'
+export * from './announcement.types'
 
 export interface PaginatedResponse<T> {
   data: T[]

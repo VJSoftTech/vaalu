@@ -1,26 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { BookOpen, Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react'
-
-const quickLinks = [
-  { to: '/books', label: 'Books' },
-  { to: '/authors', label: 'Authors' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/vaalu-tv', label: 'Vaalu TV' },
-  { to: '/offers', label: 'Offers' },
-  { to: '/contact', label: 'Contact Us' },
-  { to: '/wishlist', label: 'Wishlist' },
-  { to: '/my-orders', label: 'My Orders' },
-]
-
-const helpLinks = [
-  { to: '/shipping', label: 'Shipping & Delivery' },
-  { to: '/returns', label: 'Returns & Refunds' },
-  { to: '/privacy', label: 'Privacy Policy' },
-  { to: '/terms', label: 'Terms & Conditions' },
-  { to: '/faq', label: 'FAQ' },
-  { to: '/orders', label: 'Track Order' },
-]
+import { useLanguage } from '@/contexts/LanguageContext'
+import { cn } from '@/lib/utils'
 
 type SocialItem = { href: string; label: string; Icon: React.FC<{ className?: string }> }
 
@@ -66,6 +48,31 @@ const socials: SocialItem[] = [
 ]
 
 export default function Footer() {
+  const { t, lang } = useLanguage()
+  const f = t.footer
+  const ta = lang === 'ta'
+
+  const quickLinks = [
+    { to: '/about', label: f.links.about },
+    { to: '/books', label: f.links.books },
+    { to: '/authors', label: f.links.authors },
+    { to: '/blog', label: f.links.blog },
+    { to: '/vaalu-tv', label: f.links.vaaluTv },
+    { to: '/offers', label: f.links.offers },
+    { to: '/contact', label: f.links.contact },
+    { to: '/wishlist', label: f.links.wishlist },
+    { to: '/my-orders', label: f.links.myOrders },
+  ]
+
+  const helpLinks = [
+    { to: '/shipping', label: f.links.shipping },
+    { to: '/returns', label: f.links.returns },
+    { to: '/privacy', label: f.links.privacy },
+    { to: '/terms', label: f.links.terms },
+    { to: '/faq', label: f.links.faq },
+    { to: '/orders', label: f.links.trackOrder },
+  ]
+
   return (
     <footer className="bg-vaalu-dark text-white mt-auto">
       {/* Top accent line */}
@@ -90,9 +97,8 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="text-sm text-white/55 leading-relaxed max-w-xs mb-6">
-              Preserving the richness of Tamil literature while embracing modern digital commerce.
-              Discover books, authors, and culture.
+            <p className={cn('text-sm text-white/55 leading-relaxed max-w-xs mb-6', ta && 'font-tamil')}>
+              {f.tagline}
             </p>
 
             <div className="flex gap-2.5">
@@ -111,15 +117,15 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5">
-              Quick Links
+            <h4 className={cn('text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5', ta && 'font-tamil')}>
+              {f.quickLinks}
             </h4>
             <ul className="space-y-2.5">
               {quickLinks.map(({ to, label }) => (
                 <li key={to}>
                   <Link
                     to={to}
-                    className="group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors duration-200"
+                    className={cn('group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors duration-200', ta && 'font-tamil')}
                   >
                     <ArrowRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200" />
                     {label}
@@ -131,15 +137,15 @@ export default function Footer() {
 
           {/* Help & Support */}
           <div>
-            <h4 className="text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5">
-              Help & Support
+            <h4 className={cn('text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5', ta && 'font-tamil')}>
+              {f.helpSupport}
             </h4>
             <ul className="space-y-2.5">
               {helpLinks.map(({ to, label }) => (
                 <li key={to}>
                   <Link
                     to={to}
-                    className="group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors duration-200"
+                    className={cn('group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors duration-200', ta && 'font-tamil')}
                   >
                     <ArrowRight className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200" />
                     {label}
@@ -151,8 +157,8 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5">
-              Contact Us
+            <h4 className={cn('text-[11px] font-semibold tracking-widest uppercase text-white/40 mb-5', ta && 'font-tamil')}>
+              {f.contactUs}
             </h4>
             <ul className="space-y-4">
               {[
@@ -162,19 +168,17 @@ export default function Footer() {
                   Icon: MapPin,
                   text: (
                     <>
-                      123, Book Street, Chennai,
-                      <br />
-                      Tamil Nadu — 600001
+                      Chennai, Tamil Nadu
                     </>
                   ),
                 },
-                { Icon: Clock, text: 'Mon – Sat : 9 AM – 7 PM' },
+                { Icon: Clock, text: f.hours },
               ].map(({ Icon, text }, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <span className="flex items-center justify-center w-7 h-7 rounded-md bg-primary/15 shrink-0 mt-0.5">
                     <Icon className="h-3.5 w-3.5 text-primary" />
                   </span>
-                  <span className="text-sm text-white/60 leading-relaxed">{text}</span>
+                  <span className={cn('text-sm text-white/60 leading-relaxed', ta && 'font-tamil')}>{text}</span>
                 </li>
               ))}
             </ul>
@@ -185,11 +189,15 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/8">
         <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/35 tracking-wide">
-            © {new Date().getFullYear()} Vaalu Pathippagam. All rights reserved.
+          <p className={cn('text-xs text-white/35 tracking-wide', ta && 'font-tamil')}>
+            © {new Date().getFullYear()} Vaalu Pathippagam. {f.copyright}
           </p>
-          <p className="text-xs text-white/35 tracking-wide">
-            Made with <span className="text-primary">♥</span> for Tamil Literature
+          <p className={cn('text-xs text-white/35 tracking-wide', ta && 'font-tamil')}>
+            {ta ? (
+              <>{f.forLiterature} <span className="text-primary">♥</span> {f.madeWith}</>
+            ) : (
+              <>{f.madeWith} <span className="text-primary">♥</span> {f.forLiterature}</>
+            )}
           </p>
         </div>
       </div>

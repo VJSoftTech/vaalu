@@ -4,8 +4,10 @@ import { bookService } from '@/services/bookService'
 import type { Book } from '@/types'
 import BookCard from '@/components/books/BookCard'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Offers() {
+  const { t } = useLanguage()
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -22,14 +24,14 @@ export default function Offers() {
           <Tag className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">Special Offers</h1>
-          <p className="text-sm text-muted-foreground">Discounted books — limited time only!</p>
+          <h1 className="text-2xl font-bold">{t.offers.title}</h1>
+          <p className="text-sm text-muted-foreground">{t.offers.subtitle}</p>
         </div>
       </div>
       {loading ? (
         <LoadingSpinner className="py-16" />
       ) : books.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">No offers available right now. Check back soon!</div>
+        <div className="text-center py-16 text-muted-foreground">{t.offers.noOffers}</div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {books.map((book) => <BookCard key={book.id} book={book} />)}

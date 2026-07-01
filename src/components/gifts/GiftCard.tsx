@@ -4,12 +4,14 @@ import { Tag, Star, TrendingUp } from 'lucide-react'
 import type { GiftItem } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Props {
   gift: GiftItem
 }
 
 export default function GiftCard({ gift }: Props) {
+  const { t } = useLanguage()
   return (
     <motion.div
       whileHover={{ y: -4 }}
@@ -32,12 +34,12 @@ export default function GiftCard({ gift }: Props) {
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {gift.is_featured && (
             <Badge className="bg-yellow-400 text-yellow-900 text-[10px] px-1.5 py-0 h-5 gap-0.5">
-              <Star className="h-2.5 w-2.5" /> Featured
+              <Star className="h-2.5 w-2.5" /> {t.giftDetail.featured}
             </Badge>
           )}
           {gift.is_trending && (
             <Badge className="bg-red-500 text-white text-[10px] px-1.5 py-0 h-5 gap-0.5">
-              <TrendingUp className="h-2.5 w-2.5" /> Trending
+              <TrendingUp className="h-2.5 w-2.5" /> {t.giftDetail.trending}
             </Badge>
           )}
         </div>
@@ -66,7 +68,7 @@ export default function GiftCard({ gift }: Props) {
               size="sm"
               className="h-7 text-xs bg-teal-700 hover:bg-teal-800 text-white px-3"
             >
-              View Details
+              {t.giftDetail.viewDetails}
             </Button>
           </Link>
         </div>

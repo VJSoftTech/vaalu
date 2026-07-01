@@ -1,36 +1,59 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Search, Menu, X, BookOpen, Heart, Package, LogOut, User } from 'lucide-react'
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { ShoppingCart, Search, Menu, X, BookOpen, Heart, Package, LogOut, User, Globe, ChevronDown, Bell } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
+import { useAnnouncements } from '@/hooks/useAnnouncements'
 import { useAuthStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-
-const navLinks = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/books', label: 'Books' },
-  { to: '/authors', label: 'Authors' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/vaalu-tv', label: 'Vaalu TV' },
-  { to: '/gifts', label: '🎁 Gifts' },
-  { to: '/offers', label: 'Offers' },
-  { to: '/contact', label: 'Contact Us' },
-]
+import { useLanguage } from '@/contexts/LanguageContext'
+import type { Language } from '@/i18n/translations'
 
 export default function Navbar() {
   const { itemCount, clearCart } = useCart()
   const { itemCount: wishlistCount, clearWishlist } = useWishlist()
+  const { unreadCount: announcementCount } = useAnnouncements()
   const { isAuthenticated, user, clearAuth } = useAuthStore()
+  const { lang, setLang, t } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [langMenuOpen, setLangMenuOpen] = useState(false)
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
+  const langMenuRef = useRef<HTMLDivElement>(null)
+  const moreMenuRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const nav = t.nav
+
+  // Primary links stay visible on the bar; the rest collapse into "More" to avoid crowding/wrapping.
+  const primaryLinks: { to: string; label: string; end?: boolean }[] = [
+    { to: '/', label: nav.home, end: true },
+    { to: '/about', label: nav.about },
+    { to: '/publish-plan', label: nav.publishPlan },
+    { to: '/books', label: nav.books },
+    { to: '/authors', label: nav.authors },
+  ]
+
+  const moreLinks: { to: string; label: string; end?: boolean }[] = [
+    { to: '/donate-books', label: nav.donateBooks },
+    { to: '/gifts', label: nav.gifts },
+    { to: '/offers', label: nav.offers },
+    { to: '/vaalu-tv', label: nav.vaaluTv },
+    { to: '/blog', label: nav.blog },
+    { to: '/corporate-enquiries', label: nav.corporateEnquiries },
+    { to: '/copyright-enquiries', label: nav.copyrightEnquiries },
+    { to: '/contact', label: nav.contact },
+  ]
+
+  const navLinks = [...primaryLinks, ...moreLinks]
 
   useEffect(() => {
     if (searchOpen) searchRef.current?.focus()
@@ -40,6 +63,12 @@ export default function Navbar() {
     const handler = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false)
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setLangMenuOpen(false)
+      }
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setMoreMenuOpen(false)
       }
     }
     document.addEventListener('mousedown', handler)
@@ -63,6 +92,11 @@ export default function Navbar() {
     navigate('/')
   }
 
+  const handleLangSelect = (l: Language) => {
+    setLang(l)
+    setLangMenuOpen(false)
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
       <div className="container flex h-16 items-center justify-between gap-4">
@@ -76,26 +110,62 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
+        <nav className="hidden md:flex items-center gap-3 lg:gap-4">
+          {primaryLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.end}
               className={({ isActive }) =>
                 cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
+                  'text-xs font-medium whitespace-nowrap transition-colors hover:text-primary',
                   isActive ? 'text-primary font-semibold' : 'text-foreground/70',
+                  lang === 'ta' && 'font-tamil',
                 )
               }
             >
               {link.label}
             </NavLink>
           ))}
+
+          {/* More dropdown */}
+          <div ref={moreMenuRef} className="relative">
+            <button
+              onClick={() => setMoreMenuOpen((o) => !o)}
+              className={cn(
+                'flex items-center gap-0.5 text-xs font-medium whitespace-nowrap transition-colors hover:text-primary',
+                moreLinks.some((l) => l.to === location.pathname) ? 'text-primary font-semibold' : 'text-foreground/70',
+                lang === 'ta' && 'font-tamil',
+              )}
+            >
+              {nav.more}
+              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', moreMenuOpen && 'rotate-180')} />
+            </button>
+            {moreMenuOpen && (
+              <div className="absolute left-0 top-full mt-2 w-44 rounded-lg border bg-white shadow-lg py-1 z-50">
+                {moreLinks.map((link) => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMoreMenuOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        'block px-4 py-2 text-xs font-medium transition-colors hover:bg-muted',
+                        isActive ? 'text-primary font-semibold' : 'text-foreground/70',
+                        lang === 'ta' && 'font-tamil',
+                      )
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {/* Search */}
           {searchOpen ? (
             <form onSubmit={handleSearch} className="flex items-center gap-1">
@@ -103,22 +173,74 @@ export default function Navbar() {
                 ref={searchRef}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search books, authors..."
+                placeholder={nav.searchPlaceholder}
                 className="h-8 w-48 text-sm"
               />
-              <Button type="button" variant="ghost" size="icon" onClick={() => setSearchOpen(false)}>
+              <Button type="button" variant="ghost" size="icon" className="h-9 w-9" onClick={() => setSearchOpen(false)}>
                 <X className="h-4 w-4" />
               </Button>
             </form>
           ) : (
-            <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setSearchOpen(true)}>
               <Search className="h-5 w-5" />
             </Button>
           )}
 
+          {/* Language Switcher */}
+          <div ref={langMenuRef} className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLangMenuOpen((o) => !o)}
+              title="Language"
+              className="relative h-9 w-9"
+            >
+              <Globe className="h-5 w-5" />
+              <span className="absolute -bottom-0.5 -right-0.5 text-[8px] font-bold bg-primary text-white rounded px-0.5 leading-tight">
+                {lang === 'en' ? 'EN' : 'த'}
+              </span>
+            </Button>
+            {langMenuOpen && (
+              <div className="absolute right-0 top-full mt-1 w-36 rounded-lg border bg-white shadow-lg py-1 z-50">
+                <button
+                  onClick={() => handleLangSelect('en')}
+                  className={cn(
+                    'w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors',
+                    lang === 'en' && 'text-primary font-semibold',
+                  )}
+                >
+                  <span className="text-base">🇬🇧</span> English
+                </button>
+                <button
+                  onClick={() => handleLangSelect('ta')}
+                  className={cn(
+                    'w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors font-tamil',
+                    lang === 'ta' && 'text-primary font-semibold',
+                  )}
+                >
+                  <span className="text-base">🇮🇳</span> தமிழ்
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Announcements */}
+          {isAuthenticated && (
+            <Link to="/announcements" className="relative">
+              <Button variant="ghost" size="icon" className="h-9 w-9" title={nav.announcements}>
+                <Bell className={cn('h-5 w-5', announcementCount > 0 && 'animate-bounce')} />
+                {announcementCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-4 min-w-4 px-0.5 flex items-center justify-center text-[10px] bg-amber-500 animate-pulse">
+                    {announcementCount > 9 ? '9+' : announcementCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+          )}
+
           {/* Wishlist */}
           <Link to={isAuthenticated ? '/wishlist' : '/auth/login'} className="relative">
-            <Button variant="ghost" size="icon" title="Wishlist">
+            <Button variant="ghost" size="icon" className="h-9 w-9" title={nav.wishlist}>
               <Heart className={cn('h-5 w-5', wishlistCount > 0 && 'fill-red-500 text-red-500')} />
               {wishlistCount > 0 && (
                 <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px] bg-red-500">
@@ -129,15 +251,15 @@ export default function Navbar() {
           </Link>
 
           {/* My Orders */}
-          <Link to={isAuthenticated ? '/orders' : '/auth/login'} title="My Orders">
-            <Button variant="ghost" size="icon">
+          <Link to={isAuthenticated ? '/orders' : '/auth/login'} title={nav.myOrders}>
+            <Button variant="ghost" size="icon" className="h-9 w-9">
               <Package className="h-5 w-5" />
             </Button>
           </Link>
 
           {/* Cart */}
           <Link to={isAuthenticated ? '/cart' : '/auth/login'} className="relative">
-            <Button variant="ghost" size="icon" title="Cart">
+            <Button variant="ghost" size="icon" className="h-9 w-9" title="Cart">
               <ShoppingCart className="h-5 w-5" />
               {itemCount > 0 && (
                 <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px]">
@@ -164,38 +286,50 @@ export default function Navbar() {
                   <Link
                     to="/profile"
                     onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors"
+                    className={cn('flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
                   >
-                    <User className="h-4 w-4" /> My Profile
+                    <User className="h-4 w-4" /> {nav.myProfile}
                   </Link>
                   <Link
                     to="/orders"
                     onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors"
+                    className={cn('flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
                   >
-                    <Package className="h-4 w-4" /> My Orders
+                    <Package className="h-4 w-4" /> {nav.myOrders}
                   </Link>
                   <Link
                     to="/wishlist"
                     onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors"
+                    className={cn('flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
                   >
-                    <Heart className="h-4 w-4" /> Wishlist
+                    <Heart className="h-4 w-4" /> {nav.wishlist}
+                  </Link>
+                  <Link
+                    to="/announcements"
+                    onClick={() => setUserMenuOpen(false)}
+                    className={cn('flex items-center justify-between gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
+                  >
+                    <span className="flex items-center gap-2"><Bell className="h-4 w-4" /> {nav.announcements}</span>
+                    {announcementCount > 0 && (
+                      <Badge className="h-4 min-w-4 px-1 flex items-center justify-center text-[10px] bg-amber-500">
+                        {announcementCount > 9 ? '9+' : announcementCount}
+                      </Badge>
+                    )}
                   </Link>
                   {(user?.role === 'admin' || user?.role === 'staff') && (
                     <Link
                       to="/admin"
                       onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors border-t"
+                      className={cn('flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors border-t', lang === 'ta' && 'font-tamil')}
                     >
-                      Dashboard
+                      {nav.dashboard}
                     </Link>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-destructive hover:bg-muted transition-colors border-t"
+                    className={cn('w-full flex items-center gap-2 px-4 py-2 text-sm text-destructive hover:bg-muted transition-colors border-t', lang === 'ta' && 'font-tamil')}
                   >
-                    <LogOut className="h-4 w-4" /> Sign Out
+                    <LogOut className="h-4 w-4" /> {nav.signOut}
                   </button>
                 </div>
               )}
@@ -203,10 +337,10 @@ export default function Navbar() {
           ) : (
             <div className="hidden sm:flex items-center gap-2">
               <Link to="/auth/login">
-                <Button size="sm" variant="outline">Sign In</Button>
+                <Button size="sm" variant="outline" className={lang === 'ta' ? 'font-tamil' : ''}>{nav.signIn}</Button>
               </Link>
               <Link to="/auth/register">
-                <Button size="sm">Register</Button>
+                <Button size="sm" className={lang === 'ta' ? 'font-tamil' : ''}>{nav.register}</Button>
               </Link>
             </div>
           )}
@@ -233,7 +367,7 @@ export default function Navbar() {
               end={link.end}
               onClick={() => setMobileOpen(false)}
               className={({ isActive }) =>
-                cn('text-sm font-medium py-1', isActive ? 'text-primary' : 'text-foreground/70')
+                cn('text-sm font-medium py-1', isActive ? 'text-primary' : 'text-foreground/70', lang === 'ta' && 'font-tamil')
               }
             >
               {link.label}
@@ -242,26 +376,34 @@ export default function Navbar() {
           <div className="border-t pt-3 flex flex-col gap-2">
             {isAuthenticated ? (
               <>
-                <Link to="/profile" onClick={() => setMobileOpen(false)} className="text-sm flex items-center gap-2 py-1">
-                  <User className="h-4 w-4" /> My Profile
+                <Link to="/profile" onClick={() => setMobileOpen(false)} className={cn('text-sm flex items-center gap-2 py-1', lang === 'ta' && 'font-tamil')}>
+                  <User className="h-4 w-4" /> {nav.myProfile}
                 </Link>
-                <Link to="/orders" onClick={() => setMobileOpen(false)} className="text-sm flex items-center gap-2 py-1">
-                  <Package className="h-4 w-4" /> My Orders
+                <Link to="/orders" onClick={() => setMobileOpen(false)} className={cn('text-sm flex items-center gap-2 py-1', lang === 'ta' && 'font-tamil')}>
+                  <Package className="h-4 w-4" /> {nav.myOrders}
                 </Link>
-                <Link to="/wishlist" onClick={() => setMobileOpen(false)} className="text-sm flex items-center gap-2 py-1">
-                  <Heart className="h-4 w-4" /> Wishlist
+                <Link to="/wishlist" onClick={() => setMobileOpen(false)} className={cn('text-sm flex items-center gap-2 py-1', lang === 'ta' && 'font-tamil')}>
+                  <Heart className="h-4 w-4" /> {nav.wishlist}
                 </Link>
-                <button onClick={handleLogout} className="text-sm flex items-center gap-2 py-1 text-destructive">
-                  <LogOut className="h-4 w-4" /> Sign Out
+                <Link to="/announcements" onClick={() => setMobileOpen(false)} className={cn('text-sm flex items-center gap-2 py-1', lang === 'ta' && 'font-tamil')}>
+                  <Bell className="h-4 w-4" /> {nav.announcements}
+                  {announcementCount > 0 && (
+                    <Badge className="h-4 min-w-4 px-1 flex items-center justify-center text-[10px] bg-amber-500">
+                      {announcementCount > 9 ? '9+' : announcementCount}
+                    </Badge>
+                  )}
+                </Link>
+                <button onClick={handleLogout} className={cn('text-sm flex items-center gap-2 py-1 text-destructive', lang === 'ta' && 'font-tamil')}>
+                  <LogOut className="h-4 w-4" /> {nav.signOut}
                 </button>
               </>
             ) : (
               <div className="flex gap-2">
                 <Link to="/auth/login" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button size="sm" variant="outline" className="w-full">Sign In</Button>
+                  <Button size="sm" variant="outline" className={cn('w-full', lang === 'ta' && 'font-tamil')}>{nav.signIn}</Button>
                 </Link>
                 <Link to="/auth/register" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button size="sm" className="w-full">Register</Button>
+                  <Button size="sm" className={cn('w-full', lang === 'ta' && 'font-tamil')}>{nav.register}</Button>
                 </Link>
               </div>
             )}

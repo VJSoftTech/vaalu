@@ -54,6 +54,7 @@ export default function EditBook() {
           stock_quantity: book.stock_quantity,
           preview_pdf: book.preview_pdf ?? undefined,
           rating: book.rating ?? 0,
+          external_url: book.external_url ?? '',
         })
         setCoverPreview(book.cover_image || '')
         setAuthors(authorsRes.data)
@@ -187,6 +188,16 @@ export default function EditBook() {
             <div className="space-y-1">
               <Label htmlFor="preview_pdf">Preview PDF URL</Label>
               <Input id="preview_pdf" type="text" placeholder="https://..." {...register('preview_pdf')} />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="external_url">External Listing URL</Label>
+              <Input
+                id="external_url"
+                type="text"
+                placeholder="https://thamizhbooks.com/product/..."
+                {...register('external_url')}
+              />
             </div>
 
             <div className="flex gap-3">

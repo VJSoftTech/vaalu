@@ -3,18 +3,22 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw, Headphones,
-  BookOpen, Users, Heart, Clock, Play, Phone, Mail, MapPin, MessageCircle,
+  Play, Phone, Mail, MapPin, MessageCircle,
 } from 'lucide-react'
 import WhatsAppIcon from '@/components/common/WhatsAppIcon'
 import { bookService } from '@/services/bookService'
-import { advertisementService } from '@/services/advertisementService'
 import { videoService } from '@/services/videoService'
 import { giftService } from '@/services/giftService'
+import { bannerService } from '@/services/bannerService'
 import type { Book, Advertisement, Video, GiftItem } from '@/types'
 import BookCard from '@/components/books/BookCard'
 import GiftCard from '@/components/gifts/GiftCard'
 import BookPageLoader from '@/components/common/BookPageLoader'
 import { Button } from '@/components/ui/button'
+import HeroBannerSlider from '@/components/home/HeroBannerSlider'
+import DefaultHero from '@/components/home/DefaultHero'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { cn } from '@/lib/utils'
 
 function useCountdown(targetDate: Date) {
   const calc = () => {
@@ -35,23 +39,9 @@ function useCountdown(targetDate: Date) {
   return time
 }
 
-const TRUST_BADGES = [
-  { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹499' },
-  { icon: Shield, title: 'Secure Payment', desc: '100% secure payments' },
-  { icon: RefreshCw, title: 'Easy Returns', desc: '7 days return policy' },
-  { icon: Headphones, title: '24/7 Support', desc: "We're here to help" },
-]
-
-const STATS = [
-  { icon: BookOpen, value: '5000+', label: 'Books' },
-  { icon: Users, value: '200+', label: 'Authors' },
-  { icon: Heart, value: '50K+', label: 'Happy Readers' },
-  { icon: Clock, value: '10+', label: 'Years of Legacy' },
-]
-
 export default function Home() {
   const [books, setBooks] = useState<Book[]>([])
-  const [ads, setAds] = useState<Advertisement[]>([])
+  const [banners, setBanners] = useState<Advertisement[]>([])
   const [videos, setVideos] = useState<Video[]>([])
   const [featuredGifts, setFeaturedGifts] = useState<GiftItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -59,17 +49,20 @@ export default function Home() {
   const videosScrollRef = useRef<HTMLDivElement>(null)
   const offerEnd = new Date(Date.now() + 2 * 86400000 + 14 * 3600000 + 36 * 60000 + 48000)
   const countdown = useCountdown(offerEnd)
+  const { t, lang } = useLanguage()
+  const h = t.home
+  const ta = lang === 'ta'
 
   useEffect(() => {
     Promise.allSettled([
       bookService.getAll({ limit: 12, sort_by: 'created_at', sort_order: 'desc' }),
-      advertisementService.getAll({ is_active: true }),
+      bannerService.getActiveBanners(),
       videoService.getAll({ limit: 6 }),
       giftService.getFeatured(8),
     ])
-      .then(([booksRes, adsRes, videosRes, giftsRes]) => {
+      .then(([booksRes, bannersRes, videosRes, giftsRes]) => {
         if (booksRes.status === 'fulfilled') setBooks(booksRes.value.data ?? [])
-        if (adsRes.status === 'fulfilled') setAds(adsRes.value.data ?? [])
+        if (bannersRes.status === 'fulfilled') setBanners(bannersRes.value.data ?? [])
         if (videosRes.status === 'fulfilled') setVideos(videosRes.value.data ?? [])
         if (giftsRes.status === 'fulfilled') setFeaturedGifts(giftsRes.value.data ?? [])
       })
@@ -81,100 +74,34 @@ export default function Home() {
     ref.current.scrollBy({ left: dir === 'left' ? -320 : 320, behavior: 'smooth' })
   }
 
+  const trustBadges = [
+    { icon: Truck, title: h.freeShipping, desc: h.freeShippingDesc },
+    { icon: Shield, title: h.securePayment, desc: h.securePaymentDesc },
+    { icon: RefreshCw, title: h.easyReturns, desc: h.easyReturnsDesc },
+    { icon: Headphones, title: h.support, desc: h.supportDesc },
+  ]
+
   return (
     <div className="space-y-0">
-      {/* ── Hero ── */}
-      {/* <section className="relative overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 py-16 md:py-24"> */}
-        <section
-  className="relative overflow-hidden py-16 md:py-24 bg-cover bg-center bg-no-repeat"
-  style={{
-    backgroundImage: "url('/hero-banner.png')",
-  }}
->
-        <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM5MzMiIGZpbGwtb3BhY2l0eT0iMSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptNiA2djZoNnYtNmgtNnptLTEyIDBoNnY2aC02di02eiIvPjwvZz48L2c+PC9zdmc+')]" />
-        <div className="container relative">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            {/* Left: Content */}
-            <div>
-              <motion.p
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-primary font-medium text-sm mb-3 flex items-center gap-2"
-              >
-                <Heart className="h-4 w-4 fill-primary" /> Preserving Tamil Literature
-              </motion.p>
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-5xl md:text-7xl font-bold text-primary font-tamil mb-4"
-              >
-                <span className="block">வாலு</span>
-                <span className="block mt-2">பதிப்பகம்</span>
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-foreground/70 text-lg mb-8"
-              >
-                Discover the richness of Tamil literature.<br />
-                Books that inspire, enlighten, and connect.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="flex gap-3 flex-wrap"
-              >
-                <Link to="/books">
-                  <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 shadow-lg">
-                    Browse Books <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/vaalu-tv">
-                  <Button size="lg" variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/5">
-                    <Play className="h-4 w-4 fill-primary" /> Vaalu TV
-                  </Button>
-                </Link>
-              </motion.div>
-
-              {/* Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10"
-              >
-                {STATS.map(({ icon: Icon, value, label }) => (
-                  <div key={label} className="flex items-center gap-2 bg-white/70 rounded-xl p-3 shadow-sm border border-white">
-                    <Icon className="h-5 w-5 text-primary shrink-0" />
-                    <div>
-                      <div className="font-bold text-foreground leading-tight">{value}</div>
-                      <div className="text-xs text-muted-foreground">{label}</div>
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Right: Hero Banner Image */}
-            
-          </div>
-        </div>
-      </section>
+      {/* ── Hero Banner Slider ── */}
+      {loading ? (
+        <DefaultHero />
+      ) : (
+        <HeroBannerSlider banners={banners} autoPlayInterval={5000} />
+      )}
 
       {/* ── Trust Badges ── */}
       <section className="border-y bg-white">
         <div className="container py-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {TRUST_BADGES.map(({ icon: Icon, title, desc }) => (
+            {trustBadges.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <div className="font-semibold text-sm">{title}</div>
-                  <div className="text-xs text-muted-foreground">{desc}</div>
+                  <div className={cn('font-semibold text-sm', ta && 'font-tamil')}>{title}</div>
+                  <div className={cn('text-xs text-muted-foreground', ta && 'font-tamil')}>{desc}</div>
                 </div>
               </div>
             ))}
@@ -186,7 +113,7 @@ export default function Home() {
       <section className="container py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Latest Books</h2>
+            <h2 className={cn('text-2xl font-bold', ta && 'font-tamil')}>{h.latestBooks}</h2>
             <div className="h-1 w-12 bg-primary rounded-full mt-1" />
           </div>
           <div className="flex items-center gap-2">
@@ -202,8 +129,8 @@ export default function Home() {
             >
               <ChevronRight className="h-4 w-4" />
             </button>
-            <Link to="/books" className="flex items-center gap-1 text-sm text-primary hover:underline ml-2">
-              View all <ArrowRight className="h-4 w-4" />
+            <Link to="/books" className={cn('flex items-center gap-1 text-sm text-primary hover:underline ml-2', ta && 'font-tamil')}>
+              {h.viewAll} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -267,7 +194,6 @@ export default function Home() {
               >
                 🎁
               </motion.div>
-              {/* Sparkles */}
               {[
                 { emoji: '✨', top: '-8%', left: '-18%', delay: 0 },
                 { emoji: '⭐', top: '8%', left: '112%', delay: 0.5 },
@@ -291,25 +217,25 @@ export default function Home() {
               <motion.p
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-yellow-300 font-semibold text-sm mb-1"
+                className={cn('text-yellow-300 font-semibold text-sm mb-1', ta && 'font-tamil')}
               >
-                ✦ Exclusive Custom Gift Currency Notes
+                {h.giftBadge}
               </motion.p>
               <motion.h3
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-2xl md:text-3xl font-bold mb-2 leading-tight"
+                className={cn('text-2xl md:text-3xl font-bold mb-2 leading-tight', ta && 'font-tamil')}
               >
-                🎁 Custom Gift Currency Notes
+                {h.giftTitle}
               </motion.h3>
               <motion.p
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-white/80 text-sm leading-relaxed"
+                className={cn('text-white/80 text-sm leading-relaxed', ta && 'font-tamil')}
               >
-                Personalized gift notes for every occasion — birthdays, weddings, festivals & corporate events.
+                {h.giftDesc}
               </motion.p>
               <motion.div
                 initial={{ opacity: 0 }}
@@ -317,8 +243,8 @@ export default function Home() {
                 transition={{ delay: 0.3 }}
                 className="flex flex-wrap gap-2 mt-3"
               >
-                {['🎂 Birthdays', '💒 Weddings', '🎊 Festivals', '🏢 Corporate'].map(tag => (
-                  <span key={tag} className="text-xs bg-white/15 rounded-full px-2.5 py-1">{tag}</span>
+                {[h.tagBirthdays, h.tagWeddings, h.tagFestivals, h.tagCorporate].map(tag => (
+                  <span key={tag} className={cn('text-xs bg-white/15 rounded-full px-2.5 py-1', ta && 'font-tamil')}>{tag}</span>
                 ))}
               </motion.div>
             </div>
@@ -326,8 +252,8 @@ export default function Home() {
             {/* CTA buttons */}
             <div className="flex flex-col gap-2 shrink-0 w-full sm:w-auto">
               <Link to="/gifts">
-                <Button className="bg-orange-400 hover:bg-orange-300 text-orange-950 font-semibold gap-2 w-full shadow-lg">
-                  Explore Gifts <ArrowRight className="h-4 w-4" />
+                <Button className={cn('bg-orange-400 hover:bg-orange-300 text-orange-950 font-semibold gap-2 w-full shadow-lg', ta && 'font-tamil')}>
+                  {h.exploreGifts} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <a
@@ -336,8 +262,8 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="w-full"
               >
-                <Button className="bg-green-500 hover:bg-green-400 text-white gap-2 w-full font-semibold shadow-lg">
-                  <WhatsAppIcon /> WhatsApp Enquiry
+                <Button className={cn('bg-green-500 hover:bg-green-400 text-white gap-2 w-full font-semibold shadow-lg', ta && 'font-tamil')}>
+                  <WhatsAppIcon /> {h.whatsappEnquiry}
                 </Button>
               </a>
             </div>
@@ -346,37 +272,37 @@ export default function Home() {
       </section>
 
       {/* ── Festival Offer Banner ── */}
-      {ads.length > 0 || true ? (
+      {banners.length > 0 || true ? (
         <section className="container pb-10">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-red-700 text-white p-6 md:p-8">
             <div className="absolute top-0 right-0 bottom-0 w-1/3 bg-gradient-to-l from-red-900/40 to-transparent" />
             <div className="relative flex flex-col md:flex-row items-center gap-6">
               <div className="text-5xl hidden md:block">🎁</div>
               <div className="flex-1 text-center md:text-left">
-                <div className="text-yellow-300 font-semibold text-sm mb-1">✦ Special Festival Offer!</div>
-                <h3 className="text-2xl font-bold mb-1">Get exciting discounts and currency gifts</h3>
-                <p className="text-white/80 text-sm">on selected books. Limited time only!</p>
+                <div className={cn('text-yellow-300 font-semibold text-sm mb-1', ta && 'font-tamil')}>{h.festivalBadge}</div>
+                <h3 className={cn('text-2xl font-bold mb-1', ta && 'font-tamil')}>{h.festivalTitle}</h3>
+                <p className={cn('text-white/80 text-sm', ta && 'font-tamil')}>{h.festivalDesc}</p>
               </div>
               <div className="flex flex-col items-center gap-3">
-                <div className="text-sm text-white/80">Offer ends in</div>
+                <div className={cn('text-sm text-white/80', ta && 'font-tamil')}>{h.offerEndsIn}</div>
                 <div className="flex gap-2">
                   {[
-                    { val: countdown.days, label: 'Days' },
-                    { val: countdown.hours, label: 'Hours' },
-                    { val: countdown.mins, label: 'Mins' },
-                    { val: countdown.secs, label: 'Secs' },
+                    { val: countdown.days, label: h.days },
+                    { val: countdown.hours, label: h.hours },
+                    { val: countdown.mins, label: h.mins },
+                    { val: countdown.secs, label: h.secs },
                   ].map(({ val, label }) => (
                     <div key={label} className="flex flex-col items-center bg-white/20 backdrop-blur rounded-lg px-3 py-2 min-w-[52px]">
                       <span className="text-2xl font-bold tabular-nums">
                         {String(val).padStart(2, '0')}
                       </span>
-                      <span className="text-[10px] text-white/70">{label}</span>
+                      <span className={cn('text-[10px] text-white/70', ta && 'font-tamil')}>{label}</span>
                     </div>
                   ))}
                 </div>
                 <Link to="/offers">
-                  <Button size="sm" className="bg-yellow-400 text-yellow-900 hover:bg-yellow-300 font-semibold gap-1">
-                    Explore Offers <ArrowRight className="h-3.5 w-3.5" />
+                  <Button size="sm" className={cn('bg-yellow-400 text-yellow-900 hover:bg-yellow-300 font-semibold gap-1', ta && 'font-tamil')}>
+                    {h.exploreOffers} <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
               </div>
@@ -390,7 +316,7 @@ export default function Home() {
         <section className="container pb-10">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold">Vaalu TV</h2>
+              <h2 className={cn('text-2xl font-bold', ta && 'font-tamil')}>{h.vaaluTv}</h2>
               <div className="h-1 w-12 bg-primary rounded-full mt-1" />
             </div>
             <div className="flex items-center gap-2">
@@ -406,8 +332,8 @@ export default function Home() {
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
-              <Link to="/vaalu-tv" className="flex items-center gap-1 text-sm text-primary hover:underline ml-2">
-                View all <ArrowRight className="h-4 w-4" />
+              <Link to="/vaalu-tv" className={cn('flex items-center gap-1 text-sm text-primary hover:underline ml-2', ta && 'font-tamil')}>
+                {h.viewAll} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -454,14 +380,14 @@ export default function Home() {
         <section className="container pb-10">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold">🎁 வாழு கிப்ட் கரன்சி & சிறப்பு காலண்டர் பரிசுகள்</h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                பிறந்தநாள், திருமண நாள், நினைவு நாள் மற்றும் சிறப்பு விழாக்களுக்கு தனிப்பயன் பரிசுகள்
+              <h2 className={cn('text-2xl font-bold font-tamil', ta && 'font-tamil')}>{h.giftSectionTitle}</h2>
+              <p className={cn('text-muted-foreground text-sm mt-1', ta && 'font-tamil')}>
+                {h.giftSectionDesc}
               </p>
               <div className="h-1 w-12 bg-teal-600 rounded-full mt-2" />
             </div>
-            <Link to="/gifts" className="flex items-center gap-1 text-sm text-teal-700 hover:underline">
-              View all <ArrowRight className="h-4 w-4" />
+            <Link to="/gifts" className={cn('flex items-center gap-1 text-sm text-teal-700 hover:underline', ta && 'font-tamil')}>
+              {h.viewAll} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -495,26 +421,26 @@ export default function Home() {
               <motion.p
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-yellow-300 font-semibold text-sm mb-2 flex items-center gap-2"
+                className={cn('text-yellow-300 font-semibold text-sm mb-2 flex items-center gap-2', ta && 'font-tamil')}
               >
-                <MessageCircle className="h-4 w-4" /> We're here for you
+                <MessageCircle className="h-4 w-4" /> {h.contactBadge}
               </motion.p>
               <motion.h2
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
-                className="text-3xl md:text-4xl font-bold mb-3 leading-tight"
+                className={cn('text-3xl md:text-4xl font-bold mb-3 leading-tight', ta && 'font-tamil')}
               >
-                Get in Touch with<br />
+                {h.contactTitle}<br />
                 <span className="text-yellow-300 font-tamil">வாலு பதிப்பகம்</span>
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-white/80 text-sm leading-relaxed mb-6 max-w-md"
+                className={cn('text-white/80 text-sm leading-relaxed mb-6 max-w-md', ta && 'font-tamil')}
               >
-                Have a question about books, orders, or custom gift currency notes? Our team is ready to help you — reach out via call, email, or WhatsApp.
+                {h.contactDesc}
               </motion.p>
 
               {/* Quick contact info */}
@@ -527,7 +453,7 @@ export default function Home() {
                 {[
                   { Icon: Phone, text: '+91 94442 96929' },
                   { Icon: Mail, text: 'vaalupathippagam@gmail.com' },
-                  { Icon: MapPin, text: '123, Book Street, Chennai – 600001' },
+                  { Icon: MapPin, text: 'Chennai, Tamil Nadu' },
                 ].map(({ Icon, text }) => (
                   <div key={text} className="flex items-center gap-3 text-sm text-white/90">
                     <div className="h-8 w-8 rounded-full bg-white/15 flex items-center justify-center shrink-0">
@@ -546,8 +472,8 @@ export default function Home() {
                 className="flex flex-wrap gap-3"
               >
                 <Link to="/contact">
-                  <Button className="bg-white text-primary hover:bg-white/90 font-semibold gap-2 shadow-lg">
-                    <MessageCircle className="h-4 w-4" /> Contact Us
+                  <Button className={cn('bg-white text-primary hover:bg-white/90 font-semibold gap-2 shadow-lg', ta && 'font-tamil')}>
+                    <MessageCircle className="h-4 w-4" /> {h.contactUs}
                   </Button>
                 </Link>
                 <a
@@ -555,8 +481,8 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="bg-green-500 hover:bg-green-400 text-white gap-2 font-semibold shadow-lg">
-                    <WhatsAppIcon /> WhatsApp Us
+                  <Button className={cn('bg-green-500 hover:bg-green-400 text-white gap-2 font-semibold shadow-lg', ta && 'font-tamil')}>
+                    <WhatsAppIcon /> {h.whatsappUs}
                   </Button>
                 </a>
               </motion.div>
@@ -570,14 +496,14 @@ export default function Home() {
               className="grid grid-cols-2 gap-4"
             >
               {[
-                { icon: Phone, label: 'Call Us', value: '+91 94442 96929', color: 'bg-blue-500/20 border-blue-300/30' },
-                { icon: Mail, label: 'Email Us', value: 'vaalupathippagam@gmail.com', color: 'bg-white/10 border-white/20' },
-                { icon: MapPin, label: 'Visit Us', value: 'Chennai,\nTamil Nadu', color: 'bg-emerald-500/20 border-emerald-300/30' },
+                { icon: Phone, label: h.callUs, value: '+91 94442 96929', color: 'bg-blue-500/20 border-blue-300/30' },
+                { icon: Mail, label: h.emailUs, value: 'vaalupathippagam@gmail.com', color: 'bg-white/10 border-white/20' },
+                { icon: MapPin, label: h.visitUs, value: 'Chennai,\nTamil Nadu', color: 'bg-emerald-500/20 border-emerald-300/30' },
                 { icon: WhatsAppIcon, label: 'WhatsApp', value: '+91 94442 96929', color: 'bg-green-500/20 border-green-300/30' },
               ].map(({ icon: Icon, label, value, color }) => (
                 <div key={label} className={`rounded-2xl border ${color} p-4 backdrop-blur-sm`}>
                   <Icon className="h-5 w-5 text-white/80 mb-2" />
-                  <div className="text-xs text-white/60 mb-1">{label}</div>
+                  <div className={cn('text-xs text-white/60 mb-1', ta && 'font-tamil')}>{label}</div>
                   <div className="text-sm font-semibold text-white leading-snug whitespace-pre-line">{value}</div>
                 </div>
               ))}

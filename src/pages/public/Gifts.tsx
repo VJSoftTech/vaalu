@@ -8,10 +8,12 @@ import GiftCard from '@/components/gifts/GiftCard'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useDebounce } from '@/hooks/useDebounce'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const LIMIT = 12
 
 export default function Gifts() {
+  const { t } = useLanguage()
   const [gifts, setGifts] = useState<GiftItem[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -23,6 +25,7 @@ export default function Gifts() {
     setLoading(true)
     giftService.getAll({ ...filters, search: debouncedSearch })
       .then((r) => { setGifts(r.data); setTotal(r.total) })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [filters, debouncedSearch])
 
@@ -65,14 +68,14 @@ export default function Gifts() {
 
         <div className="flex flex-wrap gap-2 justify-center">
           <div className="flex items-center gap-1 text-sm text-muted-foreground mr-1">
-            <Filter className="h-3.5 w-3.5" /> Category:
+            <Filter className="h-3.5 w-3.5" /> {t.gifts.category}
           </div>
           <Badge
             variant={!filters.category ? 'default' : 'outline'}
             className="cursor-pointer text-sm px-4 py-1.5"
             onClick={() => setFilters((f) => ({ ...f, category: '', page: 1 }))}
           >
-            All
+            {t.gifts.all}
           </Badge>
           {GIFT_CATEGORIES.map((c) => (
             <Badge
@@ -97,13 +100,13 @@ export default function Gifts() {
       ) : gifts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-3">
           <span className="text-5xl">🎁</span>
-          <p className="text-lg font-medium">No gifts found</p>
-          <p className="text-sm">Try a different category or search term.</p>
+          <p className="text-lg font-medium">{t.gifts.noGiftsFound}</p>
+          <p className="text-sm">{t.gifts.tryDifferentCategory}</p>
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">{total} gift{total !== 1 ? 's' : ''} found</p>
+            <p className="text-sm text-muted-foreground">{total} {total !== 1 ? t.gifts.giftsFound : t.gifts.giftFound}</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {gifts.map((gift) => (
@@ -122,10 +125,10 @@ export default function Gifts() {
             disabled={filters.page === 1}
             onClick={() => setFilters((f) => ({ ...f, page: (f.page ?? 1) - 1 }))}
           >
-            Previous
+            {t.gifts.previous}
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {filters.page} of {totalPages}
+            {t.gifts.page} {filters.page} {t.gifts.of} {totalPages}
           </span>
           <Button
             variant="outline"
@@ -133,7 +136,7 @@ export default function Gifts() {
             disabled={filters.page === totalPages}
             onClick={() => setFilters((f) => ({ ...f, page: (f.page ?? 1) + 1 }))}
           >
-            Next
+            {t.gifts.next}
           </Button>
         </div>
       )}

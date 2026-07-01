@@ -1,16 +1,140 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Star, ShoppingCart, Heart, Share2, FileText } from 'lucide-react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Star, ShoppingCart, Heart, Share2, FileText, ExternalLink } from 'lucide-react'
 import { bookService } from '@/services/bookService'
-import type { Book } from '@/types'
-import { formatCurrency } from '@/utils/formatters'
+import { reviewService } from '@/services/reviewService'
+import { reviewSchema } from '@/utils/validators'
+import type { Book, Review, ReviewFormData } from '@/types'
+import { formatCurrency, formatDate } from '@/utils/formatters'
 import { calculateDiscount } from '@/utils/helpers'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
+import { toast } from '@/hooks/useToast'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent } from '@/components/ui/card'
 import { getBookCover } from '@/assets/images/bookCovers'
+import ImageLightbox from '@/components/common/ImageLightbox'
+
+function ReviewsSection({ book }: { book: Book }) {
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ReviewFormData>({ resolver: zodResolver(reviewSchema), defaultValues: { rating: 0 } })
+
+  useEffect(() => {
+    reviewService
+      .getByBook(book.id)
+      .then(setReviews)
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [book.id])
+
+  const onSubmit = async (data: ReviewFormData) => {
+    try {
+      const review = await reviewService.create(book.id, data)
+      setReviews((prev) => [review, ...prev])
+      reset({ customer_name: '', customer_email: '', comment: '', rating: 0 })
+      toast({ title: 'Thank you for your feedback!' })
+    } catch {
+      toast({ title: 'Failed to submit review', variant: 'destructive' })
+    }
+  }
+
+  return (
+    <div className="mt-12 grid md:grid-cols-2 gap-8">
+      <div>
+        <h3 className="text-xl font-semibold mb-4">Reviews ({reviews.length})</h3>
+        {loading ? (
+          <LoadingSpinner className="py-8" />
+        ) : reviews.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No reviews yet. Be the first to share your feedback.</p>
+        ) : (
+          <div className="space-y-4">
+            {reviews.map((r) => (
+              <Card key={r.id}>
+                <CardContent className="p-4 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{r.customer_name}</span>
+                    <span className="text-xs text-muted-foreground">{formatDate(r.created_at)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`h-4 w-4 ${s <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{r.comment}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          <div className="space-y-1">
+            <Label htmlFor="customer_name">Name</Label>
+            <Input id="customer_name" {...register('customer_name')} />
+            {errors.customer_name && <p className="text-xs text-destructive">{errors.customer_name.message}</p>}
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="customer_email">Email (optional)</Label>
+            <Input id="customer_email" type="email" {...register('customer_email')} />
+            {errors.customer_email && <p className="text-xs text-destructive">{errors.customer_email.message}</p>}
+          </div>
+
+          <div className="space-y-1">
+            <Label>Rating</Label>
+            <Controller
+              name="rating"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <button key={s} type="button" onClick={() => field.onChange(s)}>
+                      <Star
+                        className={`h-6 w-6 ${s <= field.value ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
+            {errors.rating && <p className="text-xs text-destructive">{errors.rating.message}</p>}
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="comment">Comment</Label>
+            <Textarea id="comment" rows={4} {...register('comment')} />
+            {errors.comment && <p className="text-xs text-destructive">{errors.comment.message}</p>}
+          </div>
+
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit Review'}
+          </Button>
+        </form>
+      </div>
+    </div>
+  )
+}
 
 export default function BookDetail() {
   const { id } = useParams<{ id: string }>()
@@ -18,12 +142,14 @@ export default function BookDetail() {
   const [loading, setLoading] = useState(true)
   const { addToCart, isInCart } = useCart()
   const { toggleWishlist, isInWishlist } = useWishlist()
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   useEffect(() => {
     if (!id) return
     bookService
       .getById(Number(id))
       .then(setBook)
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id])
 
@@ -31,19 +157,23 @@ export default function BookDetail() {
   if (!book) return <div className="container py-24 text-center">Book not found.</div>
 
   const discount = calculateDiscount(book.price, book.discount_price)
+  const thamizhBooksUrl = book.external_url || 'https://thamizhbooks.com/product/mayil-pota-kanakku/'
+  const coverSrc = getBookCover(book.id, book.cover_image)
 
   return (
     <div className="container py-8">
       <div className="grid md:grid-cols-2 gap-10">
         <div className="relative max-w-xs mx-auto md:mx-0">
           <img
-            src={getBookCover(book.id, book.cover_image)}
+            src={coverSrc}
             alt={book.title}
-            className="w-full rounded-lg shadow-lg"
+            onClick={() => setLightboxOpen(true)}
+            className="w-full rounded-lg shadow-lg cursor-zoom-in"
           />
           {discount > 0 && (
             <Badge className="absolute top-3 left-3 bg-destructive text-lg">{discount}% OFF</Badge>
           )}
+          <ImageLightbox src={coverSrc} alt={book.title} open={lightboxOpen} onClose={() => setLightboxOpen(false)} />
         </div>
 
         <div className="space-y-4">
@@ -123,6 +253,16 @@ export default function BookDetail() {
             )}
           </div>
 
+          <a
+            href={thamizhBooksUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline inline-flex items-center gap-1 text-sm break-all"
+          >
+            <ExternalLink className="h-4 w-4 shrink-0" />
+            {thamizhBooksUrl}
+          </a>
+
           <div>
             <h3 className="font-semibold mb-2">About this book</h3>
             <p className="text-muted-foreground leading-relaxed">{book.description}</p>
@@ -134,6 +274,8 @@ export default function BookDetail() {
           </div>
         </div>
       </div>
+
+      <ReviewsSection book={book} />
     </div>
   )
 }

@@ -16,6 +16,14 @@ export const bookSchema = z.object({
   stock_quantity: z.number().int().min(0, 'Stock cannot be negative'),
   rating: z.number().min(0, 'Rating cannot be negative').max(5, 'Rating cannot exceed 5').optional(),
   preview_pdf: z.string().optional().or(z.literal('')),
+  external_url: z.string().optional().or(z.literal('')),
+})
+
+export const reviewSchema = z.object({
+  customer_name: z.string().min(1, 'Name is required'),
+  customer_email: z.string().email('Invalid email address').optional().or(z.literal('')),
+  rating: z.number().int().min(1, 'Please select a rating').max(5, 'Rating cannot exceed 5'),
+  comment: z.string().min(5, 'Please write a few words about the book'),
 })
 
 export const authorSchema = z.object({
@@ -49,6 +57,22 @@ export const giftSchema = z.object({
   video_url: z.string().optional().or(z.literal('')),
   is_featured: z.boolean(),
   is_trending: z.boolean(),
+  is_active: z.boolean(),
+})
+
+export const staffUserSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  role: z.enum(['admin', 'staff']),
+  is_active: z.boolean(),
+})
+
+export const staffUserEditSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional().or(z.literal('')),
+  role: z.enum(['admin', 'staff']),
   is_active: z.boolean(),
 })
 

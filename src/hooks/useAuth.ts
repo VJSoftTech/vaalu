@@ -16,13 +16,13 @@ export const useAuth = () => {
     setError(null)
     try {
       const data = await authService.login(credentials)
-      if (data.user.role === 'admin' || data.user.role === 'staff') {
-        setError('Access denied. This login is for customers only.')
-        return
-      }
       setAuth(data.user, data.token)
       const from = (location.state as { from?: string })?.from
-      navigate(from ?? '/', { replace: true })
+      if (data.user.role === 'admin' || data.user.role === 'staff') {
+        navigate('/admin', { replace: true })
+      } else {
+        navigate(from ?? '/', { replace: true })
+      }
     } catch {
       setError('Invalid email or password')
     } finally {

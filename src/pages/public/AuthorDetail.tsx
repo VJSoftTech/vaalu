@@ -20,6 +20,7 @@ export default function AuthorDetail() {
       bookService.getAll({ author_id: Number(id) }),
     ])
       .then(([a, b]) => { setAuthor(a); setBooks(b.data) })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [id])
 

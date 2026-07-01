@@ -14,6 +14,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/useToast'
+import ImageLightbox from '@/components/common/ImageLightbox'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface EnquiryForm {
   customer_name: string
@@ -30,11 +32,13 @@ function extractYoutubeInfo(url: string): { id: string; isShort: boolean } | nul
 }
 
 export default function GiftDetail() {
+  const { t } = useLanguage()
   const { slug } = useParams<{ slug: string }>()
   const { toast } = useToast()
   const [gift, setGift] = useState<GiftItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeImg, setActiveImg] = useState<string>('')
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -58,11 +62,11 @@ export default function GiftDetail() {
     setSubmitting(true)
     try {
       await giftService.submitEnquiry({ ...data, gift_id: gift.id })
-      toast({ title: 'Enquiry sent! We will contact you soon.' })
+      toast({ title: t.giftDetail.enquirySentToast })
       setSubmitted(true)
       reset()
     } catch {
-      toast({ title: 'Failed to send enquiry', variant: 'destructive' })
+      toast({ title: t.giftDetail.enquiryFailedToast, variant: 'destructive' })
     } finally {
       setSubmitting(false)
     }
@@ -80,8 +84,8 @@ export default function GiftDetail() {
     return (
       <div className="container py-20 text-center space-y-4">
         <p className="text-5xl">🎁</p>
-        <h2 className="text-2xl font-bold">Gift not found</h2>
-        <Link to="/gifts"><Button>Browse Gifts</Button></Link>
+        <h2 className="text-2xl font-bold">{t.giftDetail.giftNotFound}</h2>
+        <Link to="/gifts"><Button>{t.giftDetail.browseGifts}</Button></Link>
       </div>
     )
   }
@@ -94,7 +98,7 @@ export default function GiftDetail() {
   return (
     <div className="container py-10 space-y-8">
       <Link to="/gifts" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Back to Gifts
+        <ArrowLeft className="h-4 w-4" /> {t.giftDetail.backToGifts}
       </Link>
 
       {/* Heading & Description */}
@@ -105,12 +109,12 @@ export default function GiftDetail() {
           </Badge>
           {gift.is_featured && (
             <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 gap-1">
-              <Star className="h-3 w-3" /> Featured
+              <Star className="h-3 w-3" /> {t.giftDetail.featured}
             </Badge>
           )}
           {gift.is_trending && (
             <Badge className="bg-orange-100 text-orange-800 border-orange-200 gap-1">
-              <TrendingUp className="h-3 w-3" /> Trending
+              <TrendingUp className="h-3 w-3" /> {t.giftDetail.trending}
             </Badge>
           )}
         </div>
@@ -123,7 +127,7 @@ export default function GiftDetail() {
             className="bg-teal-700 hover:bg-teal-800 gap-2"
             onClick={() => document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            <MessageSquare className="h-4 w-4" /> Send Enquiry
+            <MessageSquare className="h-4 w-4" /> {t.giftDetail.sendEnquiry}
           </Button>
           <a
             href="https://wa.me/919444296929?text=Hi%2C%20I%20have%20an%20enquiry%20about%20a%20Gift%20Currency%20Note"
@@ -131,7 +135,7 @@ export default function GiftDetail() {
             rel="noopener noreferrer"
           >
             <Button variant="outline" className="gap-2 border-green-600 text-green-700 hover:bg-green-50">
-              <WhatsAppIcon className="h-4 w-4" /> WhatsApp Enquiry
+              <WhatsAppIcon className="h-4 w-4" /> {t.giftDetail.whatsappEnquiry}
             </Button>
           </a>
         </div>
@@ -143,7 +147,12 @@ export default function GiftDetail() {
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-2">
           <div className="rounded-2xl overflow-hidden border bg-gradient-to-br from-teal-50 to-orange-50">
             {activeImg ? (
-              <img src={activeImg} alt={gift.title} className="w-full h-auto" />
+              <img
+                src={activeImg}
+                alt={gift.title}
+                onClick={() => setLightboxOpen(true)}
+                className="w-full h-auto cursor-zoom-in"
+              />
             ) : (
               <div className="flex items-center justify-center py-16 text-7xl">🎁</div>
             )}
@@ -164,6 +173,7 @@ export default function GiftDetail() {
             </div>
           )}
         </motion.div>
+        <ImageLightbox src={activeImg} alt={gift.title} open={lightboxOpen} onClose={() => setLightboxOpen(false)} />
 
         {/* YouTube Video */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
@@ -181,7 +191,7 @@ export default function GiftDetail() {
                 </div>
               </div>
               <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <Play className="h-3 w-3 text-teal-600" /> Watch product video
+                <Play className="h-3 w-3 text-teal-600" /> {t.giftDetail.watchProductVideo}
               </p>
             </>
           ) : gift.video_url ? (
@@ -191,11 +201,11 @@ export default function GiftDetail() {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-teal-700 hover:underline"
             >
-              <Play className="h-4 w-4" /> Watch video preview
+              <Play className="h-4 w-4" /> {t.giftDetail.watchVideoPreview}
             </a>
           ) : (
             <div className="rounded-2xl border border-dashed flex items-center justify-center py-16 text-muted-foreground text-sm">
-              No video available
+              {t.giftDetail.noVideoAvailable}
             </div>
           )}
         </motion.div>
@@ -205,14 +215,14 @@ export default function GiftDetail() {
           <div id="enquiry-form" className="border rounded-2xl p-5 space-y-4 bg-teal-50/50">
             <div className="flex items-center gap-2 font-semibold">
               <MessageSquare className="h-4 w-4 text-teal-700" />
-              Send Enquiry
+              {t.giftDetail.sendEnquiry}
             </div>
 
             {submitted ? (
               <div className="text-center py-4 space-y-2">
                 <p className="text-2xl">✅</p>
-                <p className="font-medium text-teal-700">Enquiry sent successfully!</p>
-                <p className="text-sm text-muted-foreground">We'll contact you shortly.</p>
+                <p className="font-medium text-teal-700">{t.giftDetail.enquirySentSuccess}</p>
+                <p className="text-sm text-muted-foreground">{t.giftDetail.wellContactShortly}</p>
                 <a
                   href="https://wa.me/919444296929?text=Hi%2C%20I%20sent%20an%20enquiry%20about%20a%20Gift%20Currency%20Note"
                   target="_blank"
@@ -223,42 +233,42 @@ export default function GiftDetail() {
                 </a>
                 <div>
                   <Button size="sm" variant="outline" onClick={() => setSubmitted(false)}>
-                    Send Another
+                    {t.giftDetail.sendAnother}
                   </Button>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onEnquiry)} className="space-y-3">
                 <div className="space-y-1">
-                  <Label htmlFor="customer_name">Your Name *</Label>
+                  <Label htmlFor="customer_name">{t.giftDetail.yourName}</Label>
                   <Input id="customer_name" {...register('customer_name')} placeholder="John Doe" />
                   {errors.customer_name && (
                     <p className="text-xs text-destructive">{errors.customer_name.message}</p>
                   )}
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="phone_number">Phone</Label>
+                  <Label htmlFor="phone_number">{t.giftDetail.phone}</Label>
                   <Input id="phone_number" {...register('phone_number')} placeholder="9876543210" />
                   {errors.phone_number && (
                     <p className="text-xs text-destructive">{errors.phone_number.message}</p>
                   )}
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t.giftDetail.email}</Label>
                   <Input id="email" type="email" {...register('email')} placeholder="optional" />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="message">Message</Label>
+                  <Label htmlFor="message">{t.giftDetail.message}</Label>
                   <Textarea
                     id="message"
                     {...register('message')}
-                    placeholder="Tell us more about your requirement…"
+                    placeholder={t.giftDetail.messagePlaceholder}
                     rows={3}
                   />
                 </div>
                 <Button type="submit" disabled={submitting} className="w-full bg-teal-700 hover:bg-teal-800 gap-2">
                   {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {submitting ? 'Sending…' : 'Send Enquiry'}
+                  {submitting ? t.giftDetail.sending : t.giftDetail.sendEnquiry}
                 </Button>
               </form>
             )}

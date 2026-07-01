@@ -167,6 +167,16 @@ export default function AddBook() {
               <Input id="preview_pdf" type="text" placeholder="https://..." {...register('preview_pdf')} />
             </div>
 
+            <div className="space-y-1">
+              <Label htmlFor="external_url">External Listing URL</Label>
+              <Input
+                id="external_url"
+                type="text"
+                placeholder="https://thamizhbooks.com/product/..."
+                {...register('external_url')}
+              />
+            </div>
+
             <div className="flex gap-3">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Add Book'}

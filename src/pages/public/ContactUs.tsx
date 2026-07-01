@@ -25,7 +25,7 @@ const CONTACT_CARDS = [
   {
     icon: MapPin,
     title: 'Visit Us',
-    lines: ['123, Book Street, Chennai,', 'Tamil Nadu – 600001'],
+    lines: ['Chennai, Tamil Nadu'],
     color: 'from-emerald-500 to-emerald-700',
     bg: 'bg-emerald-50',
     border: 'border-emerald-100',
@@ -245,8 +245,7 @@ export default function ContactUs() {
               <div className="bg-muted h-40 flex items-center justify-center gap-3 text-muted-foreground">
                 <MapPin className="h-6 w-6" />
                 <div className="text-sm">
-                  <div className="font-medium text-foreground">123, Book Street</div>
-                  <div>Chennai, Tamil Nadu – 600001</div>
+                  <div className="font-medium text-foreground">Chennai, Tamil Nadu</div>
                 </div>
               </div>
               <div className="p-4 bg-white flex items-center justify-between">
