@@ -46,12 +46,14 @@ export default function Dashboard() {
       icon: ShoppingBag,
       color: 'blue' as const,
       trend: stats ? { value: stats.orders_trend, label: 'vs last month' } : undefined,
+      href: '/admin/orders',
     },
     {
       title: 'Total Books',
       value: statsLoading ? '—' : (stats?.total_books ?? 0).toLocaleString(),
       icon: BookOpen,
       color: 'purple' as const,
+      href: '/admin/books',
     },
     {
       title: 'Customers',
@@ -59,6 +61,7 @@ export default function Dashboard() {
       icon: Users,
       color: 'orange' as const,
       trend: stats ? { value: stats.customers_trend, label: 'vs last month' } : undefined,
+      href: '/admin/customers',
     },
     {
       title: 'Revenue',
@@ -66,6 +69,7 @@ export default function Dashboard() {
       icon: DollarSign,
       color: 'green' as const,
       trend: stats ? { value: stats.revenue_trend, label: 'vs last month' } : undefined,
+      href: '/admin/reports/revenue',
     },
   ]
 

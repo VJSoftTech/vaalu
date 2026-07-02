@@ -1,4 +1,5 @@
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded'
+export type PaymentMethod = 'online' | 'qr'
 export type OrderStatus =
   | 'placed'
   | 'confirmed'
@@ -6,7 +7,16 @@ export type OrderStatus =
   | 'shipped'
   | 'delivered'
   | 'cancelled'
-  | 'returned'
+
+export interface ShippingAddress {
+  full_name: string
+  address_line1: string
+  address_line2?: string
+  city: string
+  state: string
+  pincode: string
+  phone: string
+}
 
 export interface OrderItem {
   id: number
@@ -29,7 +39,11 @@ export interface Order {
   shipping_amount: number
   total_amount: number
   payment_status: PaymentStatus
+  payment_method?: PaymentMethod
+  payment_ref_id?: string
+  payment_attachment?: string
   order_status: OrderStatus
+  shipping_address?: ShippingAddress
   items?: OrderItem[]
   created_at: string
   updated_at?: string

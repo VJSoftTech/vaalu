@@ -14,12 +14,14 @@ const UPLOADS_AUTHORS = path.join(__dirname, 'uploads', 'authors')
 const UPLOADS_BOOKS   = path.join(__dirname, 'uploads', 'books')
 const UPLOADS_BANNERS = path.join(__dirname, 'uploads', 'banners')
 const UPLOADS_ANNOUNCEMENTS = path.join(__dirname, 'uploads', 'announcements')
-fs.mkdirSync(UPLOADS_GIFTS,   { recursive: true })
-fs.mkdirSync(UPLOADS_BLOGS,   { recursive: true })
-fs.mkdirSync(UPLOADS_AUTHORS, { recursive: true })
-fs.mkdirSync(UPLOADS_BOOKS,   { recursive: true })
-fs.mkdirSync(UPLOADS_BANNERS, { recursive: true })
+const UPLOADS_PAYMENTS      = path.join(__dirname, 'uploads', 'payments')
+fs.mkdirSync(UPLOADS_GIFTS,         { recursive: true })
+fs.mkdirSync(UPLOADS_BLOGS,         { recursive: true })
+fs.mkdirSync(UPLOADS_AUTHORS,       { recursive: true })
+fs.mkdirSync(UPLOADS_BOOKS,         { recursive: true })
+fs.mkdirSync(UPLOADS_BANNERS,       { recursive: true })
 fs.mkdirSync(UPLOADS_ANNOUNCEMENTS, { recursive: true })
+fs.mkdirSync(UPLOADS_PAYMENTS,      { recursive: true })
 
 // ── DB Pool ───────────────────────────────────────────────────
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
@@ -226,6 +228,10 @@ async function initDB() {
     ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS display_order INTEGER      DEFAULT 0;
     ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS subtitle      VARCHAR(500) DEFAULT '';
     ALTER TABLE books ADD COLUMN IF NOT EXISTS external_url VARCHAR(500) DEFAULT '';
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method     VARCHAR(50)  DEFAULT 'qr';
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_ref_id     VARCHAR(255) DEFAULT '';
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_attachment VARCHAR(500) DEFAULT '';
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_address   JSONB        DEFAULT '{}';
   `)
 
   // Seed default admin
@@ -434,6 +440,15 @@ async function saveAnnouncementImage(file) {
   const dest = path.join(UPLOADS_ANNOUNCEMENTS, name)
   fs.writeFileSync(dest, file.data)
   return '/uploads/announcements/' + name
+}
+
+async function savePaymentAttachment(file) {
+  if (!file || !file.filename || !file.data || file.data.length === 0) return ''
+  const ext  = path.extname(file.filename) || '.jpg'
+  const name = Date.now() + '-' + Math.random().toString(36).slice(2) + ext
+  const dest = path.join(UPLOADS_PAYMENTS, name)
+  fs.writeFileSync(dest, file.data)
+  return '/uploads/payments/' + name
 }
 
 const BOOK_JOIN = `
@@ -1105,21 +1120,105 @@ const server = http.createServer(async (req, res) => {
       if (!cur) return notFound(res)
       const { rows } = await q(
         'UPDATE orders SET order_status=$1 WHERE id=$2 RETURNING *',
-        [body.status ?? cur.order_status, id]
+        [body.order_status ?? body.status ?? cur.order_status, id]
       )
       return ok(res, rows[0])
     }
 
+    if (pathname === '/api/orders' && method === 'POST') {
+      const { fields, files } = await parseMultipart(req)
+      const {
+        full_name, email, phone, address_line1, address_line2,
+        city, state, pincode, payment_method, payment_ref_id,
+        subtotal, gst_amount, shipping_amount, total_amount, items: itemsJson,
+      } = fields
+      if (!full_name || !email || !address_line1 || !city || !state || !pincode || !phone) {
+        return badRequest(res, 'All required shipping fields must be filled')
+      }
+      const items = JSON.parse(itemsJson || '[]')
+      if (!items.length) return badRequest(res, 'Cart is empty')
+
+      const attachmentPath = await savePaymentAttachment(files.payment_attachment)
+
+      // Find or create customer
+      let customerId = null
+      const existCust = await q('SELECT id FROM customers WHERE email=$1', [email])
+      if (existCust.rows.length) {
+        customerId = existCust.rows[0].id
+      } else {
+        const newCust = await q(
+          'INSERT INTO customers (name, email, mobile_number) VALUES ($1,$2,$3) RETURNING id',
+          [full_name, email, phone]
+        )
+        customerId = newCust.rows[0].id
+      }
+
+      const orderNumber = 'VP-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase()
+      const shippingAddr = JSON.stringify({ full_name, address_line1, address_line2: address_line2 || '', city, state, pincode, phone })
+
+      const { rows: [order] } = await q(
+        `INSERT INTO orders (
+          customer_id, order_number, subtotal, gst_amount, shipping_amount, total_amount,
+          payment_method, payment_ref_id, payment_attachment, payment_status, order_status, shipping_address
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'pending','placed',$10) RETURNING *`,
+        [
+          customerId, orderNumber,
+          parseFloat(subtotal || 0), parseFloat(gst_amount || 0),
+          parseFloat(shipping_amount || 0), parseFloat(total_amount || 0),
+          payment_method || 'qr', payment_ref_id || '',
+          attachmentPath, shippingAddr,
+        ]
+      )
+
+      for (const item of items) {
+        await q(
+          'INSERT INTO order_items (order_id, book_id, quantity, unit_price) VALUES ($1,$2,$3,$4)',
+          [order.id, item.book_id, item.quantity, item.unit_price]
+        )
+        await q(
+          'UPDATE books SET stock_quantity = stock_quantity - $1 WHERE id=$2 AND stock_quantity >= $1',
+          [item.quantity, item.book_id]
+        )
+      }
+
+      return created(res, order)
+    }
+
     if (pathname === '/api/orders' && method === 'GET') {
-      const { rows } = await q('SELECT * FROM orders ORDER BY created_at DESC')
+      const { rows } = await q(`
+        SELECT o.*, c.name AS customer_name, c.email AS customer_email,
+          COALESCE((SELECT json_agg(json_build_object(
+            'id', oi.id, 'order_id', oi.order_id, 'book_id', oi.book_id,
+            'quantity', oi.quantity, 'unit_price', oi.unit_price,
+            'book_title', b.title, 'book_cover', b.cover_image
+          ) ORDER BY oi.id)
+          FROM order_items oi LEFT JOIN books b ON b.id = oi.book_id
+          WHERE oi.order_id = o.id), '[]'::json) AS items
+        FROM orders o
+        LEFT JOIN customers c ON o.customer_id = c.id
+        ORDER BY o.created_at DESC
+      `)
       return ok(res, { data: rows, total: rows.length, page: 1, limit: rows.length || 10, total_pages: 1 })
     }
+
     const orderMatch = pathname.match(/^\/api\/orders\/(\d+)$/)
     if (orderMatch) {
       const id = parseInt(orderMatch[1])
       if (method === 'GET') {
-        const { rows } = await q('SELECT * FROM orders WHERE id=$1', [id])
-        return rows.length ? ok(res, rows[0]) : notFound(res)
+        const { rows: [order] } = await q(`
+          SELECT o.*, c.name AS customer_name, c.email AS customer_email
+          FROM orders o
+          LEFT JOIN customers c ON o.customer_id = c.id
+          WHERE o.id = $1
+        `, [id])
+        if (!order) return notFound(res)
+        const { rows: items } = await q(`
+          SELECT oi.*, b.title AS book_title, b.cover_image AS book_cover
+          FROM order_items oi
+          LEFT JOIN books b ON oi.book_id = b.id
+          WHERE oi.order_id = $1
+        `, [id])
+        return ok(res, { ...order, items })
       }
       if (method === 'PUT') {
         const body = await parseBody(req)
@@ -1127,7 +1226,7 @@ const server = http.createServer(async (req, res) => {
         if (!cur) return notFound(res)
         const { rows } = await q(
           'UPDATE orders SET payment_status=$1, order_status=$2 WHERE id=$3 RETURNING *',
-          [body.payment_status??cur.payment_status, body.order_status??cur.order_status, id]
+          [body.payment_status ?? cur.payment_status, body.order_status ?? cur.order_status, id]
         )
         return ok(res, rows[0])
       }
@@ -1135,7 +1234,15 @@ const server = http.createServer(async (req, res) => {
 
     // ── Customers ─────────────────────────────────────────────
     if (pathname === '/api/customers' && method === 'GET') {
-      const { rows } = await q('SELECT * FROM customers ORDER BY created_at DESC')
+      const { rows } = await q(`
+        SELECT c.*,
+               COUNT(o.id)::int AS orders_count,
+               COALESCE(SUM(o.total_amount), 0)::numeric AS total_spent
+        FROM customers c
+        LEFT JOIN orders o ON o.customer_id = c.id AND o.payment_status = 'paid'
+        GROUP BY c.id
+        ORDER BY c.created_at DESC
+      `)
       return ok(res, { data: rows, total: rows.length, page: 1, limit: rows.length || 10, total_pages: 1 })
     }
     const customerMatch = pathname.match(/^\/api\/customers\/(\d+)$/)

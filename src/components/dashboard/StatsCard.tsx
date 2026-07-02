@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
@@ -8,6 +9,7 @@ interface Props {
   icon: LucideIcon
   trend?: { value: number; label: string }
   color?: 'blue' | 'green' | 'orange' | 'red' | 'purple'
+  href?: string
 }
 
 const colorMap = {
@@ -26,19 +28,17 @@ const borderMap = {
   purple: 'border-l-violet-400',
 }
 
-export default function StatsCard({ title, value, icon: Icon, trend, color = 'blue' }: Props) {
-  return (
-    <Card className={cn('border-l-4 transition-shadow hover:shadow-md', borderMap[color])}>
-      <CardContent className="p-5">
+export default function StatsCard({ title, value, icon: Icon, trend, color = 'blue', href }: Props) {
+  const card = (
+    <Card className={cn('border-l-4 transition-shadow hover:shadow-md h-full', borderMap[color], href && 'cursor-pointer hover:shadow-lg')}>
+      <CardContent className="p-5 h-full">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold mt-1">{value}</p>
-            {trend && (
-              <p className={cn('text-xs mt-1 font-medium', trend.value >= 0 ? 'text-emerald-600' : 'text-rose-600')}>
-                {trend.value >= 0 ? '+' : ''}{trend.value}% {trend.label}
-              </p>
-            )}
+            <p className={cn('text-xs mt-1 font-medium', trend ? (trend.value >= 0 ? 'text-emerald-600' : 'text-rose-600') : 'invisible')}>
+              {trend ? `${trend.value >= 0 ? '+' : ''}${trend.value}% ${trend.label}` : ' '}
+            </p>
           </div>
           <div className={cn('p-2.5 rounded-lg', colorMap[color])}>
             <Icon className="h-5 w-5" />
@@ -47,4 +47,7 @@ export default function StatsCard({ title, value, icon: Icon, trend, color = 'bl
       </CardContent>
     </Card>
   )
+
+  if (href) return <Link to={href} className="block h-full">{card}</Link>
+  return card
 }
