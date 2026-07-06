@@ -13,7 +13,6 @@ const statusColors: Record<OrderStatus, string> = {
   shipped:    'bg-orange-100 text-orange-700 border-orange-200',
   delivered:  'bg-green-100 text-green-700 border-green-200',
   cancelled:  'bg-red-100 text-red-700 border-red-200',
-  returned:   'bg-gray-100 text-gray-700 border-gray-200',
 }
 import PageTitle from '@/components/common/PageTitle'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
