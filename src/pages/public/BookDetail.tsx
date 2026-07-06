@@ -11,6 +11,7 @@ import { formatCurrency, formatDate } from '@/utils/formatters'
 import { calculateDiscount } from '@/utils/helpers'
 import { useCart } from '@/hooks/useCart'
 import { useWishlist } from '@/hooks/useWishlist'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { toast } from '@/hooks/useToast'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,7 @@ import { getBookCover } from '@/assets/images/bookCovers'
 import ImageLightbox from '@/components/common/ImageLightbox'
 
 function ReviewsSection({ book }: { book: Book }) {
+  const { t } = useLanguage()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -47,20 +49,20 @@ function ReviewsSection({ book }: { book: Book }) {
       const review = await reviewService.create(book.id, data)
       setReviews((prev) => [review, ...prev])
       reset({ customer_name: '', customer_email: '', comment: '', rating: 0 })
-      toast({ title: 'Thank you for your feedback!' })
+      toast({ title: t.bookDetail.thankYouFeedback })
     } catch {
-      toast({ title: 'Failed to submit review', variant: 'destructive' })
+      toast({ title: t.bookDetail.failedSubmitReview, variant: 'destructive' })
     }
   }
 
   return (
     <div className="mt-12 grid md:grid-cols-2 gap-8">
       <div>
-        <h3 className="text-xl font-semibold mb-4">Reviews ({reviews.length})</h3>
+        <h3 className="text-xl font-semibold mb-4">{t.bookDetail.reviews} ({reviews.length})</h3>
         {loading ? (
           <LoadingSpinner className="py-8" />
         ) : reviews.length === 0 ? (
-          <p className="text-muted-foreground text-sm">No reviews yet. Be the first to share your feedback.</p>
+          <p className="text-muted-foreground text-sm">{t.bookDetail.noReviews}</p>
         ) : (
           <div className="space-y-4">
             {reviews.map((r) => (
@@ -87,22 +89,22 @@ function ReviewsSection({ book }: { book: Book }) {
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
+        <h3 className="text-xl font-semibold mb-4">{t.bookDetail.writeAReview}</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="space-y-1">
-            <Label htmlFor="customer_name">Name</Label>
+            <Label htmlFor="customer_name">{t.bookDetail.name}</Label>
             <Input id="customer_name" {...register('customer_name')} />
             {errors.customer_name && <p className="text-xs text-destructive">{errors.customer_name.message}</p>}
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="customer_email">Email (optional)</Label>
+            <Label htmlFor="customer_email">{t.bookDetail.emailOptional}</Label>
             <Input id="customer_email" type="email" {...register('customer_email')} />
             {errors.customer_email && <p className="text-xs text-destructive">{errors.customer_email.message}</p>}
           </div>
 
           <div className="space-y-1">
-            <Label>Rating</Label>
+            <Label>{t.bookDetail.rating}</Label>
             <Controller
               name="rating"
               control={control}
@@ -122,13 +124,13 @@ function ReviewsSection({ book }: { book: Book }) {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="comment">Comment</Label>
+            <Label htmlFor="comment">{t.bookDetail.comment}</Label>
             <Textarea id="comment" rows={4} {...register('comment')} />
             {errors.comment && <p className="text-xs text-destructive">{errors.comment.message}</p>}
           </div>
 
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit Review'}
+            {isSubmitting ? t.bookDetail.submitting : t.bookDetail.submitReview}
           </Button>
         </form>
       </div>
@@ -137,6 +139,7 @@ function ReviewsSection({ book }: { book: Book }) {
 }
 
 export default function BookDetail() {
+  const { t } = useLanguage()
   const { id } = useParams<{ id: string }>()
   const [book, setBook] = useState<Book | null>(null)
   const [loading, setLoading] = useState(true)
@@ -154,7 +157,7 @@ export default function BookDetail() {
   }, [id])
 
   if (loading) return <LoadingSpinner className="py-24" />
-  if (!book) return <div className="container py-24 text-center">Book not found.</div>
+  if (!book) return <div className="container py-24 text-center">{t.bookDetail.bookNotFound}</div>
 
   const discount = calculateDiscount(book.price, book.discount_price)
   const thamizhBooksUrl = book.external_url || 'https://thamizhbooks.com/product/mayil-pota-kanakku/'
@@ -217,8 +220,8 @@ export default function BookDetail() {
               className={book.stock_quantity > 0 ? 'text-green-600' : 'text-destructive'}
             >
               {book.stock_quantity > 0
-                ? `In Stock (${book.stock_quantity} available)`
-                : 'Out of Stock'}
+                ? `${t.bookDetail.inStock} (${book.stock_quantity} ${t.bookDetail.available})`
+                : t.bookDetail.outOfStock}
             </span>
           </div>
 
@@ -230,7 +233,7 @@ export default function BookDetail() {
               variant={isInCart(book.id) ? 'secondary' : 'default'}
             >
               <ShoppingCart className="h-5 w-5 mr-2" />
-              {isInCart(book.id) ? 'Added to Cart' : 'Add to Cart'}
+              {isInCart(book.id) ? t.bookDetail.addedToCart : t.bookDetail.addToCart}
             </Button>
             <Button
               size="lg"
@@ -247,7 +250,7 @@ export default function BookDetail() {
               <Button size="lg" variant="outline" asChild>
                 <a href={book.preview_pdf} target="_blank" rel="noopener noreferrer">
                   <FileText className="h-5 w-5 mr-2" />
-                  Preview PDF
+                  {t.bookDetail.previewPdf}
                 </a>
               </Button>
             )}
@@ -264,13 +267,13 @@ export default function BookDetail() {
           </a>
 
           <div>
-            <h3 className="font-semibold mb-2">About this book</h3>
+            <h3 className="font-semibold mb-2">{t.bookDetail.aboutThisBook}</h3>
             <p className="text-muted-foreground leading-relaxed">{book.description}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm border rounded-lg p-3">
-            <div><span className="text-muted-foreground">ISBN:</span> {book.isbn}</div>
-            <div><span className="text-muted-foreground">Category:</span> {book.category_name}</div>
+            <div><span className="text-muted-foreground">{t.bookDetail.isbn}:</span> {book.isbn}</div>
+            <div><span className="text-muted-foreground">{t.bookDetail.category}:</span> {book.category_name}</div>
           </div>
         </div>
       </div>

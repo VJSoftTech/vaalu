@@ -2,15 +2,18 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, Play, Heart, BookOpen, Users, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-const STATS = [
-  { icon: BookOpen, value: '5000+', label: 'Books' },
-  { icon: Users,    value: '200+',  label: 'Authors' },
-  { icon: Heart,    value: '50K+',  label: 'Happy Readers' },
-  { icon: Clock,    value: '10+',   label: 'Years of Legacy' },
-]
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function DefaultHero() {
+  const { t } = useLanguage()
+
+  const STATS = [
+    { icon: BookOpen, value: '5000+', label: t.home.statBooks },
+    { icon: Users,    value: '200+',  label: t.home.statAuthors },
+    { icon: Heart,    value: '50K+',  label: t.home.statHappyReaders },
+    { icon: Clock,    value: '10+',   label: t.home.statYearsLegacy },
+  ]
+
   return (
     <section
       className="relative overflow-hidden py-16 md:py-24 bg-cover bg-center bg-no-repeat"
@@ -25,7 +28,7 @@ export default function DefaultHero() {
               animate={{ opacity: 1, x: 0 }}
               className="text-primary font-medium text-sm mb-3 flex items-center gap-2"
             >
-              <Heart className="h-4 w-4 fill-primary" /> Preserving Tamil Literature
+              <Heart className="h-4 w-4 fill-primary" /> {t.home.heroBadge}
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -40,10 +43,8 @@ export default function DefaultHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="text-foreground/70 text-lg mb-8"
-            >
-              Discover the richness of Tamil literature.<br />
-              Books that inspire, enlighten, and connect.
-            </motion.p>
+              dangerouslySetInnerHTML={{ __html: t.home.heroDesc }}
+            />
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -52,12 +53,12 @@ export default function DefaultHero() {
             >
               <Link to="/books">
                 <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 shadow-lg">
-                  Browse Books <ArrowRight className="h-4 w-4" />
+                  {t.home.browseBooks} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/vaalu-tv">
                 <Button size="lg" variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/5">
-                  <Play className="h-4 w-4 fill-primary" /> Vaalu TV
+                  <Play className="h-4 w-4 fill-primary" /> {t.home.vaaluTv}
                 </Button>
               </Link>
             </motion.div>

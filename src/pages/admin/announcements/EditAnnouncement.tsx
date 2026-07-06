@@ -34,6 +34,7 @@ export default function EditAnnouncement() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [currentImage, setCurrentImage] = useState('')
+  const [newImagePreview, setNewImagePreview] = useState('')
   const {
     register,
     handleSubmit,
@@ -42,6 +43,8 @@ export default function EditAnnouncement() {
     watch,
     formState: { isSubmitting },
   } = useForm<EditAnnouncementForm>()
+
+  const { onChange: onImageChange, ...imageField } = register('image')
 
   useEffect(() => {
     if (!id) return
@@ -78,26 +81,12 @@ export default function EditAnnouncement() {
   return (
     <div>
       <PageTitle title="Edit Announcement" />
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-start">
             <div className="space-y-1">
               <Label>Title</Label>
               <Input {...register('title', { required: true })} placeholder="Announcement headline" />
-            </div>
-
-            <div className="space-y-1">
-              <Label>Message</Label>
-              <Textarea {...register('message', { required: true })} rows={4} />
-            </div>
-
-            <div className="space-y-1">
-              <Label>Image <span className="text-muted-foreground text-xs">(optional banner)</span></Label>
-              {currentImage && (
-                <img src={currentImage} alt="Current banner" className="w-full h-24 object-cover rounded mb-2 border" />
-              )}
-              <Input type="file" accept="image/*" {...register('image')} />
-              <p className="text-xs text-muted-foreground">Leave empty to keep the current image</p>
             </div>
 
             <div className="space-y-1">
@@ -117,18 +106,42 @@ export default function EditAnnouncement() {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label>Start Date</Label>
-                <Input type="date" {...register('start_date')} />
-              </div>
-              <div className="space-y-1">
-                <Label>End Date</Label>
-                <Input type="date" {...register('end_date')} />
-              </div>
+            <div className="space-y-1">
+              <Label>Image <span className="text-muted-foreground text-xs">(optional banner)</span></Label>
+              {currentImage && !newImagePreview && (
+                <img src={currentImage} alt="Current banner" className="w-full h-24 object-cover rounded mb-2 border" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                {...imageField}
+                onChange={(e) => {
+                  onImageChange(e)
+                  const file = e.target.files?.[0]
+                  if (file) setNewImagePreview(URL.createObjectURL(file))
+                }}
+              />
+              <p className="text-xs text-muted-foreground">Leave empty to keep the current image</p>
+              {newImagePreview && (
+                <img src={newImagePreview} alt="New banner preview" className="mt-2 w-full h-24 object-cover rounded border" />
+              )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="space-y-1">
+              <Label>Start Date</Label>
+              <Input type="date" {...register('start_date')} />
+            </div>
+            <div className="space-y-1">
+              <Label>End Date</Label>
+              <Input type="date" {...register('end_date')} />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2 lg:col-span-3">
+              <Label>Message</Label>
+              <Textarea {...register('message', { required: true })} rows={4} />
+            </div>
+
+            <div className="flex items-center gap-3 sm:col-span-2 lg:col-span-3">
               <Switch
                 id="active"
                 checked={watch('is_active')}
@@ -137,7 +150,7 @@ export default function EditAnnouncement() {
               <Label htmlFor="active">Active</Label>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 sm:col-span-2 lg:col-span-3 pt-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save Changes'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/announcements')}>Cancel</Button>
             </div>

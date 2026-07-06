@@ -89,7 +89,7 @@ export default function EditGift() {
   const displayedImage = coverPreview || existingCoverUrl
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Link to="/admin/gifts">
           <Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
@@ -100,7 +100,7 @@ export default function EditGift() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         <div className="space-y-1.5">
           <Label htmlFor="title">Title *</Label>
           <Input id="title" {...register('title')} />
@@ -126,7 +126,7 @@ export default function EditGift() {
           {errors.category && <p className="text-xs text-destructive">{errors.category.message}</p>}
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 md:col-span-2">
           <Label htmlFor="description">Description *</Label>
           <Textarea id="description" {...register('description')} rows={5} placeholder="Product description (short or detailed)…" />
           {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
@@ -154,7 +154,7 @@ export default function EditGift() {
             />
           </label>
           {displayedImage && (
-            <img src={displayedImage} alt="Cover" className="mt-2 h-32 w-auto rounded-lg object-cover border" />
+            <img src={displayedImage} alt="Cover" className="mt-2 h-32 w-32 rounded-lg object-cover border" />
           )}
         </div>
 
@@ -163,7 +163,7 @@ export default function EditGift() {
           <Input id="video_url" {...register('video_url')} />
         </div>
 
-        <div className="border rounded-xl p-4 space-y-4">
+        <div className="border rounded-xl p-4 space-y-4 md:col-span-2">
           <h3 className="font-semibold text-sm">Visibility & Flags</h3>
           {(
             [
@@ -188,7 +188,7 @@ export default function EditGift() {
           ))}
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-2 md:col-span-2">
           <Button type="submit" disabled={saving} className="gap-2">
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             {saving ? 'Saving…' : 'Save Changes'}

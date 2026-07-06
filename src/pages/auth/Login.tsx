@@ -24,16 +24,16 @@ export default function Login() {
         <CardDescription>Enter your credentials to continue</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(login)} className="space-y-4">
+        <form onSubmit={handleSubmit(login)} className="space-y-4" autoComplete="off">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" {...register('email')} />
+            <Input id="email" type="email" autoComplete="off" {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" {...register('password')} />
+            <Input id="password" type="password" autoComplete="new-password" {...register('password')} />
             {errors.password && (
               <p className="text-xs text-destructive">{errors.password.message}</p>
             )}

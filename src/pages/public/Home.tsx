@@ -453,7 +453,7 @@ export default function Home() {
                 {[
                   { Icon: Phone, text: '+91 94442 96929' },
                   { Icon: Mail, text: 'vaalupathippagam@gmail.com' },
-                  { Icon: MapPin, text: 'Chennai, Tamil Nadu' },
+                  { Icon: MapPin, text: h.address },
                 ].map(({ Icon, text }) => (
                   <div key={text} className="flex items-center gap-3 text-sm text-white/90">
                     <div className="h-8 w-8 rounded-full bg-white/15 flex items-center justify-center shrink-0">
@@ -498,7 +498,7 @@ export default function Home() {
               {[
                 { icon: Phone, label: h.callUs, value: '+91 94442 96929', color: 'bg-blue-500/20 border-blue-300/30' },
                 { icon: Mail, label: h.emailUs, value: 'vaalupathippagam@gmail.com', color: 'bg-white/10 border-white/20' },
-                { icon: MapPin, label: h.visitUs, value: 'Chennai,\nTamil Nadu', color: 'bg-emerald-500/20 border-emerald-300/30' },
+                { icon: MapPin, label: h.visitUs, value: h.address.replace(', ', ',\n'), color: 'bg-emerald-500/20 border-emerald-300/30' },
                 { icon: WhatsAppIcon, label: 'WhatsApp', value: '+91 94442 96929', color: 'bg-green-500/20 border-green-300/30' },
               ].map(({ icon: Icon, label, value, color }) => (
                 <div key={label} className={`rounded-2xl border ${color} p-4 backdrop-blur-sm`}>

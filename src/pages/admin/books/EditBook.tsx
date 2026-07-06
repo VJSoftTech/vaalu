@@ -92,9 +92,9 @@ export default function EditBook() {
   return (
     <div>
       <PageTitle title="Edit Book" />
-      <Card className="max-w-2xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-start">
             {textFields.map(({ id: fid, label, type }) => (
               <div key={fid} className="space-y-1">
                 <Label htmlFor={fid}>{label}</Label>
@@ -160,7 +160,7 @@ export default function EditBook() {
               {errors.category_id && <p className="text-xs text-destructive">{errors.category_id.message}</p>}
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 sm:col-span-2 lg:col-span-3">
               <Label htmlFor="description">Description</Label>
               <Textarea id="description" rows={4} {...register('description')} />
               {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
@@ -181,7 +181,7 @@ export default function EditBook() {
                 }}
               />
               {coverPreview && (
-                <img src={coverPreview} alt="Preview" className="mt-2 h-24 w-auto rounded object-cover border" />
+                <img src={coverPreview} alt="Preview" className="mt-2 h-24 w-24 rounded object-cover border" />
               )}
             </div>
 
@@ -200,7 +200,7 @@ export default function EditBook() {
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 sm:col-span-2 lg:col-span-3 pt-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>

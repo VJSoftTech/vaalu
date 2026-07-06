@@ -6,6 +6,7 @@ import {
   ArrowRight, Play, Heart, BookOpen, Users, Clock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useLanguage } from '@/contexts/LanguageContext'
 import type { Advertisement } from '@/types'
 
 interface Props {
@@ -19,14 +20,16 @@ const slideVariants = {
   exit:  (dir: number) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
 }
 
-const STATS = [
-  { icon: BookOpen, value: '5000+', label: 'Books' },
-  { icon: Users,    value: '200+',  label: 'Authors' },
-  { icon: Heart,    value: '50K+',  label: 'Happy Readers' },
-  { icon: Clock,    value: '10+',   label: 'Years of Legacy' },
-]
-
 function DefaultSlide() {
+  const { t } = useLanguage()
+
+  const STATS = [
+    { icon: BookOpen, value: '5000+', label: t.home.statBooks },
+    { icon: Users,    value: '200+',  label: t.home.statAuthors },
+    { icon: Heart,    value: '50K+',  label: t.home.statHappyReaders },
+    { icon: Clock,    value: '10+',   label: t.home.statYearsLegacy },
+  ]
+
   return (
     <div
       className="absolute inset-0 overflow-hidden bg-cover bg-center bg-no-repeat"
@@ -37,25 +40,22 @@ function DefaultSlide() {
         <div className="grid md:grid-cols-2 gap-10 items-center w-full py-16 md:py-24">
           <div>
             <p className="text-primary font-medium text-sm mb-3 flex items-center gap-2">
-              <Heart className="h-4 w-4 fill-primary" /> Preserving Tamil Literature
+              <Heart className="h-4 w-4 fill-primary" /> {t.home.heroBadge}
             </p>
             <h1 className="text-5xl md:text-7xl font-bold text-primary font-tamil mb-4">
               <span className="block">வாலு</span>
               <span className="block mt-2">பதிப்பகம்</span>
             </h1>
-            <p className="text-foreground/70 text-lg mb-8">
-              Discover the richness of Tamil literature.<br />
-              Books that inspire, enlighten, and connect.
-            </p>
+            <p className="text-foreground/70 text-lg mb-8" dangerouslySetInnerHTML={{ __html: t.home.heroDesc }} />
             <div className="flex gap-3 flex-wrap">
               <Link to="/books">
                 <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 shadow-lg">
-                  Browse Books <ArrowRight className="h-4 w-4" />
+                  {t.home.browseBooks} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/vaalu-tv">
                 <Button size="lg" variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/5">
-                  <Play className="h-4 w-4 fill-primary" /> Vaalu TV
+                  <Play className="h-4 w-4 fill-primary" /> {t.home.vaaluTv}
                 </Button>
               </Link>
             </div>
@@ -78,6 +78,7 @@ function DefaultSlide() {
 }
 
 export default function HeroBannerSlider({ banners, autoPlayInterval = 3000 }: Props) {
+  const { t } = useLanguage()
   const [current,    setCurrent]   = useState(0)
   const [direction,  setDirection] = useState(1)
   const [hovered,    setHovered]   = useState(false)
@@ -193,14 +194,14 @@ export default function HeroBannerSlider({ banners, autoPlayInterval = 3000 }: P
                     rel="noopener noreferrer"
                     className="inline-block bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow hover:bg-primary/90 transition-colors"
                   >
-                    Shop Now
+                    {t.home.shopNow}
                   </a>
                 ) : (
                   <Link
                     to={banner.redirect_url}
                     className="inline-block bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow hover:bg-primary/90 transition-colors"
                   >
-                    Shop Now
+                    {t.home.shopNow}
                   </Link>
                 )}
               </motion.div>

@@ -4,43 +4,48 @@ import WhatsAppIcon from '@/components/common/WhatsAppIcon'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
-
-const CONTACT_CARDS = [
-  {
-    icon: Phone,
-    title: 'Call Us',
-    lines: ['+91 94442 96929'],
-    color: 'from-blue-500 to-blue-700',
-    bg: 'bg-blue-50',
-    border: 'border-blue-100',
-  },
-  {
-    icon: Mail,
-    title: 'Email Us',
-    lines: ['vaalupathippagam@gmail.com',],
-    color: 'from-primary to-red-700',
-    bg: 'bg-red-50',
-    border: 'border-red-100',
-  },
-  {
-    icon: MapPin,
-    title: 'Visit Us',
-    lines: ['Chennai, Tamil Nadu'],
-    color: 'from-emerald-500 to-emerald-700',
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-100',
-  },
-  {
-    icon: Clock,
-    title: 'Working Hours',
-    lines: ['Mon – Sat : 9AM – 7PM', 'Sunday : Closed'],
-    color: 'from-amber-500 to-orange-600',
-    bg: 'bg-amber-50',
-    border: 'border-amber-100',
-  },
-]
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function ContactUs() {
+  const { lang, t } = useLanguage()
+  const c = t.contactPage
+  const address = lang === 'ta' ? 'சென்னை, தமிழ்நாடு' : 'Chennai, Tamil Nadu'
+
+  const CONTACT_CARDS = [
+    {
+      icon: Phone,
+      title: c.cardCallTitle,
+      lines: ['+91 94442 96929'],
+      color: 'from-blue-500 to-blue-700',
+      bg: 'bg-blue-50',
+      border: 'border-blue-100',
+    },
+    {
+      icon: Mail,
+      title: c.cardEmailTitle,
+      lines: ['vaalupathippagam@gmail.com',],
+      color: 'from-primary to-red-700',
+      bg: 'bg-red-50',
+      border: 'border-red-100',
+    },
+    {
+      icon: MapPin,
+      title: c.cardVisitTitle,
+      lines: [address],
+      color: 'from-emerald-500 to-emerald-700',
+      bg: 'bg-emerald-50',
+      border: 'border-emerald-100',
+    },
+    {
+      icon: Clock,
+      title: c.cardHoursTitle,
+      lines: [c.hoursLine1, c.hoursLine2],
+      color: 'from-amber-500 to-orange-600',
+      bg: 'bg-amber-50',
+      border: 'border-amber-100',
+    },
+  ]
+
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [sent, setSent] = useState(false)
 
@@ -62,7 +67,7 @@ export default function ContactUs() {
             className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-4 py-1.5 rounded-full mb-4"
           >
             <Mail className="h-4 w-4" />
-            We'd love to hear from you
+            {c.badge}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -70,7 +75,7 @@ export default function ContactUs() {
             transition={{ delay: 0.05 }}
             className="text-4xl md:text-5xl font-bold text-foreground mb-3"
           >
-            Contact <span className="text-primary">Vaalu Pathippagam</span>
+            {c.heroTitlePrefix} <span className="text-primary">{c.heroTitleHighlight}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +83,7 @@ export default function ContactUs() {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-lg max-w-xl mx-auto mb-2"
           >
-            Have a question about a book, order, or collaboration? Reach out — we respond within 24 hours.
+            {c.heroDesc}
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
@@ -86,7 +91,7 @@ export default function ContactUs() {
             transition={{ delay: 0.15 }}
             className="text-2xl font-bold text-primary font-tamil"
           >
-            தொடர்பு கொள்ளுங்கள்
+            தொடர்புக்கு
           </motion.div>
         </div>
       </section>
@@ -107,7 +112,7 @@ export default function ContactUs() {
               </div>
               <h3 className="font-semibold text-foreground mb-2">{title}</h3>
               {lines.map((line, j) => (
-                <p key={j} className="text-sm text-muted-foreground leading-relaxed">{line}</p>
+                <p key={j} className={`text-sm text-muted-foreground leading-relaxed ${lang === 'ta' && line === address ? 'font-tamil' : ''}`}>{line}</p>
               ))}
             </motion.div>
           ))}
@@ -129,32 +134,32 @@ export default function ContactUs() {
                 <Send className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h2 className="font-bold text-lg">Send us a Message</h2>
-                <p className="text-sm text-muted-foreground">We'll get back to you shortly</p>
+                <h2 className="font-bold text-lg">{c.formTitle}</h2>
+                <p className="text-sm text-muted-foreground">{c.formSub}</p>
               </div>
             </div>
 
             {sent ? (
               <div className="text-center py-10">
                 <div className="text-5xl mb-4">✅</div>
-                <h3 className="font-bold text-lg mb-1">Message Sent!</h3>
-                <p className="text-sm text-muted-foreground">Thank you for reaching out. We'll respond within 24 hours.</p>
-                <Button className="mt-6" variant="outline" onClick={() => setSent(false)}>Send Another</Button>
+                <h3 className="font-bold text-lg mb-1">{c.sentTitle}</h3>
+                <p className="text-sm text-muted-foreground">{c.sentDesc}</p>
+                <Button className="mt-6" variant="outline" onClick={() => setSent(false)}>{c.sendAnother}</Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Your Name</label>
+                    <label className="text-sm font-medium">{c.labelName}</label>
                     <Input
-                      placeholder="e.g. Arjun Kumar"
+                      placeholder={c.placeholderName}
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Phone Number</label>
+                    <label className="text-sm font-medium">{c.labelPhone}</label>
                     <Input
                       placeholder="+91 98765 43210"
                       value={form.phone}
@@ -163,7 +168,7 @@ export default function ContactUs() {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Email Address</label>
+                  <label className="text-sm font-medium">{c.labelEmail}</label>
                   <Input
                     type="email"
                     placeholder="you@example.com"
@@ -173,10 +178,10 @@ export default function ContactUs() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Message</label>
+                  <label className="text-sm font-medium">{c.labelMessage}</label>
                   <textarea
                     rows={5}
-                    placeholder="Tell us about your inquiry, book request, or feedback..."
+                    placeholder={c.placeholderMessage}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     required
@@ -184,7 +189,7 @@ export default function ContactUs() {
                   />
                 </div>
                 <Button type="submit" className="w-full gap-2">
-                  <Send className="h-4 w-4" /> Send Message
+                  <Send className="h-4 w-4" /> {c.sendMessage}
                 </Button>
               </form>
             )}
@@ -202,9 +207,9 @@ export default function ContactUs() {
               <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
               <div className="relative">
                 <div className="text-4xl mb-3"><WhatsAppIcon className="h-10 w-10" /></div>
-                <h3 className="font-bold text-xl mb-1">Chat on WhatsApp</h3>
+                <h3 className="font-bold text-xl mb-1">{c.whatsappTitle}</h3>
                 <p className="text-white/80 text-sm mb-5 leading-relaxed">
-                  Get instant replies for book enquiries, gift currency orders, and custom requests.
+                  {c.whatsappDesc}
                 </p>
                 <a
                   href="https://wa.me/919444296929?text=Hi%2C%20I%20have%20an%20enquiry%20about%20Vaalu%20Pathippagam"
@@ -226,15 +231,14 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <div className="font-bold text-primary font-tamil">வாலு பதிப்பகம்</div>
-                  <div className="text-xs text-muted-foreground">Vaalu Pathippagam</div>
+                  <div className="text-xs text-muted-foreground">{c.publisherNameEn}</div>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Vaalu Pathippagam has been preserving and promoting Tamil literature for over a decade.
-                Whether you're a reader, author, or business looking to collaborate — we welcome you.
+                {c.publisherDesc}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {['Tamil Books', 'Gift Currency', 'Custom Calendars', 'Publishing'].map(tag => (
+                {[c.tag0, c.tag1, c.tag2, c.tag3].map(tag => (
                   <span key={tag} className="text-xs bg-primary/10 text-primary rounded-full px-3 py-1 font-medium">{tag}</span>
                 ))}
               </div>
@@ -245,18 +249,18 @@ export default function ContactUs() {
               <div className="bg-muted h-40 flex items-center justify-center gap-3 text-muted-foreground">
                 <MapPin className="h-6 w-6" />
                 <div className="text-sm">
-                  <div className="font-medium text-foreground">Chennai, Tamil Nadu</div>
+                  <div className={`font-medium text-foreground ${lang === 'ta' ? 'font-tamil' : ''}`}>{address}</div>
                 </div>
               </div>
               <div className="p-4 bg-white flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Mon – Sat · 9AM – 7PM</span>
+                <span className="text-sm text-muted-foreground">{c.hoursShort}</span>
                 <a
                   href="https://maps.google.com/?q=Chennai,Tamil+Nadu"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button size="sm" variant="outline" className="gap-1 text-xs">
-                    <MapPin className="h-3.5 w-3.5" /> Get Directions
+                    <MapPin className="h-3.5 w-3.5" /> {c.getDirections}
                   </Button>
                 </a>
               </div>

@@ -40,6 +40,8 @@ import EditBlog from '@/pages/admin/blogs/EditBlog'
 import OrdersList from '@/pages/admin/orders/OrdersList'
 import OrderDetail from '@/pages/admin/orders/OrderDetail'
 import CustomersList from '@/pages/admin/customers/CustomersList'
+import AddCustomer from '@/pages/admin/customers/AddCustomer'
+import EditCustomer from '@/pages/admin/customers/EditCustomer'
 import CustomerDetail from '@/pages/admin/customers/CustomerDetail'
 import VideosList from '@/pages/admin/vaalu-tv/VideosList'
 import AddVideo from '@/pages/admin/vaalu-tv/AddVideo'
@@ -142,7 +144,9 @@ export default function AppRoutes() {
           <Route path="orders" element={<OrdersList />} />
           <Route path="orders/:id" element={<OrderDetail />} />
           <Route path="customers" element={<CustomersList />} />
+          <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/:id" element={<CustomerDetail />} />
+          <Route path="customers/:id/edit" element={<EditCustomer />} />
           <Route path="vaalu-tv" element={<VideosList />} />
           <Route path="vaalu-tv/add" element={<AddVideo />} />
           <Route path="vaalu-tv/:id/edit" element={<EditVideo />} />

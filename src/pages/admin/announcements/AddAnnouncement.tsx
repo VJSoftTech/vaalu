@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { announcementService } from '@/services/announcementService'
@@ -27,11 +28,14 @@ interface AddAnnouncementForm {
 
 export default function AddAnnouncement() {
   const navigate = useNavigate()
+  const [imagePreview, setImagePreview] = useState('')
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<AddAnnouncementForm>({ defaultValues: { priority: 'normal' } })
+
+  const { onChange: onImageChange, ...imageField } = register('image')
 
   const onSubmit = async (data: AddAnnouncementForm) => {
     const fd = new FormData()
@@ -50,22 +54,12 @@ export default function AddAnnouncement() {
   return (
     <div>
       <PageTitle title="Add Announcement" />
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-start">
             <div className="space-y-1">
               <Label>Title <span className="text-destructive">*</span></Label>
               <Input {...register('title', { required: true })} placeholder="Announcement headline" />
-            </div>
-
-            <div className="space-y-1">
-              <Label>Message <span className="text-destructive">*</span></Label>
-              <Textarea {...register('message', { required: true })} placeholder="Announcement details" rows={4} />
-            </div>
-
-            <div className="space-y-1">
-              <Label>Image <span className="text-muted-foreground text-xs">(optional banner)</span></Label>
-              <Input type="file" accept="image/*" {...register('image')} />
             </div>
 
             <div className="space-y-1">
@@ -85,18 +79,38 @@ export default function AddAnnouncement() {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label>Start Date <span className="text-muted-foreground text-xs">(optional)</span></Label>
-                <Input type="date" {...register('start_date')} />
-              </div>
-              <div className="space-y-1">
-                <Label>End Date <span className="text-muted-foreground text-xs">(optional)</span></Label>
-                <Input type="date" {...register('end_date')} />
-              </div>
+            <div className="space-y-1">
+              <Label>Image <span className="text-muted-foreground text-xs">(optional banner)</span></Label>
+              <Input
+                type="file"
+                accept="image/*"
+                {...imageField}
+                onChange={(e) => {
+                  onImageChange(e)
+                  const file = e.target.files?.[0]
+                  if (file) setImagePreview(URL.createObjectURL(file))
+                }}
+              />
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="mt-2 h-24 w-24 rounded object-cover border" />
+              )}
             </div>
 
-            <div className="flex gap-3">
+            <div className="space-y-1">
+              <Label>Start Date <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Input type="date" {...register('start_date')} />
+            </div>
+            <div className="space-y-1">
+              <Label>End Date <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Input type="date" {...register('end_date')} />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2 lg:col-span-3">
+              <Label>Message <span className="text-destructive">*</span></Label>
+              <Textarea {...register('message', { required: true })} placeholder="Announcement details" rows={4} />
+            </div>
+
+            <div className="flex gap-3 sm:col-span-2 lg:col-span-3 pt-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Publish Announcement'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/announcements')}>Cancel</Button>
             </div>

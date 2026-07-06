@@ -76,6 +76,20 @@ export const staffUserEditSchema = z.object({
   is_active: z.boolean(),
 })
 
+export const customerSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  mobile_number: z.string().min(10, 'Mobile number must be at least 10 digits'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+export const customerEditSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  mobile_number: z.string().min(10, 'Mobile number must be at least 10 digits'),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional().or(z.literal('')),
+})
+
 export const giftEnquirySchema = z.object({
   customer_name: z.string().min(1, 'Name is required'),
   phone_number: z.string().min(10, 'Enter a valid phone number').optional().or(z.literal('')),

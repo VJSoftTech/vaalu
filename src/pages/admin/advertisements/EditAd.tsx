@@ -19,6 +19,7 @@ export default function EditAd() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [currentImage, setCurrentImage] = useState('')
+  const [newImagePreview, setNewImagePreview] = useState('')
   const [adMeta, setAdMeta] = useState<Record<string, unknown>>({})
   const {
     register,
@@ -26,6 +27,8 @@ export default function EditAd() {
     reset,
     formState: { isSubmitting },
   } = useForm<SimpleEditForm>()
+
+  const { onChange: onBannerChange, ...bannerImageField } = register('banner_image')
 
   useEffect(() => {
     if (!id) return
@@ -60,16 +63,28 @@ export default function EditAd() {
   return (
     <div>
       <PageTitle title="Edit Advertisement" />
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
               <Label>Banner Image</Label>
-              {currentImage && (
+              {currentImage && !newImagePreview && (
                 <img src={currentImage} alt="Current banner" className="w-full h-24 object-cover rounded mb-2 border" />
               )}
-              <Input type="file" accept="image/*" {...register('banner_image')} />
+              <Input
+                type="file"
+                accept="image/*"
+                {...bannerImageField}
+                onChange={(e) => {
+                  onBannerChange(e)
+                  const file = e.target.files?.[0]
+                  if (file) setNewImagePreview(URL.createObjectURL(file))
+                }}
+              />
               <p className="text-xs text-muted-foreground">Leave empty to keep the current image</p>
+              {newImagePreview && (
+                <img src={newImagePreview} alt="New banner preview" className="mt-2 w-full h-24 object-cover rounded border" />
+              )}
             </div>
 
             <div className="space-y-1">
@@ -77,7 +92,7 @@ export default function EditAd() {
               <Input {...register('redirect_url')} placeholder="https://... or /books" />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save Changes'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/advertisements')}>Cancel</Button>
             </div>

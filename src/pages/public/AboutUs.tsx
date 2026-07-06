@@ -1,16 +1,15 @@
 import { Link } from 'react-router-dom'
-import { BookOpen, Library, Tv, Globe, Newspaper, ArrowRight } from 'lucide-react'
+import { BookOpen, Library, Tv, Globe, Newspaper } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import founderImg from '@/assets/images/founder.jpeg'
 
 const W = 'max-w-6xl mx-auto px-6'
 
-function SecHeader({ n, title, tamil }: { n: string; title: string; tamil: string }) {
+function SecHeader({ title, tamil }: { title: string; tamil: string }) {
   return (
     <div className="flex items-start gap-4 mb-10">
       <div className="w-1 self-stretch bg-primary rounded-full" />
       <div>
-        <p className="text-xs text-muted-foreground font-mono mb-1">{n}</p>
         <h2 className="text-3xl font-bold leading-tight">{title}</h2>
         <p className="text-amber-600 text-sm font-medium mt-1">{tamil}</p>
       </div>
@@ -63,7 +62,7 @@ export default function AboutUs() {
       {/* ── 01 HISTORY ─────────────────────────────────────────────────────── */}
       <section className="py-16 bg-white">
         <div className={W}>
-          <SecHeader n="01" title={a.sec1Title} tamil={a.sec1Sub} />
+          <SecHeader title={a.sec1Title} tamil={a.sec1Sub} />
           <p
             className="text-muted-foreground leading-relaxed text-sm max-w-2xl"
             dangerouslySetInnerHTML={{ __html: a.sec1Desc }}
@@ -92,7 +91,7 @@ export default function AboutUs() {
       {/* ── 02 MISSION & VISION ────────────────────────────────────────────── */}
       <section className="py-16 bg-amber-50">
         <div className={W}>
-          <SecHeader n="02" title={a.sec2Title} tamil={a.sec2Sub} />
+          <SecHeader title={a.sec2Title} tamil={a.sec2Sub} />
 
           <p className="text-sm leading-relaxed mb-6 text-muted-foreground">
             <strong className="text-foreground">{a.missionInlineLabel}:</strong>{' '}
@@ -129,7 +128,7 @@ export default function AboutUs() {
       {/* ── 03 FOUNDER PROFILE ─────────────────────────────────────────────── */}
       <section className="py-16 bg-white">
         <div className={W}>
-          <SecHeader n="03" title={a.sec3Title} tamil={a.sec3Sub} />
+          <SecHeader title={a.sec3Title} tamil={a.sec3Sub} />
 
           <div className="grid lg:grid-cols-[260px_1fr] gap-10 items-start">
             <div>
@@ -185,7 +184,7 @@ export default function AboutUs() {
       {/* ── 04 AWARDS & HONOURS ────────────────────────────────────────────── */}
       <section className="py-16 bg-muted/30">
         <div className={W}>
-          <SecHeader n="04" title={a.sec4Title} tamil={a.sec4Sub} />
+          <SecHeader title={a.sec4Title} tamil={a.sec4Sub} />
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {awards.map((award) => (
@@ -197,21 +196,6 @@ export default function AboutUs() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── CTA BANNER ──────────────────────────────────────────────────────── */}
-      <section className="bg-foreground text-background py-8">
-        <div className={`${W} flex flex-col sm:flex-row items-center justify-between gap-6`}>
-          <div>
-            <p className="font-bold text-lg">{a.ctaText}</p>
-            <p className="text-xs text-white/40 mt-1">{a.ctaSub}</p>
-          </div>
-          <Link to="/publish-plan">
-            <button className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap hover:opacity-90 transition-opacity">
-              {a.publishWithUs} <ArrowRight className="h-4 w-4" />
-            </button>
-          </Link>
         </div>
       </section>
 

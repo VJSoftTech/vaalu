@@ -48,9 +48,9 @@ export default function EditUser() {
   return (
     <div>
       <PageTitle title="Edit Staff User" />
-      <Card className="max-w-lg">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
               <Label>Name</Label>
               <Input {...register('name')} />
@@ -76,11 +76,11 @@ export default function EditUser() {
                 <option value="admin">Admin</option>
               </select>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:col-span-2">
               <input type="checkbox" id="is_active" {...register('is_active')} className="h-4 w-4" />
               <Label htmlFor="is_active">Active (allow login)</Label>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>

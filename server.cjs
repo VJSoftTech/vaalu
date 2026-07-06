@@ -1245,6 +1245,24 @@ const server = http.createServer(async (req, res) => {
       `)
       return ok(res, { data: rows, total: rows.length, page: 1, limit: rows.length || 10, total_pages: 1 })
     }
+    if (pathname === '/api/customers' && method === 'POST') {
+      const body = await parseBody(req)
+      const { name, email, mobile_number = '', password } = body
+      if (!name || !email || !password) return badRequest(res, 'Name, email and password are required')
+      const existingCustomer = await q('SELECT id FROM customers WHERE email=$1', [email])
+      if (existingCustomer.rows.length) return badRequest(res, 'A customer with this email already exists')
+      const existingUser = await q('SELECT id FROM users WHERE email=$1', [email])
+      if (existingUser.rows.length) return badRequest(res, 'A login already exists for this email')
+      const { rows } = await q(
+        'INSERT INTO customers (name, email, mobile_number) VALUES ($1,$2,$3) RETURNING *',
+        [name, email, mobile_number]
+      )
+      await q(
+        'INSERT INTO users (name, email, password, role) VALUES ($1,$2,$3,$4)',
+        [name, email, password, 'customer']
+      )
+      return created(res, { ...rows[0], orders_count: 0, total_spent: 0 })
+    }
     const customerMatch = pathname.match(/^\/api\/customers\/(\d+)$/)
     if (customerMatch) {
       const id = parseInt(customerMatch[1])
@@ -1252,42 +1270,112 @@ const server = http.createServer(async (req, res) => {
         const { rows } = await q('SELECT * FROM customers WHERE id=$1', [id])
         return rows.length ? ok(res, rows[0]) : notFound(res)
       }
+      if (method === 'PUT') {
+        const body = await parseBody(req)
+        const cur = (await q('SELECT * FROM customers WHERE id=$1', [id])).rows[0]
+        if (!cur) return notFound(res)
+        const name          = body.name          ?? cur.name
+        const email         = body.email         ?? cur.email
+        const mobile_number = body.mobile_number ?? cur.mobile_number
+        if (email !== cur.email) {
+          const emailTaken = await q('SELECT id FROM customers WHERE email=$1 AND id<>$2', [email, id])
+          if (emailTaken.rows.length) return badRequest(res, 'A customer with this email already exists')
+        }
+        const { rows } = await q(
+          'UPDATE customers SET name=$1, email=$2, mobile_number=$3 WHERE id=$4 RETURNING *',
+          [name, email, mobile_number, id]
+        )
+        const existingUser = (await q("SELECT * FROM users WHERE email=$1 AND role='customer'", [cur.email])).rows[0]
+        if (existingUser) {
+          const password = body.password ? body.password : existingUser.password
+          await q('UPDATE users SET name=$1, email=$2, password=$3 WHERE id=$4', [name, email, password, existingUser.id])
+        } else if (body.password) {
+          await q(
+            "INSERT INTO users (name, email, password, role) VALUES ($1,$2,$3,'customer')",
+            [name, email, body.password]
+          )
+        }
+        return ok(res, rows[0])
+      }
+      if (method === 'DELETE') {
+        const cur = (await q('SELECT * FROM customers WHERE id=$1', [id])).rows[0]
+        if (!cur) return notFound(res)
+        await q('DELETE FROM customers WHERE id=$1', [id])
+        await q("DELETE FROM users WHERE email=$1 AND role='customer'", [cur.email])
+        return ok(res, { message: 'Deleted' })
+      }
     }
 
     // ── Reports ───────────────────────────────────────────────
+    const REPORT_PERIOD_CFG = {
+      daily:   { unit: 'day',   count: 30, fmt: 'Mon DD'   },
+      weekly:  { unit: 'week',  count: 12, fmt: 'Mon DD'   },
+      monthly: { unit: 'month', count: 12, fmt: 'Mon YYYY' },
+      yearly:  { unit: 'year',  count: 6,  fmt: 'YYYY'     },
+    }
     if (pathname === '/api/reports/sales' && method === 'GET') {
-      const { rows } = await q(`
-        SELECT to_char(d::date, 'Mon DD') AS date,
-               COALESCE(COUNT(o.id), 0)::int AS orders,
-               COALESCE(SUM(o.total_amount), 0)::float AS revenue
-        FROM generate_series(CURRENT_DATE - INTERVAL '29 days', CURRENT_DATE, INTERVAL '1 day') d
-        LEFT JOIN orders o ON DATE(o.created_at) = d::date AND o.payment_status = 'paid'
-        GROUP BY d
-        ORDER BY d
-      `)
+      const from = params.get('from')
+      const to = params.get('to')
+
+      let rows
+      if (from && to) {
+        ;({ rows } = await q(`
+          SELECT to_char(d::date, 'Mon DD') AS date,
+                 COALESCE(COUNT(o.id), 0)::int AS orders,
+                 COALESCE(SUM(o.total_amount), 0)::float AS revenue
+          FROM generate_series($1::date, $2::date, INTERVAL '1 day') d
+          LEFT JOIN orders o ON DATE(o.created_at) = d::date
+          GROUP BY d
+          ORDER BY d
+        `, [from, to]))
+      } else {
+        const cfg = REPORT_PERIOD_CFG[params.get('period')] || REPORT_PERIOD_CFG.daily
+        ;({ rows } = await q(`
+          SELECT to_char(d, '${cfg.fmt}') AS date,
+                 COALESCE(COUNT(o.id), 0)::int AS orders,
+                 COALESCE(SUM(o.total_amount), 0)::float AS revenue
+          FROM generate_series(
+                 date_trunc('${cfg.unit}', NOW()) - INTERVAL '${cfg.count - 1} ${cfg.unit}',
+                 date_trunc('${cfg.unit}', NOW()),
+                 INTERVAL '1 ${cfg.unit}'
+               ) d
+          LEFT JOIN orders o ON date_trunc('${cfg.unit}', o.created_at) = d
+          GROUP BY d
+          ORDER BY d
+        `))
+      }
       return ok(res, rows)
     }
 
     if (pathname === '/api/reports/revenue' && method === 'GET') {
-      const periodCfg = {
-        daily:   { unit: 'day',   count: 30, fmt: 'Mon DD'   },
-        weekly:  { unit: 'week',  count: 12, fmt: 'Mon DD'   },
-        monthly: { unit: 'month', count: 12, fmt: 'Mon YYYY' },
-        yearly:  { unit: 'year',  count: 6,  fmt: 'YYYY'     },
+      const from = params.get('from')
+      const to = params.get('to')
+
+      let rows
+      if (from && to) {
+        ;({ rows } = await q(`
+          SELECT to_char(d::date, 'Mon DD') AS date,
+                 COALESCE(SUM(o.total_amount), 0)::float AS revenue
+          FROM generate_series($1::date, $2::date, INTERVAL '1 day') d
+          LEFT JOIN orders o ON DATE(o.created_at) = d::date
+          GROUP BY d
+          ORDER BY d
+        `, [from, to]))
+      } else {
+        const cfg = REPORT_PERIOD_CFG[params.get('period')] || REPORT_PERIOD_CFG.monthly
+        ;({ rows } = await q(`
+          SELECT to_char(d, '${cfg.fmt}') AS date,
+                 COALESCE(SUM(o.total_amount), 0)::float AS revenue
+          FROM generate_series(
+                 date_trunc('${cfg.unit}', NOW()) - INTERVAL '${cfg.count - 1} ${cfg.unit}',
+                 date_trunc('${cfg.unit}', NOW()),
+                 INTERVAL '1 ${cfg.unit}'
+               ) d
+          LEFT JOIN orders o ON date_trunc('${cfg.unit}', o.created_at) = d
+          GROUP BY d
+          ORDER BY d
+        `))
       }
-      const cfg = periodCfg[params.get('period')] || periodCfg.monthly
-      const { rows } = await q(`
-        SELECT to_char(d, '${cfg.fmt}') AS date,
-               COALESCE(SUM(o.total_amount), 0)::float AS revenue
-        FROM generate_series(
-               date_trunc('${cfg.unit}', NOW()) - INTERVAL '${cfg.count - 1} ${cfg.unit}',
-               date_trunc('${cfg.unit}', NOW()),
-               INTERVAL '1 ${cfg.unit}'
-             ) d
-        LEFT JOIN orders o ON date_trunc('${cfg.unit}', o.created_at) = d AND o.payment_status = 'paid'
-        GROUP BY d
-        ORDER BY d
-      `)
       return ok(res, rows)
     }
 

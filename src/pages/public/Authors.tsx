@@ -3,6 +3,7 @@ import { authorService } from '@/services/authorService'
 import type { Author } from '@/types'
 import AuthorCard from '@/components/authors/AuthorCard'
 import AuthorSidebar, { AuthorMenuIcon } from '@/components/authors/AuthorSidebar'
+import AuthorFilterMenu from '@/components/authors/AuthorFilterMenu'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -44,34 +45,41 @@ export default function Authors() {
         <h1 className="text-3xl font-bold">{a.pageTitle}</h1>
       </div>
 
-      {/* Author menu drawer */}
-      <AuthorSidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        authors={authors}
-        searchValue={search}
-        onSearch={setSearch}
-      />
+      <div className="flex flex-col sm:flex-row gap-6">
+        {/* Author sidebar */}
+        <AuthorSidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          authors={authors}
+          searchValue={search}
+          onSearch={setSearch}
+        />
 
-      {/* Grid */}
-      {loading ? (
-        <LoadingSpinner className="py-16" />
-      ) : displayedAuthors.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">{a.noAuthors}</div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {displayedAuthors.map((author, idx) => (
-            <div key={author.id} className="relative">
-              {idx === 0 && author.name === PINNED_AUTHOR && (
-                <span className="absolute -top-1.5 -left-1.5 z-10 text-[10px] font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded shadow">
-                  #1
-                </span>
-              )}
-              <AuthorCard author={author} />
+        <div className="flex-1 min-w-0">
+          {/* Horizontal author menu */}
+          <AuthorFilterMenu authors={authors} activeName={search} onSelect={setSearch} />
+
+          {/* Grid */}
+          {loading ? (
+            <LoadingSpinner className="py-16" />
+          ) : displayedAuthors.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">{a.noAuthors}</div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {displayedAuthors.map((author, idx) => (
+                <div key={author.id} className="relative">
+                  {idx === 0 && author.name === PINNED_AUTHOR && (
+                    <span className="absolute -top-1.5 -left-1.5 z-10 text-[10px] font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded shadow">
+                      #1
+                    </span>
+                  )}
+                  <AuthorCard author={author} />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

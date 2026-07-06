@@ -35,11 +35,17 @@ export interface DashboardStats {
   revenue_trend: number
 }
 
+export interface ReportFilters {
+  period?: 'daily' | 'weekly' | 'monthly' | 'yearly'
+  from?: string
+  to?: string
+}
+
 export const reportService = {
-  getSales: (params?: { from?: string; to?: string }) =>
+  getSales: (params?: ReportFilters) =>
     api.get<SalesReport[]>('/api/reports/sales', { params }).then((r) => r.data),
 
-  getRevenue: (params?: { period?: 'daily' | 'weekly' | 'monthly' | 'yearly' }) =>
+  getRevenue: (params?: ReportFilters) =>
     api.get<RevenuePoint[]>('/api/reports/revenue', { params }).then((r) => r.data),
 
   getPopularBooks: () => api.get<PopularBook[]>('/api/reports/popular-books').then((r) => r.data),

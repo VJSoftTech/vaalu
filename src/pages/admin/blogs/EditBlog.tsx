@@ -60,23 +60,18 @@ export default function EditBlog() {
   return (
     <div>
       <PageTitle title="Edit Blog" />
-      <Card className="max-w-3xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
               <Label>Title</Label>
               <Input {...register('title')} />
               {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label>Content</Label>
-              <Textarea rows={12} {...register('content')} />
-              {errors.content && <p className="text-xs text-destructive">{errors.content.message}</p>}
-            </div>
-            <div className="space-y-1">
               <Label>Featured Image <span className="text-muted-foreground text-xs">(optional)</span></Label>
               {imagePreview && !imageFile && (
-                <img src={imagePreview} alt="Current image" className="mb-2 h-32 w-auto rounded object-cover border" />
+                <img src={imagePreview} alt="Current image" className="mb-2 h-32 w-32 rounded object-cover border" />
               )}
               <Input
                 type="file"
@@ -90,10 +85,15 @@ export default function EditBlog() {
                 }}
               />
               {imageFile && (
-                <img src={imagePreview} alt="New image preview" className="mt-2 h-32 w-auto rounded object-cover border" />
+                <img src={imagePreview} alt="New image preview" className="mt-2 h-32 w-32 rounded object-cover border" />
               )}
             </div>
-            <div className="flex gap-3">
+            <div className="space-y-1 md:col-span-2">
+              <Label>Content</Label>
+              <Textarea rows={12} {...register('content')} />
+              {errors.content && <p className="text-xs text-destructive">{errors.content.message}</p>}
+            </div>
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save Changes'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/blogs')}>Cancel</Button>
             </div>

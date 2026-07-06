@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
 import {
-  ClipboardCheck, SpellCheck, Image, Printer, Tv, PackageCheck, CheckCircle2, BookOpen, Sparkles,
+  ClipboardCheck, SpellCheck, Image, Printer, Tv, PackageCheck, Sparkles,
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -109,39 +108,6 @@ export default function PublishPlan() {
           ))}
         </div>
 
-        {/* Why */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-          <h2 className={`text-base font-semibold text-gray-900 mb-2 ${ta ? 'font-tamil' : ''}`}>
-            {ta ? 'நாங்கள் ஏன் 15 நாட்களில் வெளியிடுகிறோம்?' : 'Why do we publish in 15 days?'}
-          </h2>
-          <p className={`text-sm text-gray-600 leading-relaxed ${ta ? 'font-tamil' : ''}`}>
-            {ta
-              ? 'புதிய படைப்பாளர்களின் ஆர்வம் குறையாமல் இருக்கவும், அவர்கள் அடுத்தடுத்த படைப்புகளில் கவனம் செலுத்தவும் இந்தத் திட்டத்தை முன்னெடுத்துள்ளோம்.'
-              : 'We\'ve launched this initiative so that the enthusiasm of new creators doesn\'t fade, and so they can focus on their next creative work without a long wait.'}
-          </p>
-        </div>
-
-        {/* Condition */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3 mb-10">
-          <CheckCircle2 className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
-          <p className={`text-sm text-amber-800 leading-relaxed ${ta ? 'font-tamil' : ''}`}>
-            <span className="font-semibold">{ta ? 'நிபந்தனை: ' : 'Condition: '}</span>
-            {ta
-              ? 'படைப்புகள் முழுமையாகத் தட்டச்சு செய்யப்பட்டு (Typed Copy), அச்சுக்குத் தயாரான நிலையில் இருக்க வேண்டும்.'
-              : 'Manuscripts must be fully typed (typed copy) and print-ready before submission.'}
-          </p>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <Link
-            to="/contact"
-            className={`inline-flex items-center gap-2 bg-primary text-white text-sm font-medium px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors ${ta ? 'font-tamil' : ''}`}
-          >
-            <BookOpen className="h-4 w-4" />
-            {ta ? 'எங்களுடன் வெளியிடுங்கள்' : 'Publish With Us'}
-          </Link>
-        </div>
       </div>
     </div>
   )

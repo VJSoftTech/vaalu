@@ -15,13 +15,13 @@ export default function AddUser() {
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<StaffUserFormData>({
     resolver: zodResolver(staffUserSchema),
-    defaultValues: { role: 'staff', is_active: true },
+    defaultValues: { name: '', email: '', password: '', role: 'staff', is_active: true },
   })
 
   const onSubmit = async (data: StaffUserFormData) => {
     try {
       await userService.create(data)
-      toast({ title: 'User created successfully' })
+      toast({ title: 'User created successfully.' })
       navigate('/admin/users')
     } catch (err: any) {
       toast({ title: err?.response?.data?.message ?? 'Failed to create user', variant: 'destructive' })
@@ -31,22 +31,22 @@ export default function AddUser() {
   return (
     <div>
       <PageTitle title="Add Staff User" />
-      <Card className="max-w-lg">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start" autoComplete="off">
             <div className="space-y-1">
               <Label>Name</Label>
-              <Input {...register('name')} placeholder="Full name" />
+              <Input {...register('name')} placeholder="Full name" autoComplete="off" />
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
             <div className="space-y-1">
               <Label>Email</Label>
-              <Input type="email" {...register('email')} placeholder="user@vaalu.com" />
+              <Input type="email" {...register('email')} placeholder="user@vaalu.com" autoComplete="off" />
               {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
             <div className="space-y-1">
               <Label>Password</Label>
-              <Input type="password" {...register('password')} placeholder="Min. 6 characters" />
+              <Input type="password" {...register('password')} placeholder="Min. 6 characters" autoComplete="new-password" />
               {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
             </div>
             <div className="space-y-1">
@@ -60,11 +60,11 @@ export default function AddUser() {
               </select>
               {errors.role && <p className="text-xs text-destructive">{errors.role.message}</p>}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:col-span-2">
               <input type="checkbox" id="is_active" {...register('is_active')} className="h-4 w-4" defaultChecked />
               <Label htmlFor="is_active">Active (allow login)</Label>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Creating...' : 'Create User'}
               </Button>

@@ -10,13 +10,15 @@ import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import { Package, Clock, CheckCircle2, Truck, Home, BookOpen, ChevronDown, ChevronUp } from 'lucide-react'
 import { getBookCover } from '@/assets/images/bookCovers'
+import { useLanguage } from '@/contexts/LanguageContext'
+import type { TranslationKey } from '@/i18n/translations'
 
-const STATUS_STEPS: { key: OrderStatus; label: string; icon: React.ReactNode }[] = [
-  { key: 'placed',     label: 'Order Placed', icon: <Clock className="h-3.5 w-3.5" /> },
-  { key: 'confirmed',  label: 'Confirmed',    icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
-  { key: 'processing', label: 'Processing',   icon: <Package className="h-3.5 w-3.5" /> },
-  { key: 'shipped',    label: 'Shipped',      icon: <Truck className="h-3.5 w-3.5" /> },
-  { key: 'delivered',  label: 'Delivered',    icon: <Home className="h-3.5 w-3.5" /> },
+const STATUS_STEPS: { key: OrderStatus; labelKey: keyof TranslationKey['ordersPage']; icon: React.ReactNode }[] = [
+  { key: 'placed',     labelKey: 'statusPlaced',     icon: <Clock className="h-3.5 w-3.5" /> },
+  { key: 'confirmed',  labelKey: 'statusConfirmed',  icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+  { key: 'processing', labelKey: 'statusProcessing', icon: <Package className="h-3.5 w-3.5" /> },
+  { key: 'shipped',    labelKey: 'statusShipped',    icon: <Truck className="h-3.5 w-3.5" /> },
+  { key: 'delivered',  labelKey: 'statusDelivered',  icon: <Home className="h-3.5 w-3.5" /> },
 ]
 
 const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
@@ -30,6 +32,7 @@ const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
 }
 
 function StatusTimeline({ order }: { order: Order }) {
+  const { t } = useLanguage()
   const cancelled = order.order_status === 'cancelled' || order.order_status === 'returned'
   const currentIdx = STATUS_STEPS.findIndex((s) => s.key === order.order_status)
 
@@ -60,7 +63,7 @@ function StatusTimeline({ order }: { order: Order }) {
                 <span className={`text-[9px] text-center leading-tight max-w-[52px] ${
                   active ? 'font-semibold text-primary' : done ? 'text-green-600' : 'text-muted-foreground'
                 }`}>
-                  {step.label}
+                  {t.ordersPage[step.labelKey]}
                 </span>
               </div>
               {i < STATUS_STEPS.length - 1 && (
@@ -73,7 +76,7 @@ function StatusTimeline({ order }: { order: Order }) {
 
       {order.payment_status === 'pending' && order.payment_method === 'qr' && (
         <p className="text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded px-3 py-1.5 mt-3">
-          Payment proof under review — your order will be confirmed once verified.
+          {t.ordersPage.paymentProofNote}
         </p>
       )}
     </div>
@@ -81,6 +84,7 @@ function StatusTimeline({ order }: { order: Order }) {
 }
 
 export default function OrderHistory() {
+  const { t } = useLanguage()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedStatus, setExpandedStatus] = useState<Record<number, boolean>>({})
@@ -94,12 +98,12 @@ export default function OrderHistory() {
 
   return (
     <div className="container py-6 max-w-2xl">
-      <h1 className="text-2xl font-bold mb-4">My Orders</h1>
+      <h1 className="text-2xl font-bold mb-4">{t.ordersPage.title}</h1>
 
       {loading ? (
         <LoadingSpinner className="py-16" />
       ) : orders.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">No orders yet.</div>
+        <div className="text-center py-16 text-muted-foreground">{t.ordersPage.noOrders}</div>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
@@ -158,7 +162,7 @@ export default function OrderHistory() {
                             <p className="font-semibold text-sm leading-snug line-clamp-2 text-foreground">
                               {item.book_title ?? 'Book'}
                             </p>
-                            <p className="text-xs text-muted-foreground mt-0.5">Qty: {item.quantity}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{t.ordersPage.qty}: {item.quantity}</p>
                           </div>
 
                           {/* Track Order Button */}
@@ -170,8 +174,8 @@ export default function OrderHistory() {
                                 onClick={() => toggleStatus(order.id)}
                               >
                                 {expandedStatus[order.id]
-                                  ? <><ChevronUp className="h-3 w-3" />Hide</>
-                                  : <><ChevronDown className="h-3 w-3" />Track Order</>
+                                  ? <><ChevronUp className="h-3 w-3" />{t.ordersPage.hide}</>
+                                  : <><ChevronDown className="h-3 w-3" />{t.ordersPage.trackOrder}</>
                                 }
                               </Button>
                             </div>

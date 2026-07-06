@@ -6,18 +6,20 @@ import { useCart } from '@/hooks/useCart'
 import { formatCurrency } from '@/utils/formatters'
 import { getBookCover } from '@/assets/images/bookCovers'
 import { ShoppingCart } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Wishlist() {
   const { items, removeFromWishlist } = useWishlist()
   const { addToCart, isInCart } = useCart()
+  const { t } = useLanguage()
 
   if (items.length === 0) {
     return (
       <div className="container py-24 flex flex-col items-center gap-4 text-center">
         <Heart className="h-16 w-16 text-muted-foreground" />
-        <h2 className="text-2xl font-semibold">Your wishlist is empty</h2>
-        <p className="text-muted-foreground">Save books you love to buy them later</p>
-        <Link to="/books"><Button>Browse Books</Button></Link>
+        <h2 className="text-2xl font-semibold">{t.wishlistPage.emptyTitle}</h2>
+        <p className="text-muted-foreground">{t.wishlistPage.emptyDesc}</p>
+        <Link to="/books"><Button>{t.wishlistPage.browseBooks}</Button></Link>
       </div>
     )
   }
@@ -25,8 +27,8 @@ export default function Wishlist() {
   return (
     <div className="container py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">My Wishlist</h1>
-        <span className="text-muted-foreground text-sm">{items.length} {items.length === 1 ? 'book' : 'books'}</span>
+        <h1 className="text-3xl font-bold">{t.wishlistPage.title}</h1>
+        <span className="text-muted-foreground text-sm">{items.length} {items.length === 1 ? t.wishlistPage.book : t.wishlistPage.books}</span>
       </div>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -62,7 +64,7 @@ export default function Wishlist() {
                   className="flex-1 h-8 text-xs"
                 >
                   <ShoppingCart className="h-3 w-3 mr-1" />
-                  {isInCart(book.id) ? 'In Cart' : 'Add to Cart'}
+                  {isInCart(book.id) ? t.wishlistPage.inCart : t.wishlistPage.addToCart}
                 </Button>
                 <Button
                   size="sm"

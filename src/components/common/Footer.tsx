@@ -164,14 +164,7 @@ export default function Footer() {
               {[
                 { Icon: Phone, text: '+91 94442 96929' },
                 { Icon: Mail, text: 'vaalupathippagam@gmail.com' },
-                {
-                  Icon: MapPin,
-                  text: (
-                    <>
-                      Chennai, Tamil Nadu
-                    </>
-                  ),
-                },
+                { Icon: MapPin, text: f.address },
                 { Icon: Clock, text: f.hours },
               ].map(({ Icon, text }, i) => (
                 <li key={i} className="flex items-start gap-3">

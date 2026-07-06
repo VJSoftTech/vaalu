@@ -15,23 +15,36 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 export default function Dashboard() {
   const [salesData, setSalesData] = useState<{ date: string; revenue: number }[]>([])
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [statsLoading, setStatsLoading] = useState(true)
+  const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly')
+  const [from, setFrom] = useState('')
+  const [to, setTo] = useState('')
+
+  const hasDateRange = Boolean(from && to)
 
   useEffect(() => {
+    setLoading(true)
     reportService
-      .getSales()
+      .getSales(hasDateRange ? { from, to } : { period })
       .then((data) => {
         const arr: SalesReport[] = Array.isArray(data) ? data : ((data as any)?.data ?? [])
         setSalesData(arr.map((d) => ({ date: d.date, revenue: d.revenue })))
       })
       .catch(() => setSalesData([]))
       .finally(() => setLoading(false))
+  }, [period, from, to])
 
+  const clearDateRange = () => { setFrom(''); setTo('') }
+
+  useEffect(() => {
     reportService
       .getDashboardStats()
       .then(setStats)
@@ -84,7 +97,25 @@ export default function Dashboard() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Revenue Overview</CardTitle></CardHeader>
+        <CardHeader className="flex-row flex-wrap items-center justify-between gap-2 space-y-0">
+          <CardTitle>Revenue Overview</CardTitle>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={period} onValueChange={(v) => setPeriod(v as typeof period)} disabled={hasDateRange}>
+              <SelectTrigger className="h-8 w-24 text-xs border-primary text-primary focus:ring-primary"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {['daily', 'weekly', 'monthly', 'yearly'].map((p) => (
+                  <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input type="date" className="h-8 w-36 text-xs border-primary text-primary focus-visible:ring-primary" value={from} max={to || undefined} onChange={(e) => setFrom(e.target.value)} />
+            <span className="text-xs text-muted-foreground">to</span>
+            <Input type="date" className="h-8 w-36 text-xs border-primary text-primary focus-visible:ring-primary" value={to} min={from || undefined} onChange={(e) => setTo(e.target.value)} />
+            {hasDateRange && (
+              <Button variant="outline" size="sm" className="h-8 text-xs border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={clearDateRange}>Clear</Button>
+            )}
+          </div>
+        </CardHeader>
         <CardContent>
           {loading ? (
             <LoadingSpinner className="py-12" />

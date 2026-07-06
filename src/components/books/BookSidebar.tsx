@@ -65,76 +65,70 @@ export default function BookSidebar({ open, onClose, filters, onChange, onClear 
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+    <aside className="w-full sm:w-64 shrink-0 border rounded-lg bg-background shadow-sm flex flex-col mb-6 sm:mb-0 sm:sticky sm:top-24 sm:max-h-[calc(100vh-7rem)]">
+      {/* Sidebar header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b">
+        <span className="font-bold text-base flex items-center gap-2">
+          <LayoutList className="h-4 w-4" /> {s.categories}
+        </span>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <X className="h-5 w-5" />
+        </button>
+      </div>
 
-      {/* Drawer from left */}
-      <div className="relative w-72 max-w-[85vw] h-full bg-background shadow-2xl flex flex-col">
-        {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b">
-          <span className="font-bold text-base flex items-center gap-2">
-            <LayoutList className="h-4 w-4" /> {s.categories}
-          </span>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-            <X className="h-5 w-5" />
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-5 py-4 text-sm">
+        {hasActiveFilters && (
+          <button
+            onClick={onClear}
+            className="mb-4 text-xs text-primary hover:underline flex items-center gap-1"
+          >
+            <X className="h-3 w-3" /> {s.clearFilter}
           </button>
-        </div>
+        )}
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 text-sm">
-          {hasActiveFilters && (
-            <button
-              onClick={onClear}
-              className="mb-4 text-xs text-primary hover:underline flex items-center gap-1"
-            >
-              <X className="h-3 w-3" /> {s.clearFilter}
-            </button>
-          )}
-
-          <Section title={s.category}>
-            {categories.length === 0 ? (
-              <p className="text-xs text-muted-foreground">{s.loading}</p>
-            ) : (
-              <>
-                <label className="flex items-center gap-2 cursor-pointer">
+        <Section title={s.category}>
+          {categories.length === 0 ? (
+            <p className="text-xs text-muted-foreground">{s.loading}</p>
+          ) : (
+            <>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="category"
+                  checked={filters.category_id == null}
+                  onChange={() => onChange({ category_id: undefined })}
+                  className="accent-primary"
+                />
+                <span className={cn('text-sm', filters.category_id == null ? 'text-primary font-medium' : 'text-muted-foreground')}>
+                  {s.allCategories}
+                </span>
+              </label>
+              {categories.map((cat) => (
+                <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="category"
-                    checked={filters.category_id == null}
-                    onChange={() => onChange({ category_id: undefined })}
+                    checked={filters.category_id === cat.id}
+                    onChange={() => onChange({ category_id: cat.id })}
                     className="accent-primary"
                   />
-                  <span className={cn('text-sm', filters.category_id == null ? 'text-primary font-medium' : 'text-muted-foreground')}>
-                    {s.allCategories}
+                  <span className={cn('text-sm', filters.category_id === cat.id ? 'text-primary font-medium' : 'text-muted-foreground')}>
+                    {cat.name}
                   </span>
                 </label>
-                {categories.map((cat) => (
-                  <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={filters.category_id === cat.id}
-                      onChange={() => onChange({ category_id: cat.id })}
-                      className="accent-primary"
-                    />
-                    <span className={cn('text-sm', filters.category_id === cat.id ? 'text-primary font-medium' : 'text-muted-foreground')}>
-                      {cat.name}
-                    </span>
-                  </label>
-                ))}
-              </>
-            )}
-          </Section>
-        </div>
-
-        {/* Footer */}
-        <div className="px-5 py-4 border-t">
-          <Button className="w-full" onClick={onClose}>
-            {s.showResults}
-          </Button>
-        </div>
+              ))}
+            </>
+          )}
+        </Section>
       </div>
-    </div>
+
+      {/* Footer */}
+      <div className="px-5 py-4 border-t">
+        <Button className="w-full" onClick={onClose}>
+          {s.showResults}
+        </Button>
+      </div>
+    </aside>
   )
 }

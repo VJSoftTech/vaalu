@@ -69,11 +69,11 @@ export default function EditVideo() {
     <div>
       <PageTitle title="Edit Video" />
 
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4"
+            className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start"
           >
             <div className="space-y-1">
               <Label>YouTube Video ID</Label>
@@ -95,7 +95,7 @@ export default function EditVideo() {
               <Input {...register('category')} />
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 md:col-span-2">
               <Switch
                 id="featured"
                 checked={watch('is_featured') || false}
@@ -112,7 +112,7 @@ export default function EditVideo() {
               </Label>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { advertisementService } from '@/services/advertisementService'
@@ -14,6 +15,7 @@ interface SimpleAdForm {
 
 export default function AddAd() {
   const navigate = useNavigate()
+  const [imagePreview, setImagePreview] = useState('')
   const {
     register,
     handleSubmit,
@@ -30,16 +32,30 @@ export default function AddAd() {
     navigate('/admin/advertisements')
   }
 
+  const { onChange: onBannerChange, ...bannerImageField } = register('banner_image', { required: true })
+
   return (
     <div>
       <PageTitle title="Add Advertisement" />
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
               <Label>Banner Image <span className="text-destructive">*</span></Label>
-              <Input type="file" accept="image/*" {...register('banner_image', { required: true })} />
+              <Input
+                type="file"
+                accept="image/*"
+                {...bannerImageField}
+                onChange={(e) => {
+                  onBannerChange(e)
+                  const file = e.target.files?.[0]
+                  if (file) setImagePreview(URL.createObjectURL(file))
+                }}
+              />
               <p className="text-xs text-muted-foreground">Recommended: 1920×600px or 16:5 aspect ratio</p>
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="mt-2 w-full h-24 object-cover rounded border" />
+              )}
             </div>
 
             <div className="space-y-1">
@@ -47,7 +63,7 @@ export default function AddAd() {
               <Input {...register('redirect_url')} placeholder="https://... or /books" />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Add Banner'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/advertisements')}>Cancel</Button>
             </div>

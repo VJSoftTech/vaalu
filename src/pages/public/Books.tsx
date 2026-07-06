@@ -5,6 +5,7 @@ import { bookService } from '@/services/bookService'
 import BookCard from '@/components/books/BookCard'
 import BookFiltersBar from '@/components/books/BookFilters'
 import BookSidebar, { FilterIcon } from '@/components/books/BookSidebar'
+import BookCategoryMenu from '@/components/books/BookCategoryMenu'
 import BookPageLoader from '@/components/common/BookPageLoader'
 import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -87,52 +88,59 @@ export default function Books() {
         <BookFiltersBar filters={filters} onChange={updateFilters} />
       </div>
 
-      {/* Filter drawer */}
-      <BookSidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        filters={filters}
-        onChange={updateFilters}
-        onClear={clearFilters}
-      />
+      <div className="flex flex-col sm:flex-row gap-6">
+        {/* Category sidebar */}
+        <BookSidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          filters={filters}
+          onChange={updateFilters}
+          onClear={clearFilters}
+        />
 
-      {/* Book grid */}
-      {loading ? (
-        <BookPageLoader className="py-16" />
-      ) : error ? (
-        <div className="text-center py-16 text-destructive">{error}</div>
-      ) : books.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">{b.noBooks}</div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {books.map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
-        </div>
-      )}
+        <div className="flex-1 min-w-0">
+          {/* Horizontal category menu */}
+          <BookCategoryMenu filters={filters} onChange={updateFilters} />
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8">
-          <Button
-            variant="outline"
-            disabled={currentPage <= 1}
-            onClick={() => updateFilters({ page: currentPage - 1 })}
-          >
-            {b.previous}
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {b.page} {currentPage} {b.of} {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            disabled={currentPage >= totalPages}
-            onClick={() => updateFilters({ page: currentPage + 1 })}
-          >
-            {b.next}
-          </Button>
+          {/* Book grid */}
+          {loading ? (
+            <BookPageLoader className="py-16" />
+          ) : error ? (
+            <div className="text-center py-16 text-destructive">{error}</div>
+          ) : books.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">{b.noBooks}</div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {books.map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                disabled={currentPage <= 1}
+                onClick={() => updateFilters({ page: currentPage - 1 })}
+              >
+                {b.previous}
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {b.page} {currentPage} {b.of} {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                disabled={currentPage >= totalPages}
+                onClick={() => updateFilters({ page: currentPage + 1 })}
+              >
+                {b.next}
+              </Button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

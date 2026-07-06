@@ -33,7 +33,8 @@ export default function Navbar() {
 
   const nav = t.nav
 
-  // Primary links stay visible on the bar; the rest collapse into "More" to avoid crowding/wrapping.
+  // Only a few short links stay on the bar; everything else collapses into "More" so the
+  // bar never runs out of room (Tamil labels run much longer than their English counterparts).
   const primaryLinks: { to: string; label: string; end?: boolean }[] = [
     { to: '/', label: nav.home, end: true },
     { to: '/about', label: nav.about },
@@ -50,7 +51,6 @@ export default function Navbar() {
     { to: '/blog', label: nav.blog },
     { to: '/corporate-enquiries', label: nav.corporateEnquiries },
     { to: '/copyright-enquiries', label: nav.copyrightEnquiries },
-    { to: '/contact', label: nav.contact },
   ]
 
   const navLinks = [...primaryLinks, ...moreLinks]
@@ -110,7 +110,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-3 lg:gap-4">
+        <nav className="hidden xl:flex items-center gap-2 2xl:gap-3 shrink-0">
           {primaryLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -118,7 +118,7 @@ export default function Navbar() {
               end={link.end}
               className={({ isActive }) =>
                 cn(
-                  'text-xs font-medium whitespace-nowrap transition-colors hover:text-primary',
+                  'shrink-0 text-xs font-medium whitespace-nowrap transition-colors hover:text-primary',
                   isActive ? 'text-primary font-semibold' : 'text-foreground/70',
                   lang === 'ta' && 'font-tamil',
                 )
@@ -129,7 +129,7 @@ export default function Navbar() {
           ))}
 
           {/* More dropdown */}
-          <div ref={moreMenuRef} className="relative">
+          <div ref={moreMenuRef} className="relative shrink-0">
             <button
               onClick={() => setMoreMenuOpen((o) => !o)}
               className={cn(
@@ -142,7 +142,7 @@ export default function Navbar() {
               <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', moreMenuOpen && 'rotate-180')} />
             </button>
             {moreMenuOpen && (
-              <div className="absolute left-0 top-full mt-2 w-44 rounded-lg border bg-white shadow-lg py-1 z-50">
+              <div className="absolute left-0 top-full mt-2 w-60 max-h-[70vh] overflow-y-auto rounded-lg border bg-white shadow-lg py-1 z-50">
                 {moreLinks.map((link) => (
                   <NavLink
                     key={link.to}
@@ -150,7 +150,7 @@ export default function Navbar() {
                     onClick={() => setMoreMenuOpen(false)}
                     className={({ isActive }) =>
                       cn(
-                        'block px-4 py-2 text-xs font-medium transition-colors hover:bg-muted',
+                        'block px-4 py-2 text-xs font-medium transition-colors hover:bg-muted whitespace-nowrap',
                         isActive ? 'text-primary font-semibold' : 'text-foreground/70',
                         lang === 'ta' && 'font-tamil',
                       )
@@ -162,10 +162,16 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
+          <Link to="/contact" className="shrink-0">
+            <Button size="sm" className={cn('h-8 text-xs whitespace-nowrap', lang === 'ta' && 'font-tamil')}>
+              {nav.contact}
+            </Button>
+          </Link>
         </nav>
 
         {/* Right side actions */}
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 shrink-0">
           {/* Search */}
           {searchOpen ? (
             <form onSubmit={handleSearch} className="flex items-center gap-1">
@@ -192,7 +198,7 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setLangMenuOpen((o) => !o)}
-              title="Language"
+              title={nav.language}
               className="relative h-9 w-9"
             >
               <Globe className="h-5 w-5" />
@@ -259,7 +265,7 @@ export default function Navbar() {
 
           {/* Cart */}
           <Link to={isAuthenticated ? '/cart' : '/auth/login'} className="relative">
-            <Button variant="ghost" size="icon" className="h-9 w-9" title="Cart">
+            <Button variant="ghost" size="icon" className="h-9 w-9" title={nav.cart}>
               <ShoppingCart className="h-5 w-5" />
               {itemCount > 0 && (
                 <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px]">
@@ -273,13 +279,13 @@ export default function Navbar() {
           {isAuthenticated ? (
             <div ref={userMenuRef} className="relative">
               <Button
-                size="sm"
+                size="icon"
                 variant="outline"
-                className="hidden sm:flex items-center gap-1.5"
+                className="hidden sm:flex h-9 w-9 rounded-full p-0 font-semibold uppercase"
                 onClick={() => setUserMenuOpen((o) => !o)}
+                title={user?.name}
               >
-                <User className="h-4 w-4" />
-                {user?.name?.split(' ')[0]}
+                {user?.name?.trim()?.[0] || <User className="h-4 w-4" />}
               </Button>
               {userMenuOpen && (
                 <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border bg-white shadow-lg py-1 z-50">
@@ -335,13 +341,34 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2">
-              <Link to="/auth/login">
-                <Button size="sm" variant="outline" className={lang === 'ta' ? 'font-tamil' : ''}>{nav.signIn}</Button>
-              </Link>
-              <Link to="/auth/register">
-                <Button size="sm" className={lang === 'ta' ? 'font-tamil' : ''}>{nav.register}</Button>
-              </Link>
+            <div ref={userMenuRef} className="relative hidden sm:block">
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-9 w-9 rounded-full p-0"
+                onClick={() => setUserMenuOpen((o) => !o)}
+                title={nav.signIn}
+              >
+                <User className="h-4 w-4" />
+              </Button>
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-1 w-40 rounded-lg border bg-white shadow-lg py-1 z-50">
+                  <Link
+                    to="/auth/login"
+                    onClick={() => setUserMenuOpen(false)}
+                    className={cn('block px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
+                  >
+                    {nav.signIn}
+                  </Link>
+                  <Link
+                    to="/auth/register"
+                    onClick={() => setUserMenuOpen(false)}
+                    className={cn('block px-4 py-2 text-sm hover:bg-muted transition-colors', lang === 'ta' && 'font-tamil')}
+                  >
+                    {nav.register}
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 
@@ -349,7 +376,7 @@ export default function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="xl:hidden"
             onClick={() => setMobileOpen((o) => !o)}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -359,7 +386,7 @@ export default function Navbar() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <nav className="md:hidden border-t bg-white px-4 py-3 flex flex-col gap-3">
+        <nav className="xl:hidden border-t bg-white px-4 py-3 flex flex-col gap-3">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -373,6 +400,9 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
+          <Link to="/contact" onClick={() => setMobileOpen(false)}>
+            <Button size="sm" className={cn('w-full', lang === 'ta' && 'font-tamil')}>{nav.contact}</Button>
+          </Link>
           <div className="border-t pt-3 flex flex-col gap-2">
             {isAuthenticated ? (
               <>

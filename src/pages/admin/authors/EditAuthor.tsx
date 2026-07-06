@@ -52,18 +52,13 @@ export default function EditAuthor() {
   return (
     <div>
       <PageTitle title="Edit Author" />
-      <Card className="max-w-2xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
               <Label>Name</Label>
               <Input {...register('name')} />
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-            </div>
-            <div className="space-y-1">
-              <Label>Biography</Label>
-              <Textarea rows={5} {...register('biography')} />
-              {errors.biography && <p className="text-xs text-destructive">{errors.biography.message}</p>}
             </div>
             <div className="space-y-1">
               <Label>Photo</Label>
@@ -85,7 +80,12 @@ export default function EditAuthor() {
                 <img src={photoPreview} alt="New photo preview" className="mt-2 h-20 w-20 rounded-full object-cover border" />
               )}
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1 md:col-span-2">
+              <Label>Biography</Label>
+              <Textarea rows={5} {...register('biography')} />
+              {errors.biography && <p className="text-xs text-destructive">{errors.biography.message}</p>}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:col-span-2">
               {(['website', 'facebook', 'twitter', 'instagram'] as const).map((s) => (
                 <div key={s} className="space-y-1">
                   <Label className="capitalize">{s}</Label>
@@ -93,7 +93,7 @@ export default function EditAuthor() {
                 </div>
               ))}
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save Changes'}</Button>
               <Button type="button" variant="outline" onClick={() => navigate('/admin/authors')}>Cancel</Button>
             </div>

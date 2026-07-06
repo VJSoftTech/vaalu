@@ -84,9 +84,9 @@ export default function AddVideo() {
     <div>
       <PageTitle title="Add Video" />
 
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
 
             <div className="space-y-1">
               <Label>YouTube URL</Label>
@@ -97,18 +97,18 @@ export default function AddVideo() {
               />
             </div>
 
-            {youtubeId && (
-              <img
-                src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`}
-                alt="Thumbnail"
-                className="w-full aspect-video object-cover rounded"
-              />
-            )}
-
             <div className="space-y-1">
               <Label>Title</Label>
               <Input {...register('title', { required: true })} />
             </div>
+
+            {youtubeId && (
+              <img
+                src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`}
+                alt="Thumbnail"
+                className="w-full aspect-video object-cover rounded md:col-span-2"
+              />
+            )}
 
             <div className="space-y-1">
               <Label>Duration</Label>
@@ -123,7 +123,7 @@ export default function AddVideo() {
               <Input {...register('category')} />
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 md:col-span-2">
               <Switch
                 id="featured"
                 checked={isFeatured}
@@ -139,7 +139,7 @@ export default function AddVideo() {
               </Label>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 md:col-span-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}
