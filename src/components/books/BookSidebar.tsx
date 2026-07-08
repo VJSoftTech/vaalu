@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, X, LayoutList, Menu } from 'lucide-react'
 import { categoryService } from '@/services/categoryService'
 import type { BookFilters, Category } from '@/types'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -65,14 +64,17 @@ export default function BookSidebar({ open, onClose, filters, onChange, onClear 
   if (!open) return null
 
   return (
-    <aside className="w-full sm:w-64 shrink-0 border rounded-lg bg-background shadow-sm flex flex-col mb-6 sm:mb-0 sm:sticky sm:top-24 sm:max-h-[calc(100vh-7rem)]">
+    <aside className="w-full sm:w-64 shrink-0 border rounded-lg bg-background shadow-sm flex flex-col mb-6 sm:mb-0 sm:sticky sm:top-24 sm:max-h-[calc(100vh-7rem)] overflow-hidden">
       {/* Sidebar header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b">
+      <div className="relative flex items-center px-5 py-4 pr-14 border-b">
         <span className="font-bold text-base flex items-center gap-2">
           <LayoutList className="h-4 w-4" /> {s.categories}
         </span>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-          <X className="h-5 w-5" />
+        <button
+          onClick={onClose}
+          className="absolute top-0 right-0 h-11 w-11 flex items-center justify-center rounded-bl-2xl bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          <X className="h-4 w-4" />
         </button>
       </div>
 
@@ -121,13 +123,6 @@ export default function BookSidebar({ open, onClose, filters, onChange, onClear 
             </>
           )}
         </Section>
-      </div>
-
-      {/* Footer */}
-      <div className="px-5 py-4 border-t">
-        <Button className="w-full" onClick={onClose}>
-          {s.showResults}
-        </Button>
       </div>
     </aside>
   )

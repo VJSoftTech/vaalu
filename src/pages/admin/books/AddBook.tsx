@@ -54,12 +54,12 @@ export default function AddBook() {
   }
 
   const textFields = [
-    { id: 'title', label: 'Title', type: 'text' },
-    { id: 'isbn', label: 'ISBN', type: 'text' },
-    { id: 'price', label: 'Price (₹)', type: 'number' },
-    { id: 'discount_price', label: 'Discount Price (₹)', type: 'number' },
-    { id: 'stock_quantity', label: 'Stock Quantity', type: 'number' },
-    { id: 'rating', label: 'Rating (0–5)', type: 'number' },
+    { id: 'title', label: 'Title', type: 'text', required: true },
+    { id: 'isbn', label: 'ISBN', type: 'text', required: true },
+    { id: 'price', label: 'Price (₹)', type: 'number', required: true },
+    { id: 'discount_price', label: 'Discount Price (₹)', type: 'number', required: false },
+    { id: 'stock_quantity', label: 'Stock Quantity', type: 'number', required: true },
+    { id: 'rating', label: 'Rating (0–5)', type: 'number', required: false },
   ]
 
   return (
@@ -68,9 +68,11 @@ export default function AddBook() {
       <Card>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-start">
-            {textFields.map(({ id, label, type }) => (
+            {textFields.map(({ id, label, type, required }) => (
               <div key={id} className="space-y-1">
-                <Label htmlFor={id}>{label}</Label>
+                <Label htmlFor={id}>
+                  {label} {required && <span className="text-red-500">*</span>}
+                </Label>
                 <Input
                   id={id}
                   type={type}
@@ -86,7 +88,7 @@ export default function AddBook() {
             ))}
 
             <div className="space-y-1">
-              <Label>Author</Label>
+              <Label>Author <span className="text-red-500">*</span></Label>
               <Controller
                 name="author_id"
                 control={control}
@@ -112,7 +114,7 @@ export default function AddBook() {
             </div>
 
             <div className="space-y-1">
-              <Label>Category</Label>
+              <Label>Category <span className="text-red-500">*</span></Label>
               <Controller
                 name="category_id"
                 control={control}
@@ -138,7 +140,7 @@ export default function AddBook() {
             </div>
 
             <div className="space-y-1 sm:col-span-2 lg:col-span-3">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
               <Textarea id="description" rows={4} {...register('description')} />
               {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
             </div>

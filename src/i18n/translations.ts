@@ -7,6 +7,7 @@ const translations = {
       books: 'Books',
       authors: 'Authors',
       blog: 'Blog',
+      reviews: 'Reviews',
       vaaluTv: 'Vaalu TV',
       gifts: '🎁 Gifts',
       offers: 'Offers',
@@ -166,6 +167,13 @@ const translations = {
     },
     blog: {
       pageTitle: 'Blog',
+    },
+    reviews: {
+      pageTitle: 'Book Reviews',
+      subtitle: 'What our readers are saying',
+      noReviews: 'No reviews yet.',
+      totalReviews: 'reviews',
+      averageRating: 'Average',
     },
     gifts: {
       category: 'Category:',
@@ -470,6 +478,7 @@ const translations = {
       books: 'புத்தகங்கள்',
       authors: 'ஆசிரியர்கள்',
       blog: 'வலைப்பதிவு',
+      reviews: 'விமர்சனங்கள்',
       vaaluTv: 'வாலு TV',
       gifts: '🎁 பரிசுகள்',
       offers: 'சலுகைகள்',
@@ -629,6 +638,13 @@ const translations = {
     },
     blog: {
       pageTitle: 'வலைப்பதிவு',
+    },
+    reviews: {
+      pageTitle: 'புத்தக விமர்சனங்கள்',
+      subtitle: 'எங்கள் வாசகர்கள் கூறுவது',
+      noReviews: 'இதுவரை விமர்சனங்கள் இல்லை.',
+      totalReviews: 'விமர்சனங்கள்',
+      averageRating: 'சராசரி',
     },
     gifts: {
       category: 'வகை:',

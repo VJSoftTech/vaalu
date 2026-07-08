@@ -106,7 +106,9 @@ export default function Checkout() {
                   const label = t.checkout[labelKey]
                   return (
                   <div key={id} className={`space-y-1 ${colSpan === 2 ? 'sm:col-span-2' : ''}`}>
-                    <Label htmlFor={id}>{label}</Label>
+                    <Label htmlFor={id}>
+                      {label} {required && <span className="text-red-500">*</span>}
+                    </Label>
                     <Input
                       id={id}
                       {...register(id as keyof ShippingForm, { required })}
@@ -207,7 +209,7 @@ export default function Checkout() {
                     <p className="text-sm font-semibold">{t.checkout.submitPaymentProof}</p>
 
                     <div className="space-y-1">
-                      <Label htmlFor="payment_ref_id">{t.checkout.paymentRefLabel}</Label>
+                      <Label htmlFor="payment_ref_id">{t.checkout.paymentRefLabel} <span className="text-red-500">*</span></Label>
                       <Input
                         id="payment_ref_id"
                         placeholder={t.checkout.paymentRefPlaceholder}
@@ -217,7 +219,7 @@ export default function Checkout() {
                     </div>
 
                     <div className="space-y-1">
-                      <Label>{t.checkout.paymentScreenshotLabel}</Label>
+                      <Label>{t.checkout.paymentScreenshotLabel} <span className="text-red-500">*</span></Label>
                       <div
                         onClick={() => fileRef.current?.click()}
                         className="border-2 border-dashed rounded-lg p-5 text-center cursor-pointer hover:border-primary/50 transition-colors"

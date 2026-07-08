@@ -52,12 +52,12 @@ export default function EditUser() {
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
-              <Label>Name</Label>
+              <Label>Name <span className="text-red-500">*</span></Label>
               <Input {...register('name')} />
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label>Email</Label>
+              <Label>Email <span className="text-red-500">*</span></Label>
               <Input type="email" {...register('email')} />
               {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
@@ -67,7 +67,7 @@ export default function EditUser() {
               {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label>Role</Label>
+              <Label>Role <span className="text-red-500">*</span></Label>
               <select
                 {...register('role')}
                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm"

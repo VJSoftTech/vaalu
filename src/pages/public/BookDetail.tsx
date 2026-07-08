@@ -92,7 +92,7 @@ function ReviewsSection({ book }: { book: Book }) {
         <h3 className="text-xl font-semibold mb-4">{t.bookDetail.writeAReview}</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="space-y-1">
-            <Label htmlFor="customer_name">{t.bookDetail.name}</Label>
+            <Label htmlFor="customer_name">{t.bookDetail.name} <span className="text-red-500">*</span></Label>
             <Input id="customer_name" {...register('customer_name')} />
             {errors.customer_name && <p className="text-xs text-destructive">{errors.customer_name.message}</p>}
           </div>
@@ -104,7 +104,7 @@ function ReviewsSection({ book }: { book: Book }) {
           </div>
 
           <div className="space-y-1">
-            <Label>{t.bookDetail.rating}</Label>
+            <Label>{t.bookDetail.rating} <span className="text-red-500">*</span></Label>
             <Controller
               name="rating"
               control={control}
@@ -124,7 +124,7 @@ function ReviewsSection({ book }: { book: Book }) {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="comment">{t.bookDetail.comment}</Label>
+            <Label htmlFor="comment">{t.bookDetail.comment} <span className="text-red-500">*</span></Label>
             <Textarea id="comment" rows={4} {...register('comment')} />
             {errors.comment && <p className="text-xs text-destructive">{errors.comment.message}</p>}
           </div>

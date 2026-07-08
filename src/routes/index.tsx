@@ -16,6 +16,7 @@ import Authors from '@/pages/public/Authors'
 import AuthorDetail from '@/pages/public/AuthorDetail'
 import Blog from '@/pages/public/Blog'
 import BlogDetail from '@/pages/public/BlogDetail'
+import Reviews from '@/pages/public/Reviews'
 import VaaluTV from '@/pages/public/VaaluTV'
 import Cart from '@/pages/public/Cart'
 import Checkout from '@/pages/public/Checkout'
@@ -54,6 +55,7 @@ import SalesReport from '@/pages/admin/reports/SalesReport'
 import RevenueReport from '@/pages/admin/reports/RevenueReport'
 import PopularBooks from '@/pages/admin/reports/PopularBooks'
 import CustomerReport from '@/pages/admin/reports/CustomerReport'
+import WhoVisitedSites from '@/pages/admin/visitors/WhoVisitedSites'
 import AboutUs from '@/pages/public/AboutUs'
 import PublishPlan from '@/pages/public/PublishPlan'
 import ContactUs from '@/pages/public/ContactUs'
@@ -101,6 +103,7 @@ export default function AppRoutes() {
         <Route path="authors/:id" element={<AuthorDetail />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:slug" element={<BlogDetail />} />
+        <Route path="reviews" element={<Reviews />} />
         <Route path="vaalu-tv" element={<VaaluTV />} />
         <Route path="gifts" element={<Gifts />} />
         <Route path="gifts/:slug" element={<GiftDetail />} />
@@ -171,6 +174,7 @@ export default function AppRoutes() {
           <Route path="reports/revenue" element={<RevenueReport />} />
           <Route path="reports/popular-books" element={<PopularBooks />} />
           <Route path="reports/customers" element={<CustomerReport />} />
+          <Route path="visitors/who-visited-sites" element={<WhoVisitedSites />} />
         </Route>
       </Route>
 

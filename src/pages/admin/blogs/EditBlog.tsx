@@ -64,7 +64,7 @@ export default function EditBlog() {
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
-              <Label>Title</Label>
+              <Label>Title <span className="text-red-500">*</span></Label>
               <Input {...register('title')} />
               {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
             </div>
@@ -89,7 +89,7 @@ export default function EditBlog() {
               )}
             </div>
             <div className="space-y-1 md:col-span-2">
-              <Label>Content</Label>
+              <Label>Content <span className="text-red-500">*</span></Label>
               <Textarea rows={12} {...register('content')} />
               {errors.content && <p className="text-xs text-destructive">{errors.content.message}</p>}
             </div>

@@ -219,6 +219,31 @@ async function initDB() {
     );
   `)
 
+  // One-time cleanup of the earlier unshipped visitor-tracking scaffold
+  await pool.query(`DROP TABLE IF EXISTS visitors;`)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS visitor_logs (
+      id               SERIAL PRIMARY KEY,
+      session_id       VARCHAR(64)  NOT NULL,
+      user_id          INTEGER      REFERENCES users(id) ON DELETE SET NULL,
+      user_name        VARCHAR(255) NOT NULL,
+      email            VARCHAR(255) NOT NULL,
+      page_name        VARCHAR(255) NOT NULL,
+      page_url         VARCHAR(500) NOT NULL,
+      device_type      VARCHAR(20)  DEFAULT 'desktop',
+      browser          VARCHAR(50)  DEFAULT 'Unknown',
+      operating_system VARCHAR(50)  DEFAULT 'Unknown',
+      ip_address       VARCHAR(64)  DEFAULT '',
+      visit_date_time  TIMESTAMPTZ  DEFAULT NOW(),
+      last_activity    TIMESTAMPTZ  DEFAULT NOW(),
+      logged_out_at    TIMESTAMPTZ
+    );
+    CREATE INDEX IF NOT EXISTS idx_visitor_logs_session    ON visitor_logs(session_id);
+    CREATE INDEX IF NOT EXISTS idx_visitor_logs_visit_time ON visitor_logs(visit_date_time DESC);
+    CREATE INDEX IF NOT EXISTS idx_visitor_logs_user       ON visitor_logs(user_id);
+  `)
+
   // Schema migrations: add columns that may be missing from tables created by older schemas
   await pool.query(`
     ALTER TABLE gift_items ADD COLUMN IF NOT EXISTS price        DECIMAL(10,2) NOT NULL DEFAULT 0;
@@ -457,6 +482,112 @@ const BOOK_JOIN = `
   LEFT JOIN authors    a ON b.author_id    = a.id
   LEFT JOIN categories c ON b.category_id  = c.id
 `
+
+// ── Visitor tracking helpers ─────────────────────────────────
+const VISITOR_OFFLINE_THRESHOLD_MINUTES = parseInt(process.env.VISITOR_OFFLINE_THRESHOLD_MINUTES || '2', 10)
+
+// Note: a User-Agent string cannot reliably distinguish a laptop from a desktop —
+// both are bucketed as 'desktop' here.
+function parseUserAgent(ua) {
+  ua = ua || ''
+  let device_type = 'desktop'
+  if (/ipad|tablet(?!.*mobile)|(android(?!.*mobile))/i.test(ua)) device_type = 'tablet'
+  else if (/mobile|iphone|ipod|android/i.test(ua)) device_type = 'mobile'
+
+  let operating_system = 'Unknown'
+  if (/windows/i.test(ua)) operating_system = 'Windows'
+  else if (/iphone|ipad|ipod/i.test(ua)) operating_system = 'iOS'
+  else if (/android/i.test(ua)) operating_system = 'Android'
+  else if (/mac os x|macintosh/i.test(ua)) operating_system = 'macOS'
+  else if (/linux/i.test(ua)) operating_system = 'Linux'
+
+  let browser = 'Other'
+  if (/edg\//i.test(ua)) browser = 'Edge'
+  else if (/opr\/|opera/i.test(ua)) browser = 'Opera'
+  else if (/chrome\//i.test(ua)) browser = 'Chrome'
+  else if (/firefox\//i.test(ua)) browser = 'Firefox'
+  else if (/safari\//i.test(ua)) browser = 'Safari'
+
+  return { device_type, browser, operating_system }
+}
+
+function getClientIp(req) {
+  const fwd = req.headers['x-forwarded-for']
+  if (fwd) return fwd.split(',')[0].trim()
+  return (req.socket && req.socket.remoteAddress) || ''
+}
+
+// Maps route patterns to human-readable page names so dynamic routes
+// (e.g. /books/42) collapse into one bucket for "Most Visited Pages" aggregation.
+const PAGE_LABEL_RULES = [
+  [/^\/$/, 'Home'],
+  [/^\/books\/[^/]+$/, 'Book Detail'],
+  [/^\/books/, 'Books'],
+  [/^\/authors\/[^/]+$/, 'Author Detail'],
+  [/^\/authors/, 'Authors'],
+  [/^\/blog\/[^/]+$/, 'Blog Detail'],
+  [/^\/blog/, 'Blog'],
+  [/^\/reviews/, 'Reviews'],
+  [/^\/vaalu-tv/, 'Vaalu TV'],
+  [/^\/gifts\/[^/]+$/, 'Gift Detail'],
+  [/^\/gifts/, 'Gifts'],
+  [/^\/donate-books/, 'Donate Books'],
+  [/^\/corporate-enquiries/, 'Corporate Enquiries'],
+  [/^\/copyright-enquiries/, 'Copyright Enquiries'],
+  [/^\/offers/, 'Offers'],
+  [/^\/about/, 'About Us'],
+  [/^\/publish-plan/, 'Publish Plan'],
+  [/^\/contact/, 'Contact Us'],
+  [/^\/cart/, 'Cart'],
+  [/^\/checkout/, 'Checkout'],
+  [/^\/order-confirmation/, 'Order Confirmation'],
+  [/^\/profile/, 'Profile'],
+  [/^\/orders/, 'Order History'],
+  [/^\/wishlist/, 'Wishlist'],
+  [/^\/announcements/, 'Announcements'],
+]
+function getPageLabel(pathname) {
+  for (const [pattern, label] of PAGE_LABEL_RULES) {
+    if (pattern.test(pathname)) return label
+  }
+  return pathname
+}
+
+const wsClients = new Set()
+function broadcast(type, payload) {
+  const msg = JSON.stringify({ type, payload })
+  for (const client of wsClients) {
+    if (client.readyState === 1 /* OPEN */) {
+      try { client.send(msg) } catch { /* ignore dead socket */ }
+    }
+  }
+}
+
+async function computeVisitorStats() {
+  const { rows: [stats] } = await q(
+    `WITH session_agg AS (
+       SELECT session_id, MAX(user_id) AS user_id,
+              MAX(last_activity) AS last_activity_at,
+              MAX(logged_out_at) AS logged_out_at
+       FROM visitor_logs GROUP BY session_id
+     )
+     SELECT
+       (SELECT COUNT(DISTINCT user_id) FROM visitor_logs WHERE visit_date_time >= date_trunc('day', NOW()))::int AS "totalVisitorsToday",
+       (SELECT COUNT(DISTINCT user_id) FROM session_agg
+          WHERE logged_out_at IS NULL AND last_activity_at > NOW() - ($1 || ' minutes')::interval)::int AS "currentOnlineUsers",
+       (SELECT COUNT(*) FROM visitor_logs WHERE visit_date_time >= date_trunc('day', NOW()))::int AS "totalPageVisitsToday",
+       (SELECT COUNT(DISTINCT user_id) FROM visitor_logs WHERE visit_date_time >= date_trunc('day', NOW()))::int AS "uniqueVisitorsToday"
+    `,
+    [VISITOR_OFFLINE_THRESHOLD_MINUTES]
+  )
+  const { rows: mostVisited } = await q(
+    `SELECT page_name, COUNT(*)::int AS count
+     FROM visitor_logs
+     WHERE visit_date_time >= date_trunc('day', NOW())
+     GROUP BY page_name ORDER BY count DESC LIMIT 5`
+  )
+  return { ...stats, mostVisitedPages: mostVisited }
+}
 
 // ── Routing ───────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
@@ -1306,6 +1437,184 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // ── Visitors ──────────────────────────────────────────────
+    if (pathname === '/api/visitors/track' && method === 'POST') {
+      const body = await parseBody(req)
+      if (!body.session_id || !body.user_id || !body.email || !body.page_url) {
+        return badRequest(res, 'session_id, user_id, email and page_url are required')
+      }
+      const { device_type, browser, operating_system } = parseUserAgent(req.headers['user-agent'])
+      const ip = getClientIp(req)
+      const pageName = body.page_name || getPageLabel(body.page_url)
+
+      // Guard against duplicate rows from double-fired effects (e.g. React
+      // StrictMode's mount/unmount/remount in dev) re-tracking the same page
+      // within the same instant.
+      const dup = await q(
+        `SELECT * FROM visitor_logs
+         WHERE session_id=$1 AND page_url=$2 AND visit_date_time > NOW() - INTERVAL '10 seconds'
+         ORDER BY visit_date_time DESC LIMIT 1`,
+        [body.session_id, body.page_url]
+      )
+      if (dup.rows.length) {
+        return created(res, { message: 'Tracked', id: dup.rows[0].id })
+      }
+
+      const { rows } = await q(
+        `INSERT INTO visitor_logs
+           (session_id, user_id, user_name, email, page_name, page_url, device_type, browser, operating_system, ip_address)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+         RETURNING *`,
+        [body.session_id, body.user_id, body.user_name || '', body.email, pageName, body.page_url, device_type, browser, operating_system, ip]
+      )
+      broadcast('visit', rows[0])
+      return created(res, { message: 'Tracked', id: rows[0].id })
+    }
+
+    if (pathname === '/api/visitors/heartbeat' && method === 'POST') {
+      const body = await parseBody(req)
+      if (!body.session_id) return badRequest(res, 'session_id is required')
+      const { rows } = await q(
+        `UPDATE visitor_logs SET last_activity = NOW()
+         WHERE id = (SELECT id FROM visitor_logs WHERE session_id=$1 ORDER BY visit_date_time DESC, id DESC LIMIT 1)
+         RETURNING session_id, last_activity`,
+        [body.session_id]
+      )
+      if (!rows.length) return notFound(res)
+      broadcast('heartbeat', rows[0])
+      return ok(res, { message: 'ok' })
+    }
+
+    if (pathname === '/api/visitors/logout' && method === 'POST') {
+      const body = await parseBody(req)
+      if (!body.session_id) return badRequest(res, 'session_id is required')
+      await q(
+        `UPDATE visitor_logs SET logged_out_at = NOW() WHERE session_id=$1 AND logged_out_at IS NULL`,
+        [body.session_id]
+      )
+      broadcast('logout', { session_id: body.session_id })
+      return ok(res, { message: 'Logged out' })
+    }
+
+    if (pathname === '/api/visitors' && method === 'GET') {
+      const SORTABLE = {
+        visit_date_time: 'vl.visit_date_time',
+        user_name: 'vl.user_name',
+        email: 'vl.email',
+        page_name: 'vl.page_name',
+        device_type: 'vl.device_type',
+        browser: 'vl.browser',
+        operating_system: 'vl.operating_system',
+        login_time: 'sa.login_time',
+        last_activity: 'sa.last_activity_at',
+        status: 'is_online',
+      }
+      const sortBy  = SORTABLE[params.get('sortBy')] || 'vl.visit_date_time'
+      const sortDir = params.get('sortDir') === 'asc' ? 'ASC' : 'DESC'
+      const page     = Math.max(1, parseInt(params.get('page') || '1', 10))
+      const pageSize = Math.min(100, Math.max(1, parseInt(params.get('pageSize') || '20', 10)))
+      const offset   = (page - 1) * pageSize
+
+      const search           = params.get('search') || ''
+      const from             = params.get('from') || null
+      const to               = params.get('to') || null
+      const userName         = params.get('user_name') || ''
+      const email            = params.get('email') || ''
+      const pageNameFilter   = params.get('page_name') || ''
+      const deviceType       = params.get('device_type') || ''
+      const browser          = params.get('browser') || ''
+      const operatingSystem  = params.get('operating_system') || ''
+      const status           = params.get('status') || ''
+
+      const { rows } = await q(
+        `WITH session_agg AS (
+           SELECT session_id,
+                  MIN(visit_date_time) AS login_time,
+                  MAX(last_activity)   AS last_activity_at,
+                  MAX(logged_out_at)   AS logged_out_at
+           FROM visitor_logs GROUP BY session_id
+         )
+         SELECT vl.*, sa.login_time, sa.last_activity_at,
+                (sa.logged_out_at IS NULL AND sa.last_activity_at > NOW() - ($1 || ' minutes')::interval) AS is_online,
+                COUNT(*) OVER() AS total_count
+         FROM visitor_logs vl
+         JOIN session_agg sa USING (session_id)
+         WHERE ($2='' OR vl.user_name ILIKE '%'||$2||'%')
+           AND ($3='' OR vl.email ILIKE '%'||$3||'%')
+           AND ($4='' OR vl.page_name ILIKE '%'||$4||'%')
+           AND ($5='' OR vl.device_type=$5)
+           AND ($6='' OR vl.browser=$6)
+           AND ($7='' OR vl.operating_system=$7)
+           AND ($8='' OR ($8='online') = (sa.logged_out_at IS NULL AND sa.last_activity_at > NOW() - ($1 || ' minutes')::interval))
+           AND ($9::date IS NULL OR vl.visit_date_time >= $9::date)
+           AND ($10::date IS NULL OR vl.visit_date_time < ($10::date + INTERVAL '1 day'))
+           AND ($11='' OR vl.user_name ILIKE '%'||$11||'%' OR vl.email ILIKE '%'||$11||'%' OR vl.page_name ILIKE '%'||$11||'%' OR vl.page_url ILIKE '%'||$11||'%')
+         ORDER BY ${sortBy} ${sortDir}
+         LIMIT $12 OFFSET $13`,
+        [VISITOR_OFFLINE_THRESHOLD_MINUTES, userName, email, pageNameFilter, deviceType, browser, operatingSystem, status, from, to, search, pageSize, offset]
+      )
+      const total = rows.length ? parseInt(rows[0].total_count, 10) : 0
+      const data = rows.map(({ total_count, ...r }) => ({ ...r, status: r.is_online ? 'online' : 'offline' }))
+      return ok(res, { data, total, page, pageSize })
+    }
+
+    if (pathname === '/api/visitors/stats' && method === 'GET') {
+      return ok(res, await computeVisitorStats())
+    }
+
+    if (pathname === '/api/visitors/reports' && method === 'GET') {
+      const type = params.get('type') || 'pages'
+      const from = params.get('from') || null
+      const to   = params.get('to') || null
+      const dateFilter = `($1::date IS NULL OR visit_date_time >= $1::date) AND ($2::date IS NULL OR visit_date_time < ($2::date + INTERVAL '1 day'))`
+
+      if (type === 'pages') {
+        const { rows } = await q(
+          `SELECT page_name, COUNT(*)::int AS visits, COUNT(DISTINCT user_id)::int AS unique_users
+           FROM visitor_logs WHERE ${dateFilter}
+           GROUP BY page_name ORDER BY visits DESC LIMIT 50`,
+          [from, to]
+        )
+        return ok(res, { type, data: rows })
+      }
+      if (type === 'users') {
+        const { rows } = await q(
+          `SELECT user_id, MAX(user_name) AS user_name, MAX(email) AS email,
+                  COUNT(*)::int AS total_visits, COUNT(DISTINCT session_id)::int AS session_count,
+                  MAX(visit_date_time) AS last_seen
+           FROM visitor_logs WHERE ${dateFilter}
+           GROUP BY user_id ORDER BY total_visits DESC LIMIT 50`,
+          [from, to]
+        )
+        return ok(res, { type, data: rows })
+      }
+      if (type === 'devices' || type === 'browsers' || type === 'os') {
+        const col = type === 'devices' ? 'device_type' : type === 'browsers' ? 'browser' : 'operating_system'
+        const { rows } = await q(
+          `SELECT ${col} AS label, COUNT(*)::int AS count
+           FROM visitor_logs WHERE ${dateFilter}
+           GROUP BY ${col} ORDER BY count DESC`,
+          [from, to]
+        )
+        return ok(res, { type, data: rows })
+      }
+      if (type === 'sessions') {
+        const { rows } = await q(
+          `SELECT session_id, MAX(user_name) AS user_name, MAX(email) AS email,
+                  MIN(visit_date_time) AS login_time, MAX(logged_out_at) AS logout_time,
+                  MAX(last_activity) AS last_activity_at,
+                  (MAX(logged_out_at) IS NULL AND MAX(last_activity) > NOW() - ($3 || ' minutes')::interval) AS is_online,
+                  EXTRACT(EPOCH FROM (COALESCE(MAX(logged_out_at), MAX(last_activity)) - MIN(visit_date_time)))::int AS duration_seconds
+           FROM visitor_logs WHERE ${dateFilter}
+           GROUP BY session_id ORDER BY login_time DESC LIMIT 100`,
+          [from, to, VISITOR_OFFLINE_THRESHOLD_MINUTES]
+        )
+        const data = rows.map((r) => ({ ...r, status: r.is_online ? 'online' : 'offline' }))
+        return ok(res, { type, data })
+      }
+      return badRequest(res, 'Unknown report type')
+    }
+
     // ── Reports ───────────────────────────────────────────────
     const REPORT_PERIOD_CFG = {
       daily:   { unit: 'day',   count: 30, fmt: 'Mon DD'   },
@@ -1637,6 +1946,19 @@ const server = http.createServer(async (req, res) => {
     serverErr(res, e)
   }
 })
+
+// ── WebSocket (real-time visitor tracking) ──────────────────────
+const { WebSocketServer } = require('ws')
+const wss = new WebSocketServer({ server })
+wss.on('connection', (ws) => {
+  wsClients.add(ws)
+  ws.on('close', () => wsClients.delete(ws))
+  ws.on('error', () => wsClients.delete(ws))
+})
+setInterval(() => {
+  if (!wsClients.size) return
+  computeVisitorStats().then((stats) => broadcast('stats', stats)).catch(() => {})
+}, 10000)
 
 // ── Start ─────────────────────────────────────────────────────
 initDB()

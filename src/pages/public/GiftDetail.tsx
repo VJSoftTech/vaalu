@@ -240,7 +240,7 @@ export default function GiftDetail() {
             ) : (
               <form onSubmit={handleSubmit(onEnquiry)} className="space-y-3">
                 <div className="space-y-1">
-                  <Label htmlFor="customer_name">{t.giftDetail.yourName}</Label>
+                  <Label htmlFor="customer_name">{t.giftDetail.yourName} <span className="text-red-500">*</span></Label>
                   <Input id="customer_name" {...register('customer_name')} placeholder="John Doe" />
                   {errors.customer_name && (
                     <p className="text-xs text-destructive">{errors.customer_name.message}</p>

@@ -130,7 +130,7 @@ export default function AdsList() {
   return (
     <div>
       <PageTitle
-        title="Home Slider & Advertisements"
+        title="Home Slider"
         action={
           <Link to="/admin/advertisements/add">
             <Button><Plus className="h-4 w-4 mr-1" /> Add Slide</Button>

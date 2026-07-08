@@ -19,6 +19,7 @@ import {
   Building2,
   Copyright,
   Megaphone,
+  Eye,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useUIStore } from '@/store'
@@ -71,6 +72,12 @@ const navGroups = [
     ],
   },
   {
+    label: 'Visitors',
+    items: [
+      { to: '/admin/visitors/who-visited-sites', label: 'Who Visited Sites', icon: Eye },
+    ],
+  },
+  {
     label: 'Reports',
     items: [
       { to: '/admin/reports/sales', label: 'Sales', icon: BarChart2 },
@@ -91,7 +98,7 @@ export default function AdminSidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 h-full bg-card border-r z-40 transition-all duration-300 overflow-y-auto scrollbar-hide',
+        'fixed left-0 top-0 h-full bg-card border-r z-40 transition-all duration-300 overflow-y-auto scrollbar-hide print:hidden',
         sidebarOpen ? 'w-64' : 'w-16',
       )}
     >

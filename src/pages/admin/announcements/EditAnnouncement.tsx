@@ -85,7 +85,7 @@ export default function EditAnnouncement() {
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 items-start">
             <div className="space-y-1">
-              <Label>Title</Label>
+              <Label>Title <span className="text-red-500">*</span></Label>
               <Input {...register('title', { required: true })} placeholder="Announcement headline" />
             </div>
 
@@ -137,7 +137,7 @@ export default function EditAnnouncement() {
             </div>
 
             <div className="space-y-1 sm:col-span-2 lg:col-span-3">
-              <Label>Message</Label>
+              <Label>Message <span className="text-red-500">*</span></Label>
               <Textarea {...register('message', { required: true })} rows={4} />
             </div>
 

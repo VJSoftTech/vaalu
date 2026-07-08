@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/store'
 import { authService } from '@/services/authService'
+import { visitorService } from '@/services/visitorService'
+import { getSessionId } from '@/utils/session'
 import type { LoginCredentials } from '@/types'
 
 export const useAuth = () => {
@@ -32,6 +34,7 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
+      await visitorService.logout(getSessionId()).catch(() => {})
       await authService.logout()
     } finally {
       clearAuth()

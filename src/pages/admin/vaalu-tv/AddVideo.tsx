@@ -89,7 +89,7 @@ export default function AddVideo() {
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
 
             <div className="space-y-1">
-              <Label>YouTube URL</Label>
+              <Label>YouTube URL <span className="text-red-500">*</span></Label>
               <Input
                 placeholder="https://youtu.be/fQZkUynCHUc"
                 {...register('youtube_url', { required: true })}
@@ -98,7 +98,7 @@ export default function AddVideo() {
             </div>
 
             <div className="space-y-1">
-              <Label>Title</Label>
+              <Label>Title <span className="text-red-500">*</span></Label>
               <Input {...register('title', { required: true })} />
             </div>
 

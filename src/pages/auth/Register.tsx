@@ -71,7 +71,9 @@ export default function Register() {
             { id: 'confirm_password', label: 'Confirm Password', type: 'password' },
           ].map(({ id, label, type }) => (
             <div key={id} className="space-y-1">
-              <Label htmlFor={id}>{label}</Label>
+              <Label htmlFor={id}>
+                {label} <span className="text-red-500">*</span>
+              </Label>
               <Input id={id} type={type} {...register(id as keyof RegisterData)} />
               {errors[id as keyof RegisterData] && (
                 <p className="text-xs text-destructive">

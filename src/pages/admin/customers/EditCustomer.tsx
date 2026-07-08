@@ -52,17 +52,17 @@ export default function EditCustomer() {
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start" autoComplete="off">
             <div className="space-y-1">
-              <Label>Name</Label>
+              <Label>Name <span className="text-red-500">*</span></Label>
               <Input {...register('name')} placeholder="Full name" autoComplete="off" />
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label>Email</Label>
+              <Label>Email <span className="text-red-500">*</span></Label>
               <Input type="email" {...register('email')} placeholder="customer@example.com" autoComplete="off" />
               {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label>Mobile Number</Label>
+              <Label>Mobile Number <span className="text-red-500">*</span></Label>
               <Input {...register('mobile_number')} placeholder="9876543210" autoComplete="off" />
               {errors.mobile_number && <p className="text-xs text-destructive">{errors.mobile_number.message}</p>}
             </div>

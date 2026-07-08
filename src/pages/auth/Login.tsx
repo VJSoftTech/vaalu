@@ -26,13 +26,13 @@ export default function Login() {
       <CardContent>
         <form onSubmit={handleSubmit(login)} className="space-y-4" autoComplete="off">
           <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
             <Input id="email" type="email" autoComplete="off" {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
             <Input id="password" type="password" autoComplete="new-password" {...register('password')} />
             {errors.password && (
               <p className="text-xs text-destructive">{errors.password.message}</p>

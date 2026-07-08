@@ -12,7 +12,7 @@ export default function AdminLayout() {
       <AdminSidebar />
       <div
         className={cn(
-          'flex-1 flex flex-col transition-all duration-300',
+          'flex-1 flex flex-col transition-all duration-300 print:ml-0',
           sidebarOpen ? 'ml-64' : 'ml-16',
         )}
       >

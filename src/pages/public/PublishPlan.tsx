@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import {
   ClipboardCheck, SpellCheck, Image, Printer, Tv, PackageCheck, Sparkles,
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import publishPlanBanner from '@/assets/publish-plan-banner.jpg'
+import ImageLightbox from '@/components/common/ImageLightbox'
 
 const timeline = [
   {
@@ -57,6 +60,7 @@ const timeline = [
 export default function PublishPlan() {
   const { lang } = useLanguage()
   const ta = lang === 'ta'
+  const [zoomOpen, setZoomOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,12 +77,20 @@ export default function PublishPlan() {
           </h1>
         </div>
 
-        {/* Intro */}
-        <p className={`text-sm text-gray-600 leading-relaxed mb-8 ${ta ? 'font-tamil' : ''}`}>
-          {ta
-            ? 'எழுத்தாளர்களின் நீண்ட காலக் காத்திருப்புக்கு முற்றுப்புள்ளி வைக்கிறது வாலு பதிப்பகம். உங்களது தரமான படைப்புகள் எங்களிடம் வந்தடைந்த 15 நாட்களிலேயே அது முழுமையான புத்தகமாக உருவெடுக்கும். கறுப்பு வெள்ளையில் என்றாலும் சரி முழு வண்ணப் புத்தகமாக இருந்தாலும் சரி...'
-            : 'Vaalu Pathippagam puts an end to the long wait that writers usually endure. The moment your quality manuscript reaches us, it transforms into a complete book within 15 days — whether it\'s black & white or a full-colour edition...'}
-        </p>
+        {/* Banner Image */}
+        <img
+          src={publishPlanBanner}
+          alt={ta ? '15 நாள் வெளியீட்டுத் திட்டம்' : '15-Day Publishing Plan'}
+          onClick={() => setZoomOpen(true)}
+          className="w-full object-contain rounded-lg mt-6 mb-8 cursor-zoom-in"
+        />
+
+        <ImageLightbox
+          src={publishPlanBanner}
+          alt={ta ? '15 நாள் வெளியீட்டுத் திட்டம்' : '15-Day Publishing Plan'}
+          open={zoomOpen}
+          onClose={() => setZoomOpen(false)}
+        />
 
         {/* Timeline */}
         <h2 className={`text-sm font-semibold uppercase tracking-widest text-primary mb-4 ${ta ? 'font-tamil' : ''}`}>

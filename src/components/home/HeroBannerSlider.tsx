@@ -140,17 +140,8 @@ export default function HeroBannerSlider({ banners, autoPlayInterval = 3000 }: P
     const banner = banners[current - 1]
     const isExternal = banner.redirect_url?.startsWith('http')
 
-    return (
-      <motion.div
-        key={banner.id}
-        custom={direction}
-        variants={slideVariants}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        transition={{ type: 'tween', ease: 'easeInOut', duration: 0.5 }}
-        className="absolute inset-0"
-      >
+    const slideBody = (
+      <>
         <img
           src={banner.banner_image}
           alt={banner.title}
@@ -181,32 +172,48 @@ export default function HeroBannerSlider({ banners, autoPlayInterval = 3000 }: P
               </motion.p>
             )}
             {banner.redirect_url && (
-              <motion.div
+              <motion.span
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
-                className="mt-4"
+                className="mt-4 inline-block bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow w-fit"
               >
-                {isExternal ? (
-                  <a
-                    href={banner.redirect_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow hover:bg-primary/90 transition-colors"
-                  >
-                    {t.home.shopNow}
-                  </a>
-                ) : (
-                  <Link
-                    to={banner.redirect_url}
-                    className="inline-block bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow hover:bg-primary/90 transition-colors"
-                  >
-                    {t.home.shopNow}
-                  </Link>
-                )}
-              </motion.div>
+                {t.home.shopNow}
+              </motion.span>
             )}
           </div>
+        )}
+      </>
+    )
+
+    return (
+      <motion.div
+        key={banner.id}
+        custom={direction}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        transition={{ type: 'tween', ease: 'easeInOut', duration: 0.5 }}
+        className="absolute inset-0"
+      >
+        {banner.redirect_url ? (
+          isExternal ? (
+            <a
+              href={banner.redirect_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute inset-0 block"
+            >
+              {slideBody}
+            </a>
+          ) : (
+            <Link to={banner.redirect_url} className="absolute inset-0 block">
+              {slideBody}
+            </Link>
+          )
+        ) : (
+          <div className="absolute inset-0">{slideBody}</div>
         )}
       </motion.div>
     )

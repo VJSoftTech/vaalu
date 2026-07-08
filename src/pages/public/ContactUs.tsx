@@ -150,7 +150,7 @@ export default function ContactUs() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">{c.labelName}</label>
+                    <label className="text-sm font-medium">{c.labelName} <span className="text-red-500">*</span></label>
                     <Input
                       placeholder={c.placeholderName}
                       value={form.name}
@@ -168,7 +168,7 @@ export default function ContactUs() {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">{c.labelEmail}</label>
+                  <label className="text-sm font-medium">{c.labelEmail} <span className="text-red-500">*</span></label>
                   <Input
                     type="email"
                     placeholder="you@example.com"
@@ -178,7 +178,7 @@ export default function ContactUs() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">{c.labelMessage}</label>
+                  <label className="text-sm font-medium">{c.labelMessage} <span className="text-red-500">*</span></label>
                   <textarea
                     rows={5}
                     placeholder={c.placeholderMessage}

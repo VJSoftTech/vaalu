@@ -56,7 +56,7 @@ export default function EditAuthor() {
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-1">
-              <Label>Name</Label>
+              <Label>Name <span className="text-red-500">*</span></Label>
               <Input {...register('name')} />
               {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
             </div>
@@ -81,7 +81,7 @@ export default function EditAuthor() {
               )}
             </div>
             <div className="space-y-1 md:col-span-2">
-              <Label>Biography</Label>
+              <Label>Biography <span className="text-red-500">*</span></Label>
               <Textarea rows={5} {...register('biography')} />
               {errors.biography && <p className="text-xs text-destructive">{errors.biography.message}</p>}
             </div>

@@ -98,8 +98,8 @@ export default function CategoriesList() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
+                <TableHead>Name <span className="text-red-500">*</span></TableHead>
+                <TableHead>Slug <span className="text-red-500">*</span></TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>

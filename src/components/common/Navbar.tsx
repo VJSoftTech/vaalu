@@ -46,9 +46,9 @@ export default function Navbar() {
   const moreLinks: { to: string; label: string; end?: boolean }[] = [
     { to: '/donate-books', label: nav.donateBooks },
     { to: '/gifts', label: nav.gifts },
-    { to: '/offers', label: nav.offers },
     { to: '/vaalu-tv', label: nav.vaaluTv },
     { to: '/blog', label: nav.blog },
+    { to: '/reviews', label: nav.reviews },
     { to: '/corporate-enquiries', label: nav.corporateEnquiries },
     { to: '/copyright-enquiries', label: nav.copyrightEnquiries },
   ]
@@ -280,8 +280,8 @@ export default function Navbar() {
             <div ref={userMenuRef} className="relative">
               <Button
                 size="icon"
-                variant="outline"
-                className="hidden sm:flex h-9 w-9 rounded-full p-0 font-semibold uppercase"
+                variant="default"
+                className="hidden sm:flex h-9 w-9 rounded-full p-0 font-semibold uppercase bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={() => setUserMenuOpen((o) => !o)}
                 title={user?.name}
               >
@@ -344,8 +344,8 @@ export default function Navbar() {
             <div ref={userMenuRef} className="relative hidden sm:block">
               <Button
                 size="icon"
-                variant="outline"
-                className="h-9 w-9 rounded-full p-0"
+                variant="default"
+                className="h-9 w-9 rounded-full p-0 bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={() => setUserMenuOpen((o) => !o)}
                 title={nav.signIn}
               >

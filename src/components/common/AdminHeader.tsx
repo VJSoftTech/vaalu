@@ -10,7 +10,7 @@ export default function AdminHeader() {
   const { logout } = useAuth()
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur h-14 flex items-center px-4 gap-4">
+    <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur h-14 flex items-center px-4 gap-4 print:hidden">
       <Button variant="ghost" size="icon" onClick={toggleSidebar}>
         <Menu className="h-5 w-5" />
       </Button>
