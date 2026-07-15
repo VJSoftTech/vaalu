@@ -45,6 +45,7 @@ export default function BooksList() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">S.No.</TableHead>
                 <TableHead>Book</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Price</TableHead>
@@ -54,8 +55,9 @@ export default function BooksList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {books.map((book) => (
+              {books.map((book, index) => (
                 <TableRow key={book.id}>
+                  <TableCell className="text-sm text-muted-foreground">{index + 1}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <img src={book.cover_image} alt={book.title} className="w-8 h-10 object-cover rounded" />

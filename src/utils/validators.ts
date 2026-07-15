@@ -5,19 +5,40 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 })
 
-export const bookSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  author_id: z.number().positive('Author is required'),
-  category_id: z.number().positive('Category is required'),
-  isbn: z.string().min(10, 'Invalid ISBN').max(13, 'Invalid ISBN'),
-  description: z.string().min(10, 'Description is required'),
-  price: z.number().positive('Price must be positive'),
-  discount_price: z.number().positive().optional(),
-  stock_quantity: z.number().int().min(0, 'Stock cannot be negative'),
-  rating: z.number().min(0, 'Rating cannot be negative').max(5, 'Rating cannot exceed 5').optional(),
-  preview_pdf: z.string().optional().or(z.literal('')),
-  external_url: z.string().optional().or(z.literal('')),
-})
+export const bookSchema = z
+  .object({
+    title: z.string().min(1, 'Title is required'),
+    subtitle: z.string().optional().or(z.literal('')),
+    author_id: z.number().positive().optional(),
+    co_author_ids: z.array(z.number().positive()).max(9, 'Maximum 10 authors allowed').optional(),
+    editor_names: z.array(z.string().min(1)).max(10, 'Maximum 10 editors allowed').optional(),
+    category_id: z.number().positive('Category is required'),
+    isbn: z.string().regex(/^\d{3}-\d{2}-\d{6}-\d-\d$/, 'ISBN must be in format 978-81-985419-6-3'),
+    description: z.string().min(10, 'Description is required'),
+    price: z.number().positive('Price must be positive'),
+    discount_price: z.number().positive().optional(),
+    stock_quantity: z.number().int().min(0, 'Stock cannot be negative'),
+    rating: z.number().min(0, 'Rating cannot be negative').max(5, 'Rating cannot exceed 5').optional(),
+    preview_pdf: z.string().optional().or(z.literal('')),
+    external_url: z.string().optional().or(z.literal('')),
+    publisher: z.string().optional().or(z.literal('')),
+    total_pages: z.number().int().positive().optional(),
+    print_type: z.enum(['Black & White', 'Color']).optional().or(z.literal('')),
+    publication_year: z.number().int().optional(),
+    edition: z.string().optional().or(z.literal('')),
+    publisher_serial_number: z.string().optional().or(z.literal('')),
+  })
+  .superRefine((data, ctx) => {
+    const hasAuthor = !!data.author_id
+    const hasEditor = (data.editor_names ?? []).some((name) => name.trim() !== '')
+    if (!hasAuthor && !hasEditor) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['author_id'],
+        message: 'Provide at least one Author or Editor',
+      })
+    }
+  })
 
 export const reviewSchema = z.object({
   customer_name: z.string().min(1, 'Name is required'),

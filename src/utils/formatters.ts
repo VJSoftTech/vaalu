@@ -22,6 +22,12 @@ export const slugify = (text: string): string =>
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+export const formatIsbn = (isbn: string | null | undefined): string => {
+  const digits = (isbn || '').replace(/\D/g, '')
+  if (digits.length !== 13) return isbn || ''
+  return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5, 11)}-${digits.slice(11, 12)}-${digits.slice(12, 13)}`
+}
+
 export const getYoutubeThumbnail = (youtubeId: string): string =>
   `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
 

@@ -57,20 +57,40 @@ async function initDB() {
       social_links JSONB        DEFAULT '{}'
     );
     CREATE TABLE IF NOT EXISTS books (
-      id             SERIAL PRIMARY KEY,
-      title          VARCHAR(500) NOT NULL,
-      author_id      INTEGER REFERENCES authors(id) ON DELETE SET NULL,
-      category_id    INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-      isbn           VARCHAR(50),
-      description    TEXT          DEFAULT '',
-      price          DECIMAL(10,2) NOT NULL DEFAULT 0,
-      discount_price DECIMAL(10,2),
-      stock_quantity INTEGER       DEFAULT 0,
-      cover_image    VARCHAR(500)  DEFAULT '',
-      preview_pdf    VARCHAR(500),
-      rating         DECIMAL(3,2)  DEFAULT 0,
-      external_url   VARCHAR(500)  DEFAULT '',
-      created_at     TIMESTAMPTZ   DEFAULT NOW()
+      id                SERIAL PRIMARY KEY,
+      title             VARCHAR(500) NOT NULL,
+      subtitle          VARCHAR(500)  DEFAULT '',
+      author_id         INTEGER REFERENCES authors(id) ON DELETE SET NULL,
+      category_id       INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+      isbn              VARCHAR(50),
+      description       TEXT          DEFAULT '',
+      price             DECIMAL(10,2) NOT NULL DEFAULT 0,
+      discount_price    DECIMAL(10,2),
+      stock_quantity    INTEGER       DEFAULT 0,
+      cover_image       VARCHAR(500)  DEFAULT '',
+      preview_pdf       VARCHAR(500),
+      rating            DECIMAL(3,2)  DEFAULT 0,
+      external_url      VARCHAR(500)  DEFAULT '',
+      publisher         VARCHAR(255)  DEFAULT '',
+      total_pages       INTEGER,
+      print_type        VARCHAR(20)   DEFAULT '',
+      publication_year  INTEGER,
+      edition           VARCHAR(100)  DEFAULT '',
+      publisher_serial_number VARCHAR(50) DEFAULT '',
+      created_at        TIMESTAMPTZ   DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS book_authors (
+      id           SERIAL PRIMARY KEY,
+      book_id      INTEGER REFERENCES books(id) ON DELETE CASCADE,
+      author_id    INTEGER REFERENCES authors(id) ON DELETE CASCADE,
+      author_order INTEGER DEFAULT 0,
+      UNIQUE(book_id, author_id)
+    );
+    CREATE TABLE IF NOT EXISTS book_editors (
+      id           SERIAL PRIMARY KEY,
+      book_id      INTEGER REFERENCES books(id) ON DELETE CASCADE,
+      editor_name  VARCHAR(255) NOT NULL,
+      editor_order INTEGER DEFAULT 0
     );
     CREATE TABLE IF NOT EXISTS reviews (
       id             SERIAL PRIMARY KEY,
@@ -253,6 +273,13 @@ async function initDB() {
     ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS display_order INTEGER      DEFAULT 0;
     ALTER TABLE advertisements ADD COLUMN IF NOT EXISTS subtitle      VARCHAR(500) DEFAULT '';
     ALTER TABLE books ADD COLUMN IF NOT EXISTS external_url VARCHAR(500) DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS subtitle         VARCHAR(500) DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS publisher        VARCHAR(255) DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS total_pages      INTEGER;
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS print_type       VARCHAR(20)  DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS publication_year INTEGER;
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS edition          VARCHAR(100) DEFAULT '';
+    ALTER TABLE books ADD COLUMN IF NOT EXISTS publisher_serial_number VARCHAR(50) DEFAULT '';
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method     VARCHAR(50)  DEFAULT 'qr';
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_ref_id     VARCHAR(255) DEFAULT '';
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_attachment VARCHAR(500) DEFAULT '';
@@ -348,6 +375,7 @@ function ok(res, data)        { send(res, 200, data) }
 function created(res, d)      { send(res, 201, d) }
 function notFound(res)        { send(res, 404, { message: 'Not found' }) }
 function badRequest(res, msg) { send(res, 400, { message: msg }) }
+function conflict(res, msg)   { send(res, 409, { message: msg }) }
 function serverErr(res, e)    { console.error(e); send(res, 500, { message: 'Server error' }) }
 
 function parseBody(req) {
@@ -477,11 +505,72 @@ async function savePaymentAttachment(file) {
 }
 
 const BOOK_JOIN = `
-  SELECT b.*, a.name AS author_name, c.name AS category_name
+  SELECT b.*, a.name AS author_name, c.name AS category_name,
+    COALESCE(
+      (SELECT json_agg(json_build_object('id', ba.author_id, 'name', au.name) ORDER BY ba.author_order)
+       FROM book_authors ba JOIN authors au ON au.id = ba.author_id
+       WHERE ba.book_id = b.id),
+      '[]'
+    ) AS authors,
+    COALESCE(
+      (SELECT json_agg(json_build_object('name', be.editor_name) ORDER BY be.editor_order)
+       FROM book_editors be
+       WHERE be.book_id = b.id),
+      '[]'
+    ) AS editors
   FROM books b
   LEFT JOIN authors    a ON b.author_id    = a.id
   LEFT JOIN categories c ON b.category_id  = c.id
 `
+
+async function syncBookAuthors(bookId, primaryAuthorId, coAuthorIds) {
+  const ordered = []
+  if (primaryAuthorId) ordered.push(primaryAuthorId)
+  for (const id of coAuthorIds) {
+    if (id && !ordered.includes(id)) ordered.push(id)
+  }
+  const capped = ordered.slice(0, 10)
+  await q('DELETE FROM book_authors WHERE book_id=$1', [bookId])
+  for (let i = 0; i < capped.length; i++) {
+    await q(
+      'INSERT INTO book_authors (book_id, author_id, author_order) VALUES ($1,$2,$3) ON CONFLICT (book_id, author_id) DO NOTHING',
+      [bookId, capped[i], i]
+    )
+  }
+}
+
+function parseCoAuthorIds(field) {
+  return (field || '')
+    .split(',')
+    .map((s) => parseInt(s.trim()))
+    .filter((n) => Number.isInteger(n) && n > 0)
+}
+
+async function syncBookEditors(bookId, editorNames) {
+  const names = editorNames.filter((n) => n && n.trim()).slice(0, 10)
+  await q('DELETE FROM book_editors WHERE book_id=$1', [bookId])
+  for (let i = 0; i < names.length; i++) {
+    await q(
+      'INSERT INTO book_editors (book_id, editor_name, editor_order) VALUES ($1,$2,$3)',
+      [bookId, names[i].trim(), i]
+    )
+  }
+}
+
+function parseEditorNames(field) {
+  return (field || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
+async function findDuplicateBookTitle(title, excludeId) {
+  const { rows } = await q(
+    'SELECT id FROM books WHERE LOWER(TRIM(title)) = LOWER(TRIM($1)) AND ($2::int IS NULL OR id <> $2) LIMIT 1',
+    [title, excludeId]
+  )
+  return rows[0] || null
+}
 
 // ── Visitor tracking helpers ─────────────────────────────────
 const VISITOR_OFFLINE_THRESHOLD_MINUTES = parseInt(process.env.VISITOR_OFFLINE_THRESHOLD_MINUTES || '2', 10)
@@ -808,8 +897,12 @@ const server = http.createServer(async (req, res) => {
       const catId  = params.get('category_id') ? parseInt(params.get('category_id')) : null
       const authId = params.get('author_id')   ? parseInt(params.get('author_id'))   : null
       const page   = Math.max(1, parseInt(params.get('page')  || '1'))
-      const limit  = Math.max(1, parseInt(params.get('limit') || '12'))
-      const offset = (page - 1) * limit
+      // No `limit` param means "return every matching book" — pagination is opt-in,
+      // not the default, so admin/report views never silently truncate results.
+      const limitParam = params.get('limit')
+      const hasLimit = limitParam !== null && limitParam !== ''
+      const limit  = hasLimit ? Math.max(1, parseInt(limitParam)) : null
+      const offset = hasLimit ? (page - 1) * limit : 0
 
       const ALLOWED_SORT = new Set(['created_at', 'price', 'rating', 'title', 'stock_quantity'])
       const sortBy    = ALLOWED_SORT.has(params.get('sort_by')) ? params.get('sort_by') : 'created_at'
@@ -823,20 +916,38 @@ const server = http.createServer(async (req, res) => {
 
       const [countRes, dataRes] = await Promise.all([
         q(`SELECT COUNT(*) FROM books b ${where}`, wArgs),
-        q(`${BOOK_JOIN} ${where} ORDER BY b.${sortBy} ${sortOrder} LIMIT $6 OFFSET $7`, [...wArgs, limit, offset]),
+        hasLimit
+          ? q(`${BOOK_JOIN} ${where} ORDER BY b.${sortBy} ${sortOrder} LIMIT $6 OFFSET $7`, [...wArgs, limit, offset])
+          : q(`${BOOK_JOIN} ${where} ORDER BY b.${sortBy} ${sortOrder}`, wArgs),
       ])
       const total = parseInt(countRes.rows[0].count)
-      return ok(res, { data: dataRes.rows, total, page, limit, total_pages: Math.ceil(total / limit) })
+      const effectiveLimit = hasLimit ? limit : total
+      return ok(res, {
+        data: dataRes.rows,
+        total,
+        page,
+        limit: effectiveLimit,
+        total_pages: hasLimit ? Math.ceil(total / limit) : 1,
+      })
     }
 
     if (pathname === '/api/books' && method === 'POST') {
       const { fields, files } = await parseMultipart(req)
       if (!fields.title) return badRequest(res, 'Title is required')
+      const primaryAuthorId = parseInt(fields.author_id) || null
+      const editorNames = parseEditorNames(fields.editor_names)
+      if (!primaryAuthorId && editorNames.length === 0) {
+        return badRequest(res, 'Please provide at least one Author or Editor')
+      }
+      if (fields.allow_duplicate !== 'true') {
+        const dup = await findDuplicateBookTitle(fields.title, null)
+        if (dup) return conflict(res, 'A book with this title already exists. Please use a different title.')
+      }
       const coverUrl = await saveBookCover(files.cover_image)
       const { rows } = await q(
-        `INSERT INTO books (title, author_id, category_id, isbn, description, price, discount_price, stock_quantity, cover_image, preview_pdf, rating, external_url)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
-        [fields.title, parseInt(fields.author_id) || null, parseInt(fields.category_id) || null,
+        `INSERT INTO books (title, subtitle, author_id, category_id, isbn, description, price, discount_price, stock_quantity, cover_image, preview_pdf, rating, external_url, publisher, total_pages, print_type, publication_year, edition, publisher_serial_number)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19) RETURNING id`,
+        [fields.title, fields.subtitle || '', primaryAuthorId, parseInt(fields.category_id) || null,
          fields.isbn || '', fields.description || '',
          parseFloat(fields.price) || 0,
          fields.discount_price ? parseFloat(fields.discount_price) : null,
@@ -844,8 +955,16 @@ const server = http.createServer(async (req, res) => {
          coverUrl || fields.cover_image || '',
          fields.preview_pdf || null,
          fields.rating ? parseFloat(fields.rating) : 0,
-         fields.external_url || '']
+         fields.external_url || '',
+         fields.publisher || '',
+         fields.total_pages ? parseInt(fields.total_pages) : null,
+         fields.print_type || '',
+         fields.publication_year ? parseInt(fields.publication_year) : null,
+         fields.edition || '',
+         fields.publisher_serial_number || '']
       )
+      await syncBookAuthors(rows[0].id, primaryAuthorId, parseCoAuthorIds(fields.co_author_ids))
+      await syncBookEditors(rows[0].id, editorNames)
       const full = (await q(`${BOOK_JOIN} WHERE b.id=$1`, [rows[0].id])).rows[0]
       return created(res, full)
     }
@@ -861,14 +980,30 @@ const server = http.createServer(async (req, res) => {
         const { fields, files } = await parseMultipart(req)
         const cur  = (await q('SELECT * FROM books WHERE id=$1', [id])).rows[0]
         if (!cur) return notFound(res)
+        const primaryAuthorId = fields.author_id ? parseInt(fields.author_id) : cur.author_id
+        const editorNames = fields.editor_names !== undefined ? parseEditorNames(fields.editor_names) : null
+        let hasEditor = editorNames !== null && editorNames.length > 0
+        if (editorNames === null) {
+          hasEditor = (await q('SELECT 1 FROM book_editors WHERE book_id=$1 LIMIT 1', [id])).rows.length > 0
+        }
+        if (!primaryAuthorId && !hasEditor) {
+          return badRequest(res, 'Please provide at least one Author or Editor')
+        }
+        const newTitle = fields.title ?? cur.title
+        if (fields.title !== undefined && fields.allow_duplicate !== 'true') {
+          const dup = await findDuplicateBookTitle(newTitle, id)
+          if (dup) return conflict(res, 'A book with this title already exists. Please use a different title.')
+        }
         const newCover = await saveBookCover(files.cover_image)
         await q(
-          `UPDATE books SET title=$1, author_id=$2, category_id=$3, isbn=$4, description=$5,
-           price=$6, discount_price=$7, stock_quantity=$8, cover_image=$9, preview_pdf=$10, rating=$11, external_url=$12
-           WHERE id=$13`,
+          `UPDATE books SET title=$1, subtitle=$2, author_id=$3, category_id=$4, isbn=$5, description=$6,
+           price=$7, discount_price=$8, stock_quantity=$9, cover_image=$10, preview_pdf=$11, rating=$12, external_url=$13,
+           publisher=$14, total_pages=$15, print_type=$16, publication_year=$17, edition=$18, publisher_serial_number=$19
+           WHERE id=$20`,
           [
-            fields.title          ?? cur.title,
-            fields.author_id      ? parseInt(fields.author_id)      : cur.author_id,
+            newTitle,
+            fields.subtitle       ?? cur.subtitle,
+            primaryAuthorId,
             fields.category_id    ? parseInt(fields.category_id)    : cur.category_id,
             fields.isbn           ?? cur.isbn,
             fields.description    ?? cur.description,
@@ -879,9 +1014,21 @@ const server = http.createServer(async (req, res) => {
             fields.preview_pdf    ?? cur.preview_pdf,
             fields.rating         ? parseFloat(fields.rating)       : cur.rating,
             fields.external_url   ?? cur.external_url,
+            fields.publisher        ?? cur.publisher,
+            fields.total_pages      ? parseInt(fields.total_pages)      : cur.total_pages,
+            fields.print_type       ?? cur.print_type,
+            fields.publication_year ? parseInt(fields.publication_year) : cur.publication_year,
+            fields.edition          ?? cur.edition,
+            fields.publisher_serial_number ?? cur.publisher_serial_number,
             id,
           ]
         )
+        if (fields.author_id !== undefined || fields.co_author_ids !== undefined) {
+          await syncBookAuthors(id, primaryAuthorId, parseCoAuthorIds(fields.co_author_ids))
+        }
+        if (editorNames !== null) {
+          await syncBookEditors(id, editorNames)
+        }
         const full = (await q(`${BOOK_JOIN} WHERE b.id=$1`, [id])).rows[0]
         return ok(res, full)
       }

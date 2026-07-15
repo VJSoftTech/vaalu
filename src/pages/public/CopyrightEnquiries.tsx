@@ -60,7 +60,7 @@ export default function CopyrightEnquiries() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    bookService.getAll({ limit: 1000, sort_by: 'title', sort_order: 'asc' })
+    bookService.getAll({ sort_by: 'title', sort_order: 'asc' })
       .then((r) => setBooks(r.data))
       .catch(() => setBooks([]))
   }, [])
