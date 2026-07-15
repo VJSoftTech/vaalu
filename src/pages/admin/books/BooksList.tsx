@@ -7,6 +7,7 @@ import PageTitle from '@/components/common/PageTitle'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/utils/formatters'
+import { ITEMS_PER_PAGE } from '@/utils/constants'
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
@@ -14,13 +15,17 @@ import {
 export default function BooksList() {
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   const loadBooks = () => {
     setLoading(true)
-    bookService.getAll().then((res) => setBooks(res.data)).finally(() => setLoading(false))
+    bookService.getAll({ page, limit: ITEMS_PER_PAGE })
+      .then((res) => { setBooks(res.data); setTotalPages(res.total_pages ?? 1) })
+      .finally(() => setLoading(false))
   }
 
-  useEffect(() => { loadBooks() }, [])
+  useEffect(() => { loadBooks() }, [page])
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this book?')) return
@@ -57,7 +62,7 @@ export default function BooksList() {
             <TableBody>
               {books.map((book, index) => (
                 <TableRow key={book.id}>
-                  <TableCell className="text-sm text-muted-foreground">{index + 1}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{(page - 1) * ITEMS_PER_PAGE + index + 1}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <img src={book.cover_image} alt={book.title} className="w-8 h-10 object-cover rounded" />
@@ -89,6 +94,27 @@ export default function BooksList() {
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+      {!loading && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <Button
+            variant="outline"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Page {page} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </Button>
         </div>
       )}
     </div>

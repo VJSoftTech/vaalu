@@ -17,5 +17,5 @@ export const GST_RATE = 0.05
 export const FREE_SHIPPING_THRESHOLD = 500
 export const SHIPPING_CHARGE = 60
 
-export const ITEMS_PER_PAGE = 12
+export const ITEMS_PER_PAGE = 15
 export const ADMIN_ITEMS_PER_PAGE = 10

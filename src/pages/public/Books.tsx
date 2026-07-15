@@ -25,6 +25,7 @@ export default function Books() {
   const [searchParams] = useSearchParams()
   const [books, setBooks] = useState<Book[]>([])
   const [total, setTotal] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -45,7 +46,7 @@ export default function Books() {
     setError(null)
     bookService
       .getAll({ ...filters, search: debouncedSearch })
-      .then((res) => { setBooks(res.data ?? []); setTotal(res.total ?? 0) })
+      .then((res) => { setBooks(res.data ?? []); setTotal(res.total ?? 0); setTotalPages(res.total_pages ?? 1) })
       .catch((err) => {
         setError(err?.response?.data?.message ?? err?.message ?? b.failedToLoad)
         setBooks([])
@@ -64,7 +65,6 @@ export default function Books() {
   const activeFilterCount = filters.category_id != null ? 1 : 0
 
   const currentPage = filters.page ?? 1
-  const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
