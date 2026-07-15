@@ -59,6 +59,9 @@ export default function Books() {
   const updateFilters = (partial: Partial<BookFilters>) =>
     setFilters((f) => ({ ...f, ...partial, page: 1 }))
 
+  const goToPage = (page: number) =>
+    setFilters((f) => ({ ...f, page }))
+
   const clearFilters = () =>
     setFilters((f) => ({ ...DEFAULT_FILTERS, search: f.search }))
 
@@ -123,7 +126,7 @@ export default function Books() {
               <Button
                 variant="outline"
                 disabled={currentPage <= 1}
-                onClick={() => updateFilters({ page: currentPage - 1 })}
+                onClick={() => goToPage(currentPage - 1)}
               >
                 {b.previous}
               </Button>
@@ -133,7 +136,7 @@ export default function Books() {
               <Button
                 variant="outline"
                 disabled={currentPage >= totalPages}
-                onClick={() => updateFilters({ page: currentPage + 1 })}
+                onClick={() => goToPage(currentPage + 1)}
               >
                 {b.next}
               </Button>
